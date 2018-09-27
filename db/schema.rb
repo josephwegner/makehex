@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180927112237) do
+ActiveRecord::Schema.define(version: 20180927190452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,6 +19,8 @@ ActiveRecord::Schema.define(version: 20180927112237) do
     t.string "name"
     t.bigint "map_id"
     t.jsonb "grid"
+    t.integer "height"
+    t.integer "width"
     t.index ["map_id"], name: "index_layouts_on_map_id"
   end
 

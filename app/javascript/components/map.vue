@@ -8,8 +8,7 @@ import Grid from '../lib/grid.js'
 
 export default {
   mounted: function () {
-    new Grid(this.$el, 25, 50, 50)
-    //poly.click(hexClick.bind(poly, this, index))
+    new Grid(this.$el, this.$store)
   }
 }
 

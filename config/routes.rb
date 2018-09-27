@@ -1,11 +1,7 @@
 Rails.application.routes.draw do
 
   root 'home#index'
-  get 'caf' => 'caf#index'
-  get 'weather/:latitude/:longitude' => 'weather#get', :constraints => {
-    :latitude => /.*/,
-    :longiude => /.*/
-  }
+  get 'map/:id' => 'map#get'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
