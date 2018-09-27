@@ -5,3 +5,7 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+pintonville = Map.create(name: 'Pintonville')
+downtown = Layout.create(name: 'Downtown', map: pintonville)
+pintonville.update!(default_layout: downtown)
