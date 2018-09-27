@@ -1,0 +1,19 @@
+<html>
+  <head>
+
+  </head>
+
+  <body>
+    <h1>Hi</h1>
+    <button id="cast">Cast</button>
+    <script type="text/javascript" src="./cast.js"></script>
+    <script type="text/javascript">
+      window['__onGCastApiAvailable'] = function(isAvailable) {
+        if (isAvailable) {
+          setup()
+        }
+      };
+    </script>
+    <script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
+  </body>
+</html>
