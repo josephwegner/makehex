@@ -30,6 +30,7 @@ export default class Storestore {
        },
 
        updateTile(state, payload) {
+         console.log('updateTile', payload)
          state.map.layouts.find((layout) => {
            return layout.id === state.activeLayoutId
          }).grid[payload.index].color = payload.color

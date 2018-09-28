@@ -3,6 +3,7 @@ import Vue from 'vue/dist/vue.js'
 import Vuex from 'vuex'
 import Map from '../components/map.vue'
 import API from '../lib/api.js'
+import Cable from '../lib/cable.js'
 import Store from '../lib/store.js'
 
 Vue.use(Vuex)
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.$store.commit('addMap', map)
         this.$store.commit('openLayout', map.default_layout_id)
       })
+      Cable.loadMap(mapId, this.$store)
     }
   })
 })

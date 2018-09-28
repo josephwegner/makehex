@@ -1,3 +1,5 @@
+import Cable from './cable.js'
+
 export default class Tile {
   constructor(hex, grid, color, store) {
     this.hex = hex
@@ -35,10 +37,12 @@ export default class Tile {
   }
 
   onClick() {
-    console.log(this.index())
-    this.store.commit('updateTile', {
+    var data = {
       index: this.index(),
       color: 'green'
-    })
+    };
+
+    this.store.commit('updateTile', data)
+    Cable.sendForMap(data)
   }
 }
