@@ -43,6 +43,6 @@ export default class Tile {
     };
 
     this.store.commit('updateTile', data)
-    Cable.sendForMap(data)
+    Cable.sendLayoutUpdate(data)
   }
 }

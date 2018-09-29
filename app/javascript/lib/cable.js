@@ -5,22 +5,42 @@ class Cable {
     this.ac = ActionCable.createConsumer();
   }
 
-  loadMap(id, store) {
+  loadStore(store) {
     this.store = store
+
+    this.store.watch((state) => {
+      if (!state.map) return null
+      return state.map.id
+    }, this.connectToMapResources.bind(this))
+  }
+
+  disconnectFromMapResources() {
+    // noop
+    console.log('TODO: disconnect from map')
+  }
+
+  connectToMapResources() {
+    this.tileChannel = this.ac.subscriptions.create({
+      channel: 'TileChannel',
+      layout: this.store.state.activeLayoutId
+    }, { received: this.layoutUpdate.bind(this) })
+
     this.mapChannel = this.ac.subscriptions.create({
       channel: 'MapChannel',
-      map: id
+      map: this.store.state.map.id
     }, { received: this.mapUpdate.bind(this) })
   }
 
-  sendForMap(data) {
-    console.log('sending data', data)
-    console.log(this.mapChannel)
-    this.mapChannel.send(data)
+  sendLayoutUpdate(data) {
+    this.tileChannel.send(data)
+  }
+
+  layoutUpdate(data) {
+    this.store.commit('updateTile', data)
   }
 
   mapUpdate(data) {
-    this.store.commit('updateTile', data)
+    this.store.commit('updateLayoutGrid', data)
   }
 }
 

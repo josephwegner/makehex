@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         this.$store.commit('addMap', map)
         this.$store.commit('openLayout', map.default_layout_id)
       })
-      Cable.loadMap(mapId, this.$store)
+      Cable.loadStore(this.$store)
     }
   })
 })
