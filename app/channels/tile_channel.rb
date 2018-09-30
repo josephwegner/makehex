@@ -8,7 +8,7 @@ class TileChannel < ApplicationCable::Channel
   def receive(data)
     ActionCable.server.broadcast("layout_#{params[:layout]}_tiles", data)
     Redis.current.with do |conn|
-      conn.hset(params[:layout], data['index'], data['color'])
+      conn.hset(params[:layout], data['index'], data.reject { |k| k == 'index' }.to_json)
     end
     TileUpdateWorker.perform_in(ENV['GRID_UPDATE_INTERVAL'].to_i.seconds, params[:layout])
   end

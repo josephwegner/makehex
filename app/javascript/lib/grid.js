@@ -32,7 +32,7 @@ export default class Grid {
 
     this.grid = this.gridFactory.rectangle({ width: width, height: height })
     this.grid.forEach((hex, index) => {
-      var tile = new Tile(hex, this, tiles[index].color, this.store);
+      var tile = new Tile(hex, this, this.store);
       hex.set({
         tile: tile,
         x: hex.x,

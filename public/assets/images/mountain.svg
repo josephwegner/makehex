@@ -1,0 +1,14 @@
+<svg version="1.1"
+     baseProfile="full"
+     width="200" height="200"
+     xmlns="http://www.w3.org/2000/svg">
+     <path stroke="black" d="
+                             M30 140
+                             74 70
+                             C 74 70 80.75 60 87.5 70
+                             L110 100
+                             M85 140
+                             118.25 90
+                             C 118.25 90 125 80 131.75 90
+                             L165 140" stroke-width="5" fill="transparent"/>
+</svg>
