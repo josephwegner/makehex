@@ -2,6 +2,7 @@
 import Vue from 'vue/dist/vue.js'
 import Vuex from 'vuex'
 import Map from '../components/map.vue'
+import Tools from '../components/tools.vue'
 import API from '../lib/api.js'
 import Cable from '../lib/cable.js'
 import Store from '../lib/store.js'
@@ -9,9 +10,10 @@ import Store from '../lib/store.js'
 Vue.use(Vuex)
 
 document.addEventListener('DOMContentLoaded', () => {
+  var store = new Store().store
   const editor = new Vue({
     el: '.map',
-    store: new Store().store,
+    store: store,
     template: '<Map/>',
     components: { Map },
     beforeCreate: function() {
@@ -22,5 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       Cable.loadStore(this.$store)
     }
+  })
+
+  const tools = new Vue({
+    el: '.footer-tools',
+    store: store,
+    template: '<Tools/>',
+    components: { Tools }
   })
 })

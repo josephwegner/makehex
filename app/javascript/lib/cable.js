@@ -36,7 +36,6 @@ class Cable {
   }
 
   layoutUpdate(data) {
-    console.log('layoutUpdate', data)
     this.store.commit('updateTile', data)
   }
 

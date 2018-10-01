@@ -1,4 +1,4 @@
-$toolBarWidth: 42px;
+$toolBarWidth: 48px;
 
 .editor {
   height: 100%;
@@ -7,21 +7,10 @@ $toolBarWidth: 42px;
   flex-direction: column;
 }
 
-.header {
-  background-color: black;
-  height: $toolBarWidth;
-}
-
 .main-bar {
   display: flex;
   flex-grow: 1;
   height: 0;
-
-  .left-tools {
-    background-color: black;
-    width: $toolBarWidth;
-    height: 100%;
-  }
 
   .map {
     background-color: #F0F0F0;

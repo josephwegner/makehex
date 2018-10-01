@@ -19,3 +19,19 @@ html,body {
   height: 100%;
   width: 100%;
 }
+
+:root {
+  /* Sizing */
+  --toolbarWidth: 48px;
+
+  /* Styling */
+  --borderRadius: 4px;
+
+  /* Colors */
+  --lightGray: #3b3b3b;
+  --midGray: #3c3c3c;
+  --gray: #333;
+  --darkGray: #232323;
+
+  --darkWhite: #c0c0c0;
+}

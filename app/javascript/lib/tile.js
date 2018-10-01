@@ -30,7 +30,6 @@ export default class Tile {
   render() {
     this.ele.clear()
     var features = this.features()
-    console.log(features)
 
     this.ele.polygon(this.hex.corners().map(({ x, y }) => `${x},${y}`))
       .stroke({ width: 1, color: '#999' })
@@ -56,7 +55,7 @@ export default class Tile {
   onClick() {
     var data = {
       index: this.index(),
-      color: 'green',
+      color: this.store.state.tool.color,
       icon: 'mountain'
     };
 

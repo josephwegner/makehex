@@ -6,7 +6,12 @@ export default class Storestore {
     this.store = new Vuex.Store({
       state: {
         map: null,
-        activeLayoutId: null
+        activeLayoutId: null,
+        tool: {
+          color: '#008000',
+          icon: null,
+          type: 'single'
+        }
       },
 
       getters: {
@@ -43,22 +48,16 @@ export default class Storestore {
               Vue.set(tile, feature, payload[feature])
             }
           }
-
-         /*
-         var layout = state.map.layouts.find((layout) => {
-           return layout.id === state.activeLayoutId
-         })
-
-         layout.grid[payload.index] = Object.assign({}, layout.grid[payload.index], payload)
-         delete layout.grid[payload.index].index
-         console.log(layout.grid[payload.index])
-         */
        },
 
        updateLayoutGrid(state, payload) {
          state.map.layouts.find((layout) => {
            return layout.id === payload.layout
          }).grid = payload.grid
+       },
+
+       updateTool(state, payload) {
+         state.tool[payload.type] = payload.value
        }
      }
     })
