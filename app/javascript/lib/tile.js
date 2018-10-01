@@ -22,7 +22,7 @@ export default class Tile {
       // I would be very open to suggestions of better ways to do this
       var tile = getters.activeLayout.grid[this.index()]
       return Object.values(Object.getOwnPropertyDescriptors(tile))
-        .map((p) => { return p.value })
+        .map(p => { return p.hasOwnProperty('value') ? null : p.get() })
         .join('_')
     }, this.render.bind(this))
   }
@@ -34,10 +34,12 @@ export default class Tile {
     this.ele.polygon(this.hex.corners().map(({ x, y }) => `${x},${y}`))
       .stroke({ width: 1, color: '#999' })
       .fill(features.color)
-      .click(this.onClick.bind(this))
+
+    this.ele.click(this.onClick.bind(this))
 
     if (features.icon) {
-      this.ele.image(`/assets/images/${features.icon}.svg`, this.hex.width(),   this.hex.height())
+      this.ele.use(features.icon, '/packs/tilecons.svg')
+          .size(this.hex.width(), this.hex.height())
     }
   }
 
@@ -56,7 +58,7 @@ export default class Tile {
     var data = {
       index: this.index(),
       color: this.store.state.tool.color,
-      icon: 'mountain'
+      icon: this.store.state.tool.icon
     };
 
     this.store.commit('updateTile', data)

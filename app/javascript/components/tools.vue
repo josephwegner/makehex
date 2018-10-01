@@ -7,11 +7,15 @@
     <div class="color-picker">
       <input type="color" v-model="color" />
     </div>
+
+    <icon-picker v-bind:selected="icon"
+                 v-bind:onUpdate="updateTool.bind(this, 'icon')" />
   </div>
 </template>
 
 <script>
 import Toolbox from './toolbox.vue'
+import IconPicker from './icon-picker.vue'
 
 export default {
   data: function () {
@@ -28,6 +32,9 @@ export default {
     type () {
       return this.$store.state.tool.type
     },
+    icon () {
+      return this.$store.state.tool.icon
+    },
     color: {
       get () {
         return this.$store.state.tool.color
@@ -39,7 +46,8 @@ export default {
   },
 
   components: {
-    Toolbox
+    Toolbox,
+    IconPicker
   },
 
   methods: {
@@ -59,9 +67,10 @@ export default {
 
   .color-picker {
     height: 100%;
-    width: var(--toolbarWidth);
-    padding: 8px;
+    width: var(--toolWidth);
+    padding: 8px 0;
     box-sizing: border-box;
+    cursor: pointer;
   }
 
   input[type="color"] {

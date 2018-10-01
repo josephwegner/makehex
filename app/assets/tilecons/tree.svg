@@ -1,0 +1,23 @@
+<svg version="1.1"
+     baseProfile="full"
+     width="200" height="200"
+     xmlns="http://www.w3.org/2000/svg">
+     <path stroke="#000" d="M100 148
+                            90 148
+                            90 180
+                            110 180
+                            110 148
+                            100 148
+                            M100 20
+                            140 70
+                            120 65
+                            150 109
+                            132 100
+                            160 148
+                            40 148
+                            68 100
+                            50 109
+                            80 65
+                            60 70
+                            101 21" stroke-width="4" fill="transparent"/>
+</svg>

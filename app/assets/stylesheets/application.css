@@ -23,15 +23,41 @@ html,body {
 :root {
   /* Sizing */
   --toolbarWidth: 48px;
+  --toolWidth: 32px;
 
   /* Styling */
   --borderRadius: 4px;
 
   /* Colors */
+  --whiteRed: #FFB7AA;
+  --lightRed: #D47B6A;
+  --red: #AA4A39;
+  --midRed: #802615;
+  --darkRed: #550D00;
+
+  --whiteYellow: #FFD6AA;
+  --lightYellow: #D4A16A;
+  --yellow: #AA7339;
+  --midYellow: #804C15;
+  --darkYellow: #552C00;
+
+  --whiteBlue: #6C939F;
+  --lightBlue: #457585;
+  --blue: #26596A;
+  --midBlue: #104050;
+  --darkBlue: #022835;
+
+  --whiteGreen: #7CBB92;
+  --lightGreen: #4E9C68;
+  --green: #297C46;
+  --midGreen: #105D2A;
+  --darkGreen: #003E15;
+
   --lightGray: #3b3b3b;
   --midGray: #3c3c3c;
   --gray: #333;
   --darkGray: #232323;
 
   --darkWhite: #c0c0c0;
+  --white: #f3f3f3;
 }
