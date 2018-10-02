@@ -54,7 +54,23 @@ export default class Tile {
     return {}
   }
 
-  onClick() {
+  wouldDraw() {
+    return !this.matches(this.store.state.tool)
+  }
+
+  matches(matchAgainst) {
+    var features = this.features()
+    var unmatched = ['color', 'icon'].filter(feature => {
+      var val = features[feature] === undefined ? null : features[feature]
+      var match = matchAgainst[feature] === undefined ? null : matchAgainst[feature]
+      return val !== match
+    })
+    return unmatched.length === 0
+  }
+
+  draw(forceDraw = false) {
+    if (!forceDraw && !this.wouldDraw()) { return }
+
     var data = {
       index: this.index(),
       color: this.store.state.tool.color,
@@ -62,6 +78,21 @@ export default class Tile {
     };
 
     this.store.commit('updateTile', data)
-    Cable.sendLayoutUpdate(data)
+    //Cable.sendLayoutUpdate(data)
+  }
+
+  onClick() {
+    switch (this.store.state.tool.type) {
+      case 'single':
+        this.draw()
+        break;
+
+      case 'fill':
+        this.grid.fillFrom(this.hex)
+        break;
+
+      case  'empty':
+        break;
+    }
   }
 }

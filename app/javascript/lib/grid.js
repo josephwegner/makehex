@@ -40,4 +40,35 @@ export default class Grid {
       })
     })
   }
+
+  // Implements a modified Forest-Fire algorithm
+  fillFrom(hex) {
+    if (!hex.tile.wouldDraw()) { return }
+    var target = Object.assign({}, hex.tile.features())
+    hex.tile.draw(true)
+    var queue = [hex]
+    var traversalDirections = ['NE','NW','E','W','SE','SW']
+
+    while(queue.length) {
+      queued++
+      var initialHex = queue.shift()
+      traversalDirections.forEach(dir => {
+        var curHex = initialHex
+        while(curHex = this.grid.neighborsOf(curHex, dir)[0]) {
+          if (!curHex.tile.matches(target)) { return }
+          curHex.tile.draw(true)
+
+          this.grid.neighborsOf(curHex).forEach(n => {
+            inspected++
+            if (n.tile.matches(target)) {
+              n.tile.draw(true)
+              queue.push(n)
+            }
+          })
+        }
+
+        curHex = initialHex
+      })
+    }
+  }
 }
