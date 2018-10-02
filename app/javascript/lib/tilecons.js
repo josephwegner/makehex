@@ -6,5 +6,9 @@ export default {
   tree: {
     label: 'Forest',
     tags: ['tree', 'evergreen', 'forest', 'woods', 'terrain']
+  },
+  hills: {
+    label: 'Hill',
+    tags: ['hill', 'rolling', 'plains', 'desert']
   }
 }
