@@ -6,29 +6,14 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-#pintonville = Map.create(name: 'Pintonville')
+user = User.new
+user.email = 'test@test.com'
+user.password = 'testtest'
+user.password_confirmation = 'testtest'
+user.save!
 
-h = 15
-w = 20
-grid = []
-(1..w).each do |x|
-  (1..h).each do |y|
-    grid.push({
-      color: 'blue'
-    })
-  end
-end
-
-[64, 65, 85, 69, 70, 90, 144, 165, 166, 167, 168, 169, 170, 150].each do |i|
-  grid[i]['color'] = 'green'
-end
-
-#downtown = Layout.create(
-#  name: 'Downtown',
-#  map: pintonville,
-#  grid: grid,
-#  height: h,
-#  width: w
-#)
-
-#pintonville.update!(default_layout: downtown)
+map = Map.new(name: 'Pintonville', user: user)
+layout = Layout.new(name: 'Downtown', map: map, height: 15, width: 25, grid: [])
+map.update(default_layout: layout)
+map.save
+layout.save
