@@ -9,7 +9,11 @@ function defaultTileFeatures() {
 }
 
 export default class Tile {
+
+
+
   constructor(hex, grid, store) {
+
     this.hex = hex
     this.grid = grid
     this.store = store
@@ -41,19 +45,26 @@ export default class Tile {
     this.ele.clear()
     var features = this.features()
 
-    this.ele.polygon(this.hex.corners().map(({ x, y }) => `${x},${y}`))
-      .stroke({ width: 1, color: '#999' })
-      .fill(features.color)
+    if (!features.fog || this.store.state.editor) {
+      var poly = this.ele.polygon(this.hex.corners().map(({ x, y }) => `${x},${y}`))
+        .stroke({ width: 1, color: '#999' })
+        .fill(features.color)
 
-    this.ele.click(this.onClick.bind(this))
+      this.ele.click(this.onClick.bind(this))
 
-    if (features.icon) {
-      this.ele.use(features.icon, '/packs/tilecons.svg')
-          .size(this.hex.width(), this.hex.height())
-    }
+      if (features.icon) {
+        this.ele.use(features.icon, '/packs/tilecons.svg')
+            .size(this.hex.width(), this.hex.height())
+      }
 
-    if (features.fog) {
-      this.ele.attr('mask', 'url(#fog)')
+      if (features.fog) {
+        poly.attr('mask', 'url(#fog)')
+      }
+    } else {
+      this.ele.polygon(this.hex.corners().map(({ x, y }) => `${x},${y}`))
+        .stroke({ width: 1, color: '#999' })
+        .fill('#888')
+        .attr('mask', 'url(#fog)')
     }
   }
 
@@ -73,9 +84,9 @@ export default class Tile {
     return this.store.state.tool.type !== 'draw' || !this.matches(this.store.state.tool)
   }
 
-  matches(matchAgainst) {
+  matches(matchAgainst, matchType) {
     var features = this.features()
-    var unmatched = ['color', 'icon'].filter(feature => {
+    var unmatched = ['color', 'icon', 'fog'].filter(feature => {
       var val = features[feature] === undefined ? null : features[feature]
       var match = matchAgainst[feature] === undefined ? null : matchAgainst[feature]
       return val !== match
@@ -88,11 +99,11 @@ export default class Tile {
 
 
     var data = Object.assign({}, this.features())
-    console.log(this.store.state.tool.type)
     switch (this.store.state.tool.type) {
       case 'design':
-        data.color = this.store.state.tool.color
-        data.icon = this.store.state.tool.icon
+        for(var prop of this.designProps) {
+          data[prop] = this.store.state.tool[prop]
+        }
         break;
 
       case 'fog':
@@ -106,7 +117,29 @@ export default class Tile {
     Cable.sendLayoutUpdate(data)
   }
 
+  erase() {
+    var currentFeatures = this.features()
+    var newFeatures = {
+      index: this.index()
+    }
+
+    switch (this.store.state.tool.type) {
+      case 'design':
+        Object.assign(newFeatures, defaultTileFeatures(), {fog: currentFeatures.fog})
+        break
+
+      case 'fog':
+        Object.assign(newFeatures, currentFeatures, {fog: false})
+        break
+    }
+
+    this.store.commit('updateTile', newFeatures)
+    Cable.sendLayoutUpdate(newFeatures)
+  }
+
   onClick() {
+    if (!this.store.state.editor) { return }
+
     switch (this.store.state.tool.coverage) {
       case 'single':
         this.draw()
@@ -117,7 +150,10 @@ export default class Tile {
         break;
 
       case  'erase':
+        this.erase()
         break;
     }
   }
 }
+
+Tile.prototype.designProps = ['color', 'icon']

@@ -50,17 +50,15 @@ export default class Grid {
     var traversalDirections = ['NE','NW','E','W','SE','SW']
 
     while(queue.length) {
-      queued++
       var initialHex = queue.shift()
       traversalDirections.forEach(dir => {
         var curHex = initialHex
         while(curHex = this.grid.neighborsOf(curHex, dir)[0]) {
-          if (!curHex.tile.matches(target)) { return }
+          if (!curHex.tile.matches(target, this.store.state.tool.type)) { return }
           curHex.tile.draw(true)
 
           this.grid.neighborsOf(curHex).forEach(n => {
-            inspected++
-            if (n.tile.matches(target)) {
+            if (n.tile.matches(target, this.store.state.tool.type)) {
               n.tile.draw(true)
               queue.push(n)
             }

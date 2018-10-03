@@ -12,6 +12,12 @@ user.password = 'testtest'
 user.password_confirmation = 'testtest'
 user.save!
 
+other_user = User.new
+other_user.email = 'test2@test.com'
+other_user.password = 'testtest'
+other_user.password_confirmation = 'testtest'
+other_user.save!
+
 map = Map.new(name: 'Pintonville', user: user)
 layout = Layout.new(name: 'Downtown', map: map, height: 15, width: 25, grid: [])
 map.update(default_layout: layout)

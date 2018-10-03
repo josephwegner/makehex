@@ -1,6 +1,8 @@
 class MapsController < ApplicationController
   def show
     @map = Map.find_by_id(params[:id])
+    @editor = @map.user == current_user
+
     respond_to do |format|
       format.json { render :json => @map, :include => 'layouts' }
       format.html

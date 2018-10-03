@@ -5,6 +5,7 @@ export default class Storestore {
   constructor() {
     this.store = new Vuex.Store({
       state: {
+        editor: false,
         map: null,
         activeLayoutId: null,
         tool: {
@@ -55,7 +56,7 @@ export default class Storestore {
             var features = Object.assign({}, payload)
             var index = features.index
             delete features.index
-            
+
             Vue.set(layout.grid, index, features)
           }
        },
@@ -68,6 +69,10 @@ export default class Storestore {
 
        updateTool(state, payload) {
          state.tool[payload.type] = payload.value
+       },
+
+       setEditor(state, payload) {
+         state.editor = payload
        }
      }
     })

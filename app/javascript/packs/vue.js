@@ -10,6 +10,10 @@ import Store from '../lib/store.js'
 Vue.use(Vuex)
 
 document.addEventListener('DOMContentLoaded', () => {
+  var root = document.getElementsByClassName('map-root')[0]
+  var mapId = root.getAttribute('data-map-id')
+  var isEditor = root.getAttribute('data-editor') === 'true'
+
   var store = new Store().store
   const editor = new Vue({
     el: '.map',
@@ -17,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     template: '<Map/>',
     components: { Map },
     beforeCreate: function() {
-      var mapId = document.getElementsByClassName('editor')[0].getAttribute('data-map-id')
+      this.$store.commit('setEditor', isEditor)
       API.getMap(mapId).then((map) => {
         this.$store.commit('addMap', map)
         this.$store.commit('openLayout', map.default_layout_id)
@@ -26,10 +30,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-  const tools = new Vue({
-    el: '.footer-tools',
-    store: store,
-    template: '<Tools/>',
-    components: { Tools }
-  })
+  if (isEditor) {
+    const tools = new Vue({
+      el: '.footer-tools',
+      store: store,
+      template: '<Tools/>',
+      components: { Tools }
+    })
+  }
 })
