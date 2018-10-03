@@ -61,7 +61,7 @@ export default {
     height: 100%;
     width: var(--toolWidth);
     box-sizing: border-box;
-    padding: 8px 0;
+    padding: 0;
     margin: 0 4px;
     position: relative;
   }

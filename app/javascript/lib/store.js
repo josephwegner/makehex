@@ -10,7 +10,8 @@ export default class Storestore {
         tool: {
           color: '#008000',
           icon: null,
-          type: 'single'
+          type: 'design',
+          coverage: 'single'
         }
       },
 
@@ -54,7 +55,7 @@ export default class Storestore {
             var features = Object.assign({}, payload)
             var index = features.index
             delete features.index
-            console.log(features,index)
+            
             Vue.set(layout.grid, index, features)
           }
        },

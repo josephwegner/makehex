@@ -3,7 +3,8 @@ import Cable from './cable.js'
 function defaultTileFeatures() {
   return {
     color: '#FFFFFF',
-    icon: null
+    icon: null,
+    fog: false
   }
 }
 
@@ -50,6 +51,10 @@ export default class Tile {
       this.ele.use(features.icon, '/packs/tilecons.svg')
           .size(this.hex.width(), this.hex.height())
     }
+
+    if (features.fog) {
+      this.ele.attr('mask', 'url(#fog)')
+    }
   }
 
   index() {
@@ -65,7 +70,7 @@ export default class Tile {
   }
 
   wouldDraw() {
-    return !this.matches(this.store.state.tool)
+    return this.store.state.tool.type !== 'draw' || !this.matches(this.store.state.tool)
   }
 
   matches(matchAgainst) {
@@ -81,18 +86,28 @@ export default class Tile {
   draw(forceDraw = false) {
     if (!forceDraw && !this.wouldDraw()) { return }
 
-    var data = {
-      index: this.index(),
-      color: this.store.state.tool.color,
-      icon: this.store.state.tool.icon
-    };
+
+    var data = Object.assign({}, this.features())
+    console.log(this.store.state.tool.type)
+    switch (this.store.state.tool.type) {
+      case 'design':
+        data.color = this.store.state.tool.color
+        data.icon = this.store.state.tool.icon
+        break;
+
+      case 'fog':
+        data.fog = this.store.state.tool.type === 'erase' ? false : true
+        break;
+    }
+
+    data.index = this.index()
 
     this.store.commit('updateTile', data)
     Cable.sendLayoutUpdate(data)
   }
 
   onClick() {
-    switch (this.store.state.tool.type) {
+    switch (this.store.state.tool.coverage) {
       case 'single':
         this.draw()
         break;
@@ -101,7 +116,7 @@ export default class Tile {
         this.grid.fillFrom(this.hex)
         break;
 
-      case  'empty':
+      case  'erase':
         break;
     }
   }

@@ -22,8 +22,8 @@ export default {
   .toolbox {
     background: var(--midGray);
     border: 1px solid var(--darkGray);
-    margin: 8px;
     border-radius: var(--borderRadius);
+    margin-right: 8px;
   }
 
   button {

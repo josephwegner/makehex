@@ -1,8 +1,12 @@
 <template>
   <div class="footer-tools">
     <toolbox v-bind:options="typeOptions"
-             v-bind:selected="type"
-             v-bind:onUpdate="updateTool.bind(this, 'type')" />
+       v-bind:selected="type"
+       v-bind:onUpdate="updateTool.bind(this, 'type')" />
+
+    <toolbox v-bind:options="coverageOptions"
+             v-bind:selected="coverage"
+             v-bind:onUpdate="updateTool.bind(this, 'coverage')" />
 
     <div class="color-picker">
       <input type="color" v-model="color" />
@@ -20,15 +24,22 @@ import IconPicker from './icon-picker.vue'
 export default {
   data: function () {
     return {
-      typeOptions: {
+      coverageOptions: {
         single: 'Single',
         fill: 'Fill',
         erase: 'Erase'
+      },
+      typeOptions: {
+        design: 'Design',
+        fog: 'Fog of War'
       }
     }
   },
 
   computed: {
+    coverage () {
+      return this.$store.state.tool.coverage
+    },
     type () {
       return this.$store.state.tool.type
     },
@@ -63,12 +74,14 @@ export default {
     background-color: var(--lightGray);
     height: var(--toolbarWidth);
     display: flex;
+    padding: 8px;
+    box-sizing: border-box;
   }
 
   .color-picker {
     height: 100%;
     width: var(--toolWidth);
-    padding: 8px 0;
+    padding: 0;
     box-sizing: border-box;
     cursor: pointer;
   }
