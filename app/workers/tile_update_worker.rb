@@ -14,10 +14,12 @@ class TileUpdateWorker
       layout.save!
       conn.del(layout_id)
 
-      ActionCable.server.broadcast("map_#{layout.map.id}", {
-        layout: layout.id,
-        grid: layout.grid
-      })
+      if tiles.size > 0
+        ActionCable.server.broadcast("map_#{layout.map.id}", {
+          layout: layout.id,
+          grid: layout.grid
+        })
+      end
     end
   end
 end
