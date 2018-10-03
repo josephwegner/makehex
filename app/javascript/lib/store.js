@@ -36,17 +36,26 @@ export default class Storestore {
         },
 
         updateTile(state, payload) {
-          var tile = state.map.layouts.find((layout) => {
+          var layout = state.map.layouts.find((layout) => {
             return layout.id === state.activeLayoutId
-          }).grid[payload.index]
+          })
+          var tile = layout.grid[payload.index]
 
-          for (var feature in payload) {
-            if (feature === 'index') continue
-            if (tile.hasOwnProperty(feature)) {
-              tile[feature] = payload[feature]
-            } else {
-              Vue.set(tile, feature, payload[feature])
+          if(tile) {
+            for (var feature in payload) {
+              if (feature === 'index') continue
+              if (tile.hasOwnProperty(feature)) {
+                tile[feature] = payload[feature]
+              } else {
+                Vue.set(tile, feature, payload[feature])
+              }
             }
+          } else {
+            var features = Object.assign({}, payload)
+            var index = features.index
+            delete features.index
+            console.log(features,index)
+            Vue.set(layout.grid, index, features)
           }
        },
 

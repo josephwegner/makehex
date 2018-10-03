@@ -6,7 +6,7 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-pintonville = Map.create(name: 'Pintonville')
+#pintonville = Map.create(name: 'Pintonville')
 
 h = 15
 w = 20
@@ -23,12 +23,12 @@ end
   grid[i]['color'] = 'green'
 end
 
-downtown = Layout.create(
-  name: 'Downtown',
-  map: pintonville,
-  grid: grid,
-  height: h,
-  width: w
-)
+#downtown = Layout.create(
+#  name: 'Downtown',
+#  map: pintonville,
+#  grid: grid,
+#  height: h,
+#  width: w
+#)
 
-pintonville.update!(default_layout: downtown)
+#pintonville.update!(default_layout: downtown)

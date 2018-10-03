@@ -1,9 +1,8 @@
-<div class="editor" data-map-id="<%= @map.id %>">
-  <div class="main-bar">
-    <div class="map">
-
-    </div>
-  </div>
-  <div class="footer-tools">
-  </div>
-</div>
+<ul>
+<% current_user.maps.each do |map| %>
+  <li>
+    <%= link_to map.name, map_path(map) %>
+  </li>
+<% end %>
+</ul>
+<%= link_to "New Map", new_map_path %>

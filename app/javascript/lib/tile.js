@@ -1,5 +1,12 @@
 import Cable from './cable.js'
 
+function defaultTileFeatures() {
+  return {
+    color: '#FFFFFF',
+    icon: null
+  }
+}
+
 export default class Tile {
   constructor(hex, grid, store) {
     this.hex = hex
@@ -21,6 +28,8 @@ export default class Tile {
       // to diff the objects
       // I would be very open to suggestions of better ways to do this
       var tile = getters.activeLayout.grid[this.index()]
+      if (!tile) { return null; }
+
       return Object.values(Object.getOwnPropertyDescriptors(tile))
         .map(p => { return p.hasOwnProperty('value') ? null : p.get() })
         .join('_')
@@ -49,9 +58,10 @@ export default class Tile {
 
   features() {
     if (this.store.getters.activeLayout) {
-      return this.store.getters.activeLayout.grid[this.index()]
+      var tile = this.store.getters.activeLayout.grid[this.index()]
+      return tile ? tile : defaultTileFeatures()
     }
-    return {}
+    return defaultTileFeatures()
   }
 
   wouldDraw() {
@@ -78,7 +88,7 @@ export default class Tile {
     };
 
     this.store.commit('updateTile', data)
-    //Cable.sendLayoutUpdate(data)
+    Cable.sendLayoutUpdate(data)
   }
 
   onClick() {

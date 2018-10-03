@@ -33,6 +33,7 @@ gem 'redis', '~> 3.0'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'webpacker', '~> 3.5'
 gem 'connection_pool'
+gem 'devise'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
