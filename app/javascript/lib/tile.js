@@ -89,15 +89,23 @@ export default class Tile {
     var unmatched = ['color', 'icon', 'fog'].filter(feature => {
       var val = features[feature] === undefined ? null : features[feature]
       var match = matchAgainst[feature] === undefined ? null : matchAgainst[feature]
+
       return val !== match
     })
+
     return unmatched.length === 0
   }
 
   draw(forceDraw = false) {
     if (!forceDraw && !this.wouldDraw()) { return }
 
+    var data = Object.assign(this.drawParams(), { index: this.index() })
 
+    this.store.commit('updateTile', data)
+    Cable.sendLayoutUpdate(data)
+  }
+
+  drawParams() {
     var data = Object.assign({}, this.features())
     switch (this.store.state.tool.type) {
       case 'design':
@@ -111,10 +119,7 @@ export default class Tile {
         break;
     }
 
-    data.index = this.index()
-
-    this.store.commit('updateTile', data)
-    Cable.sendLayoutUpdate(data)
+    return data
   }
 
   erase() {
@@ -146,7 +151,9 @@ export default class Tile {
         break;
 
       case 'fill':
+        console.log('before', JSON.stringify(this.store.getters.activeLayout.grid))
         this.grid.fillFrom(this.hex)
+        console.log('after', JSON.stringify(this.store.getters.activeLayout.grid))
         break;
 
       case  'erase':

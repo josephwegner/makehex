@@ -32,7 +32,7 @@ class Cable {
   }
 
   sendLayoutUpdate(data) {
-    this.tileChannel.send(data)
+    this.tileChannel.send({ updates: data })
   }
 
   layoutUpdate(data) {
