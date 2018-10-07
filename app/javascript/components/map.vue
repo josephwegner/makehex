@@ -21,5 +21,6 @@ function hexClick(component, index) {
   #hex-holder {
     height: 100%;
     width: 100%;
+    overflow: scroll;
   }
 </style>

@@ -48,6 +48,14 @@ export default class Grid {
         y: hex.y
       })
     })
+
+    var lastHex = this.grid.get(this.grid.length - 1)
+    var points = lastHex.toPoint()
+    var widthModifier = lastHex.offset === 1 ? .5 : 1.5
+    var totalWidth = points.x + (lastHex.width() * widthModifier) + 1
+    var totalHeight = points.y + lastHex.height() + 1
+    this.draw.height(totalHeight)
+    this.draw.width(totalWidth)
   }
 
   // Implements a modified Forest-Fire algorithm
