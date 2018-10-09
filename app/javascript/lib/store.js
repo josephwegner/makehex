@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
+import Cable from './cable.js'
 
 export default class Storestore {
   constructor() {
@@ -29,8 +30,39 @@ export default class Storestore {
       },
 
       mutations: {
+        addColumn (state) {
+          var layout = state.map.layouts.find((layout) => {
+            return layout.id === state.activeLayoutId
+          })
+
+          var oldWidth = layout.width
+          var insertAt = layout.width * layout.height
+
+          while(insertAt > 0) {
+            console.log(insertAt, oldWidth)
+            layout.grid.splice(insertAt, 0, null)
+            insertAt -= oldWidth
+          }
+          layout.width++
+
+          Cable.pushLayout(layout)
+        },
+
         addMap (state, map) {
           state.map = map
+        },
+
+        addRow (state) {
+          var layout = state.map.layouts.find((layout) => {
+            return layout.id === state.activeLayoutId
+          })
+
+          var newTiles = new Array(25)
+          newTiles.fill(null)
+          layout.grid = layout.grid.concat(newTiles)
+          layout.height++
+
+          Cable.pushLayout(layout)
         },
 
         openLayout(state, layoutId) {

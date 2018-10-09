@@ -29,17 +29,30 @@ export default class Grid {
         this.drawGrid(layout.height, layout.width, layout.grid)
       }
     });
+
+    this.store.watch((state, getters) => {
+      if (!getters.activeLayout) { return null }
+      return `${getters.activeLayout.width}x${getters.activeLayout.height}`
+    }, this.redraw.bind(this))
   }
 
-  drawGrid (height, width, tiles) {
+  drawGrid (tiles) {
     if(this.grid) return
 
     this.tiles = tiles;
 
     this.hexFactory = extendHex({ size: this.hexSize })
     this.gridFactory = defineGrid(this.hexFactory)
+    this.addRow = this.draw.group()
+      .click(this.store.commit.bind(this.store, 'addRow'))
+    this.addColumn = this.draw.group()
+      .click(this.store.commit.bind(this.store, 'addColumn'))
 
-    this.grid = this.gridFactory.rectangle({ width: width, height: height })
+    this.grid = this.gridFactory.rectangle({
+      width: this.store.getters.activeLayout.width,
+      height: this.store.getters.activeLayout.height
+    })
+
     this.grid.forEach((hex, index) => {
       var tile = new Tile(hex, this, this.store);
       hex.set({
@@ -49,13 +62,45 @@ export default class Grid {
       })
     })
 
-    var lastHex = this.grid.get(this.grid.length - 1)
-    var points = lastHex.toPoint()
-    var widthModifier = lastHex.offset === 1 ? .5 : 1.5
-    var totalWidth = points.x + (lastHex.width() * widthModifier) + 1
-    var totalHeight = points.y + lastHex.height() + 1
-    this.draw.height(totalHeight)
-    this.draw.width(totalWidth)
+    this.resizeSVG()
+    this.drawAddLines()
+  }
+
+  drawAddLines () {
+    var unitsRight = this.store.getters.activeLayout.width
+    var unitsDown = this.store.getters.activeLayout.height
+    var topRight = this.grid.get(unitsRight - 1)
+    var bottomLeft = this.grid.get(unitsRight * (unitsDown - 1) + 1)
+    var xOffset = topRight.toPoint().x + topRight.width()
+    var yOffset = bottomLeft.toPoint().y + bottomLeft.corners()[1].y
+
+    var rightGrid = this.gridFactory.rectangle({ width: 1, height: unitsDown })
+    var bottomGrid = this.gridFactory.rectangle({ width: unitsRight, height: 1 })
+
+
+    console.log(bottomLeft.y, bottomLeft.offset, bottomLeft.width())
+    this.addRow
+      .translate((bottomLeft.y % 2) !== 0 ? 0 : bottomLeft.width() / 2, yOffset)
+      .clear()
+    this.addColumn
+      .translate(xOffset, 0)
+      .clear()
+
+    rightGrid.forEach(hex => {
+      var points = hex.toPoint()
+      this.addColumn.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
+        .stroke({ width: 1, color: '#dcdcdc' })
+        .fill('#fff')
+        .translate(points.x, points.y)
+    })
+
+    bottomGrid.forEach(hex => {
+      var points = hex.toPoint()
+      this.addRow.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
+        .stroke({ width: 1, color: '#dcdcdc' })
+        .fill('#fff')
+        .translate(points.x, points.y)
+    })
   }
 
   // Implements a modified Forest-Fire algorithm
@@ -103,6 +148,40 @@ export default class Grid {
     })
 
     this.store.commit('updateTile', toFill)
-    Cable.sendLayoutUpdate(toFill)
+    Cable.sendTileUpdate(toFill)
+  }
+
+  redraw () {
+    var width = this.store.getters.activeLayout.width
+    var height = this.store.getters.activeLayout.height
+
+    for (var y=0; y < height; y++) {
+      for (var x=0; x < width; x++) {
+        var index = (y * width) + x
+
+        if (!this.grid.get([x, y])) {
+          var hex = this.hexFactory({x, y})
+          hex.set({
+            x, y,
+            tile: new Tile(hex, this, this.store)
+          })
+          this.grid.splice(index, 0, hex)
+        }
+      }
+    }
+
+    this.drawAddLines()
+    this.resizeSVG()
+  }
+
+  resizeSVG () {
+    var lastHex = this.grid.get(this.grid.length - 1)
+
+    var points = lastHex.toPoint()
+    var widthModifier = lastHex.offset === 1 ? 1.5 : 2.5
+    var totalWidth = points.x + (lastHex.width() * widthModifier) + 1
+    var totalHeight = points.y + (lastHex.height() * 2) + 1
+    this.draw.height(totalHeight)
+    this.draw.width(totalWidth)
   }
 }

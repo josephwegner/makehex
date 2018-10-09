@@ -13,7 +13,6 @@ export default class Tile {
 
 
   constructor(hex, grid, store) {
-
     this.hex = hex
     this.grid = grid
     this.store = store
@@ -69,7 +68,7 @@ export default class Tile {
   }
 
   index() {
-    return this.grid.grid.indexOf(this.hex)
+    return (this.store.getters.activeLayout.width * this.hex.y) + this.hex.x
   }
 
   features() {
@@ -102,7 +101,7 @@ export default class Tile {
     var data = Object.assign(this.drawParams(), { index: this.index() })
 
     this.store.commit('updateTile', data)
-    Cable.sendLayoutUpdate(data)
+    Cable.sendTileUpdate(data)
   }
 
   drawParams() {
@@ -139,7 +138,7 @@ export default class Tile {
     }
 
     this.store.commit('updateTile', newFeatures)
-    Cable.sendLayoutUpdate(newFeatures)
+    Cable.sendTileUpdate(newFeatures)
   }
 
   onClick() {

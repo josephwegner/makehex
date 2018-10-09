@@ -31,8 +31,18 @@ class Cable {
     }, { received: this.mapUpdate.bind(this) })
   }
 
-  sendLayoutUpdate(data) {
-    this.tileChannel.send({ updates: data })
+  sendTileUpdate(data) {
+    this.tileChannel.send({
+      method: 'updateTiles',
+      payload: data
+    })
+  }
+
+  pushLayout(layout) {
+    this.tileChannel.send({
+      method: 'pushLayout',
+      payload: layout
+    })
   }
 
   layoutUpdate(data) {
