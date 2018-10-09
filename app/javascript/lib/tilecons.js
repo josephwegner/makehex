@@ -10,5 +10,9 @@ export default {
   hills: {
     label: 'Hill',
     tags: ['hill', 'rolling', 'plains', 'desert']
+  },
+  star: {
+    label: 'Star',
+    tagss: ['icons']
   }
 }
