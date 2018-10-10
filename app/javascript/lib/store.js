@@ -87,10 +87,10 @@ export default class Storestore {
             return layout.id === state.activeLayoutId
           })
 
-          var newTiles = new Array(layout.width)
+          var newTiles = new Array(layout.width * 2)
           newTiles.fill(null)
           layout.grid = newTiles.concat(layout.grid)
-          layout.height++
+          layout.height += 2
 
           Cable.pushLayout(layout)
         },
