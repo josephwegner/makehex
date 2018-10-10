@@ -30,20 +30,16 @@ export default class Storestore {
       },
 
       mutations: {
-        addColumn (state) {
+
+        addBottom (state) {
           var layout = state.map.layouts.find((layout) => {
             return layout.id === state.activeLayoutId
           })
 
-          var oldWidth = layout.width
-          var insertAt = layout.width * layout.height
-
-          while(insertAt > 0) {
-            console.log(insertAt, oldWidth)
-            layout.grid.splice(insertAt, 0, null)
-            insertAt -= oldWidth
-          }
-          layout.width++
+          var newTiles = new Array(layout.width)
+          newTiles.fill(null)
+          layout.grid = layout.grid.concat(newTiles)
+          layout.height++
 
           Cable.pushLayout(layout)
         },
@@ -52,14 +48,48 @@ export default class Storestore {
           state.map = map
         },
 
-        addRow (state) {
+        addLeft (state) {
           var layout = state.map.layouts.find((layout) => {
             return layout.id === state.activeLayoutId
           })
 
-          var newTiles = new Array(25)
+          var oldWidth = layout.width
+          var insertAt = layout.width * layout.height - oldWidth
+
+          while(insertAt >= 0) {
+            layout.grid.splice(insertAt, 0, null)
+            insertAt -= oldWidth
+          }
+          layout.width++
+
+          Cable.pushLayout(layout)
+        },
+
+        addRight (state) {
+          var layout = state.map.layouts.find((layout) => {
+            return layout.id === state.activeLayoutId
+          })
+
+          var oldWidth = layout.width
+          var insertAt = layout.width * layout.height
+
+          while(insertAt > 0) {
+            layout.grid.splice(insertAt, 0, null)
+            insertAt -= oldWidth
+          }
+          layout.width++
+
+          Cable.pushLayout(layout)
+        },
+
+        addTop (state) {
+          var layout = state.map.layouts.find((layout) => {
+            return layout.id === state.activeLayoutId
+          })
+
+          var newTiles = new Array(layout.width)
           newTiles.fill(null)
-          layout.grid = layout.grid.concat(newTiles)
+          layout.grid = newTiles.concat(layout.grid)
           layout.height++
 
           Cable.pushLayout(layout)

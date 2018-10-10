@@ -43,10 +43,20 @@ export default class Grid {
 
     this.hexFactory = extendHex({ size: this.hexSize })
     this.gridFactory = defineGrid(this.hexFactory)
-    this.addRow = this.draw.group()
-      .click(this.store.commit.bind(this.store, 'addRow'))
-    this.addColumn = this.draw.group()
-      .click(this.store.commit.bind(this.store, 'addColumn'))
+    var baseHex = this.hexFactory()
+
+    this.addBottom = this.draw.group()
+      .click(this.store.commit.bind(this.store, 'addBottom'))
+    this.addRight = this.draw.group()
+      .click(this.store.commit.bind(this.store, 'addRight'))
+    this.addLeft = this.draw.group()
+      .click(this.store.commit.bind(this.store, 'addLeft'))
+      .translate(0, baseHex.corners()[1].y)
+    this.addTop = this.draw.group()
+      .click(this.store.commit.bind(this.store, 'addTop'))
+      .translate(baseHex.width() / 2, 0)
+    this.mainGroup = this.draw.group()
+      .translate(baseHex.width(), baseHex.corners()[1].y)
 
     this.grid = this.gridFactory.rectangle({
       width: this.store.getters.activeLayout.width,
@@ -74,29 +84,41 @@ export default class Grid {
     var xOffset = topRight.toPoint().x + topRight.width()
     var yOffset = bottomLeft.toPoint().y + bottomLeft.corners()[1].y
 
-    var rightGrid = this.gridFactory.rectangle({ width: 1, height: unitsDown })
-    var bottomGrid = this.gridFactory.rectangle({ width: unitsRight, height: 1 })
+    var verticalGrid = this.gridFactory.rectangle({ width: 1, height: unitsDown })
+    var horizontalGrid = this.gridFactory.rectangle({ width: unitsRight, height: 1 })
 
-
-    console.log(bottomLeft.y, bottomLeft.offset, bottomLeft.width())
-    this.addRow
+    this.addBottom
       .translate((bottomLeft.y % 2) !== 0 ? 0 : bottomLeft.width() / 2, yOffset)
       .clear()
-    this.addColumn
+    this.addRight
       .translate(xOffset, 0)
       .clear()
+    this.addTop.clear()
+    this.addLeft.clear()
 
-    rightGrid.forEach(hex => {
+    verticalGrid.forEach((hex, index) => {
       var points = hex.toPoint()
-      this.addColumn.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
+      this.addRight.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
+        .stroke({ width: 1, color: '#dcdcdc' })
+        .fill('#fff')
+        .translate(hex.width() + points.x, points.y + hex.corners()[1].y)
+
+      //if (index === 0) return
+      this.addLeft.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
         .stroke({ width: 1, color: '#dcdcdc' })
         .fill('#fff')
         .translate(points.x, points.y)
     })
 
-    bottomGrid.forEach(hex => {
+    horizontalGrid.forEach((hex, index) => {
+      if (index === 0) return
       var points = hex.toPoint()
-      this.addRow.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
+      this.addBottom.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
+        .stroke({ width: 1, color: '#dcdcdc' })
+        .fill('#fff')
+        .translate(points.x, hex.corners()[1].y + points.y)
+
+      this.addTop.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
         .stroke({ width: 1, color: '#dcdcdc' })
         .fill('#fff')
         .translate(points.x, points.y)
@@ -178,9 +200,9 @@ export default class Grid {
     var lastHex = this.grid.get(this.grid.length - 1)
 
     var points = lastHex.toPoint()
-    var widthModifier = lastHex.offset === 1 ? 1.5 : 2.5
+    var widthModifier = lastHex.offset === 1 ? 2.5 : 3.5
     var totalWidth = points.x + (lastHex.width() * widthModifier) + 1
-    var totalHeight = points.y + (lastHex.height() * 2) + 1
+    var totalHeight = points.y + (lastHex.height() * 3) + 1
     this.draw.height(totalHeight)
     this.draw.width(totalWidth)
   }

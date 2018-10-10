@@ -19,7 +19,7 @@ export default class Tile {
 
 
     const { x, y } = this.hex.toPoint()
-    this.ele = this.grid.draw.group()
+    this.ele = this.grid.mainGroup.group()
       .translate(x, y)
 
     this.watch()
