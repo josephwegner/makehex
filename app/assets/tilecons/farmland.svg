@@ -1,0 +1,15 @@
+<svg version="1.1"
+     baseProfile="full"
+     width="200" height="200"
+     xmlns="http://www.w3.org/2000/svg">
+<svg version="1.1"
+     baseProfile="full"
+     width="200" height="200"
+     xmlns="http://www.w3.org/2000/svg">
+     <line x1="42" y1="19" x2="41" y2="181" stroke-width="7" stroke="#000" stroke-linecap="round" />
+     <line x1="64" y1="20" x2="65" y2="180" stroke-width="7" stroke="#000" stroke-linecap="round" />
+     <line x1="81" y1="21" x2="82" y2="179" stroke-width="7" stroke="#000" stroke-linecap="round" />
+     <line x1="102" y1="20" x2="100" y2="180" stroke-width="7" stroke="#000" stroke-linecap="round" />
+     <line x1="121" y1="20" x2="121" y2="182" stroke-width="7" stroke="#000" stroke-linecap="round" />
+     <line x1="142" y1="19" x2="142" y2="180" stroke-width="7" stroke="#000" stroke-linecap="round" />
+</svg>

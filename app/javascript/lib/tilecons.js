@@ -3,16 +3,24 @@ export default {
     label: 'Mountain',
     tags: ['mountain', 'hill', 'terrain']
   },
-  tree: {
-    label: 'Forest',
-    tags: ['tree', 'evergreen', 'forest', 'woods', 'terrain']
+  farmland: {
+    label: 'Farmland',
+    tags: ['ground', 'farm', 'lines', 'crops', 'terrain']
   },
   hills: {
     label: 'Hill',
     tags: ['hill', 'rolling', 'plains', 'desert']
   },
+  rocky: {
+    label: 'Rocky',
+    tags: ['rocks', 'pebbles', 'dirt', 'ground']
+  }
   star: {
     label: 'Star',
-    tagss: ['icons']
+    tags: ['icons']
+  },
+  tree: {
+    label: 'Forest',
+    tags: ['tree', 'evergreen', 'forest', 'woods', 'terrain']
   }
 }
