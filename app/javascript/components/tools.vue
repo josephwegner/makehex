@@ -1,19 +1,26 @@
 <template>
   <div class="footer-tools">
-    <toolbox v-bind:options="typeOptions"
-       v-bind:selected="type"
-       v-bind:onUpdate="updateTool.bind(this, 'type')" />
+    <div class="left-tools">
+      <toolbox v-bind:options="typeOptions"
+         v-bind:selected="type"
+         v-bind:onUpdate="updateTool.bind(this, 'type')" />
 
-    <toolbox v-bind:options="coverageOptions"
-             v-bind:selected="coverage"
-             v-bind:onUpdate="updateTool.bind(this, 'coverage')" />
+      <toolbox v-bind:options="coverageOptions"
+               v-bind:selected="coverage"
+               v-bind:onUpdate="updateTool.bind(this, 'coverage')" />
 
-    <div class="color-picker">
-      <input type="color" v-model="color" />
+      <div class="color-picker">
+        <input type="color" v-model="color" />
+      </div>
+
+      <icon-picker v-bind:selected="icon"
+                   v-bind:onUpdate="updateTool.bind(this, 'icon')" />
     </div>
-
-    <icon-picker v-bind:selected="icon"
-                 v-bind:onUpdate="updateTool.bind(this, 'icon')" />
+    <div class="right-tools">
+      <button>
+        <i class="fa fa-cog"></i>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -76,6 +83,23 @@ export default {
     display: flex;
     padding: 8px;
     box-sizing: border-box;
+  }
+
+  .left-tools {
+    display: flex;
+    flex-grow: 1;
+  }
+
+  button {
+    height: 100%;
+    width: var(--toolWidth);
+    box-sizing: border-box;
+    border: 2px solid var(--darkGray);
+    border-radius: var(--borderRadius);
+    background: var(--midGray);
+    color: var(--darkWhite);
+    font-size: 18px;
+    padding: 0;
   }
 
   .color-picker {

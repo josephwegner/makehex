@@ -14,12 +14,6 @@ export default class Grid {
     this.watch()
   }
 
-  debugLog() {
-    if (DEBUG_LOG) {
-      console.log.apply(console, arguments)
-    }
-  }
-
   watch () {
     this.store.watch((state) => {
       return state.map ? `${state.map.id}_${state.activeLayoutId}` : null
@@ -135,44 +129,46 @@ export default class Grid {
     if (!hex.tile.wouldDraw()) { return }
     var target = Object.assign({}, hex.tile.features())
     var queue = [hex]
-    hex.set({ toFill: true, x: hex.x, y: hex.y })
     var toFill = [Object.assign({}, hex.tile.drawParams(), { index: hex.tile.index() })]
     var traversalDirections = ['NE','NW','E','W','SE','SW']
 
+    // pre-compute which tiles might match, so we don't have to check on every iteration
+    var matchingTiles = this.grid.filter(t => { return t.tile.matches(target) })
+    console.log('matching tiles', matchingTiles.length)
+
     // We will continue appending new edge nodes here until we stop seeing matching tiles
     while(queue.length) {
+      console.count('queue start')
       var initialHex = queue.shift()
 
       // Traverse in a straight line in each cardinal direction from the root node
       traversalDirections.forEach(dir => {
+        console.count('traversal directions start')
+        var neighborsToCheck = traversalDirections.filter(t => { return t !== dir })
         var curHex = initialHex
 
         // Continue traversing in a line until you stop seeing matching nodes
-        while(curHex = this.grid.neighborsOf(curHex, dir)[0]) {
-          if (curHex.toFill || !curHex.tile.matches(target)) { return }
-          curHex.set({ toFill: true, x: curHex.x, y: curHex.y })
+        while(curHex = matchingTiles.neighborsOf(curHex, dir)[0]) {
+          console.count('traverse '+ dir)
+          matchingTiles = matchingTiles.filter(t => {
+            return t.x !== curHex.x || t.y !== curHex.y
+          })
           toFill.push(Object.assign({}, curHex.tile.drawParams(), { index: curHex.tile.index() }))
 
-          // For each node in the line, check its neighbors to see if they match, and add them as new edge nodes
-          var neighborsToCheck = traversalDirections.filter(t => { return t !== dir })
-          this.grid.neighborsOf(curHex, neighborsToCheck).forEach(n => {
-
-            if (!n.toFill && n.tile.matches(target)) {
-              toFill.push(Object.assign({}, n.tile.drawParams(), { index: n.tile.index() }))
-              n.set({ toFill: true, x: n.x, y: n.y })
-              queue.push(n)
-            }
+          // For each node in the line, check its matching neighbors, and add them as new edge nodes
+          matchingTiles.neighborsOf(curHex, neighborsToCheck).forEach(n => {
+            console.count('check neighbors')
+            matchingTiles = matchingTiles.filter(t => {
+              return t.x !== n.x || t.y !== n.y
+            })
+            toFill.push(Object.assign({}, n.tile.drawParams(), { index: n.tile.index() }))
+            queue.push(n)
           })
         }
 
         curHex = initialHex
       })
     }
-
-    toFill.forEach(data => {
-      var tile = this.grid.get(data.index)
-      tile.set({ toFill: undefined, x: tile.x, y: tile.y })
-    })
 
     this.store.commit('updateTile', toFill)
     Cable.sendTileUpdate(toFill)

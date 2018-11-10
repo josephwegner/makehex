@@ -84,6 +84,7 @@ export default class Tile {
   }
 
   matches(matchAgainst, matchType) {
+    var s = Date.now()
     var features = this.features()
     var unmatched = ['color', 'icon', 'fog'].filter(feature => {
       var val = features[feature] === undefined ? null : features[feature]

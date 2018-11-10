@@ -14,7 +14,7 @@ export default {
   rocky: {
     label: 'Rocky',
     tags: ['rocks', 'pebbles', 'dirt', 'ground']
-  }
+  },
   star: {
     label: 'Star',
     tags: ['icons']

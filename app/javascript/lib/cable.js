@@ -32,6 +32,7 @@ class Cable {
   }
 
   sendTileUpdate(data) {
+    return
     this.tileChannel.send({
       method: 'updateTiles',
       payload: data
