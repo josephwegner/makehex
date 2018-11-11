@@ -2,6 +2,12 @@ require 'json'
 
 class TileUpdateWorker
   include Sidekiq::Worker
+  sidekiq_options lock: :until_executing
+
+  sidekiq_retries_exhausted do |msg, _ex|
+    SidekiqUniqueJobs::Digests.del(digest: msg['unique_digest']) if msg['unique_digest']
+  end
+
   def perform(layout_id)
     Redis.current.with do |conn|
       tiles = conn.hgetall(layout_id)

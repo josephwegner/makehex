@@ -32,7 +32,7 @@ class Cable {
   }
 
   sendTileUpdate(data) {
-    return
+    console.log('send tile update')
     this.tileChannel.send({
       method: 'updateTiles',
       payload: data
