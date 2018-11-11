@@ -130,43 +130,32 @@ export default class Grid {
     var target = Object.assign({}, hex.tile.features())
     var queue = [hex]
     var toFill = [Object.assign({}, hex.tile.drawParams(), { index: hex.tile.index() })]
-    var traversalDirections = ['NE','NW','E','W','SE','SW']
+    var drawParams = hex.tile.drawParams()
 
     // pre-compute which tiles might match, so we don't have to check on every iteration
     var matchingTiles = this.grid.filter(t => { return t.tile.matches(target) })
-    console.log('matching tiles', matchingTiles.length)
 
     // We will continue appending new edge nodes here until we stop seeing matching tiles
     while(queue.length) {
-      console.count('queue start')
-      var initialHex = queue.shift()
+      var curHex = queue.shift()
+      toFill.push(Object.assign({}, drawParams, { index: curHex.tile.index() }))
 
-      // Traverse in a straight line in each cardinal direction from the root node
-      traversalDirections.forEach(dir => {
-        console.count('traversal directions start')
-        var neighborsToCheck = traversalDirections.filter(t => { return t !== dir })
-        var curHex = initialHex
-
-        // Continue traversing in a line until you stop seeing matching nodes
-        while(curHex = matchingTiles.neighborsOf(curHex, dir)[0]) {
-          console.count('traverse '+ dir)
-          matchingTiles = matchingTiles.filter(t => {
-            return t.x !== curHex.x || t.y !== curHex.y
-          })
-          toFill.push(Object.assign({}, curHex.tile.drawParams(), { index: curHex.tile.index() }))
-
-          // For each node in the line, check its matching neighbors, and add them as new edge nodes
-          matchingTiles.neighborsOf(curHex, neighborsToCheck).forEach(n => {
-            console.count('check neighbors')
-            matchingTiles = matchingTiles.filter(t => {
-              return t.x !== n.x || t.y !== n.y
-            })
-            toFill.push(Object.assign({}, n.tile.drawParams(), { index: n.tile.index() }))
-            queue.push(n)
-          })
+      var hexCube = curHex.cartesianToCube(curHex)
+      matchingTiles = matchingTiles.filter(tile => {
+        // Using our own distance function to avoid extra lookups. This gets called
+        // A LOT of times, so speed is of the essence
+        var tileCube = tile.cartesianToCube(tile)
+        var distance = Math.max(
+          Math.abs(tileCube.q - hexCube.q),
+          Math.abs(tileCube.r - hexCube.r),
+          Math.abs(tileCube.s - hexCube.s)
+        )
+        if (distance == 1) {
+          queue.push(tile)
+          return false
+        } else {
+          return true
         }
-
-        curHex = initialHex
       })
     }
 
