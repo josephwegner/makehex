@@ -27,7 +27,6 @@ class Cable {
   connectToTile(layoutId) {
     if (this.tileChannel) { this.disconnectFromTile() }
 
-    console.log('connect to tile')
     this.tileChannel = this.ac.subscriptions.create({
       channel: 'TileChannel',
       layout: layoutId
@@ -50,7 +49,6 @@ class Cable {
   }
 
   sendTileUpdate(data) {
-    console.log('sendTileUpdate')
     this.tileChannel.send({
       method: 'updateTiles',
       payload: data

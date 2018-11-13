@@ -38,6 +38,12 @@ export default class Tile {
         .map(p => { return p.hasOwnProperty('value') ? null : p.get() })
         .join('_')
     }, this.render.bind(this))
+
+    this.store.watch((state, getters) => {
+      if (!state.selectedHex) { return false }
+
+      return state.selectedHex.x === this.hex.x && state.selectedHex.y === this.hex.y
+    }, this.renderSelectedHex.bind(this))
   }
 
   render() {
@@ -45,8 +51,17 @@ export default class Tile {
     var features = this.features()
 
     if (!features.fog || this.store.state.editor) {
-      var poly = this.ele.polygon(this.hex.corners().map(({ x, y }) => `${x},${y}`))
-        .stroke({ width: 1, color: '#999' })
+      var strokeWidth = 1
+      var strokeColor = '#999'
+      if (this.store.state.selectedHex) {
+        if(this.store.state.selectedHex.x === this.hex.x && this.store.state.selectedHex.y === this.hex.y) {
+          strokeWidth = 3
+          strokeColor = '#333'
+        }
+      }
+
+      this.hexPoly = this.ele.polygon(this.hex.corners().map(({ x, y }) => `${x},${y}`))
+        .stroke({ width: strokeWidth, color: strokeColor })
         .fill(features.color)
 
       this.ele.click(this.onClick.bind(this))
@@ -56,14 +71,44 @@ export default class Tile {
             .size(this.hex.width(), this.hex.height())
       }
 
+      this.renderEntities()
+
       if (features.fog) {
-        poly.attr('mask', 'url(#fog)')
+        this.hexPoly.attr('mask', 'url(#fog)')
       }
     } else {
       this.ele.polygon(this.hex.corners().map(({ x, y }) => `${x},${y}`))
         .stroke({ width: 1, color: '#999' })
         .fill('#888')
         .attr('mask', 'url(#fog)')
+    }
+  }
+
+  renderSelectedHex() {
+    var strokeWidth = 1
+    var strokeColor = '#999'
+    if(this.store.state.selectedHex &&
+       this.store.state.selectedHex.x === this.hex.x &&
+       this.store.state.selectedHex.y === this.hex.y) {
+
+      strokeWidth = 3
+      strokeColor = '#333'
+      this.ele.front()
+    }
+
+    this.hexPoly.stroke({ width: strokeWidth, color: strokeColor })
+  }
+
+  renderEntities() {
+    var entities = this.features().entities || {}
+
+    if (entities.in && entities.in.link) {
+      this.ele.use('arrow-out-right', '/packs/tilecons.svg')
+        .size('20', '20')
+        .stroke('#000')
+        .attr({ x: this.hex.width() / 4, y: 4 })
+        .addClass('clickable-svg')
+        .click(this.followLink.bind(this, entities.in.link))
     }
   }
 
@@ -79,8 +124,13 @@ export default class Tile {
     return defaultTileFeatures()
   }
 
+  followLink(layoutId, ev) {
+    ev.stopPropagation()
+    this.store.commit('openLayout', layoutId)
+  }
+
   wouldDraw() {
-    return this.store.state.tool.type !== 'draw' || !this.matches(this.store.state.tool)
+    return this.store.state.tool.type === 'fill' || !this.matches(this.store.state.tool)
   }
 
   matches(matchAgainst, matchType) {
@@ -144,20 +194,25 @@ export default class Tile {
 
   onClick() {
     if (!this.store.state.editor) { return }
-    switch (this.store.state.tool.coverage) {
-      case 'single':
-        this.draw()
-        break;
 
-      case 'fill':
-        console.log('before', JSON.stringify(this.store.getters.activeLayout.grid))
-        this.grid.fillFrom(this.hex)
-        console.log('after', JSON.stringify(this.store.getters.activeLayout.grid))
-        break;
+    if (this.store.state.tool.type === 'hex') {
+      this.store.commit('selectHex', {x: this.hex.x, y: this.hex.y })
+    } else {
+      switch (this.store.state.tool.coverage) {
+        case 'single':
+          this.draw()
+          break;
 
-      case  'erase':
-        this.erase()
-        break;
+        case 'fill':
+          console.log('before', JSON.stringify(this.store.getters.activeLayout.grid))
+          this.grid.fillFrom(this.hex)
+          console.log('after', JSON.stringify(this.store.getters.activeLayout.grid))
+          break;
+
+        case  'erase':
+          this.erase()
+          break;
+      }
     }
   }
 }

@@ -13,11 +13,24 @@ export default class Storestore {
           open: false,
           component: null
         },
+        selectedHex: null,
         tool: {
           color: '#008000',
           icon: null,
           type: 'design',
           coverage: 'single'
+        }
+      },
+
+      actions: {
+        async addEntity ({ commit, dispatch, getters, state }, payload) {
+          var index = (getters.activeLayout.width * state.selectedHex.y) + state.selectedHex.x
+          await commit('addEntity', payload)
+          dispatch('sendTileUpdate', index)
+        },
+
+        async sendTileUpdate ({ getters }, index) {
+          Cable.sendTileUpdate(getters.activeLayout.grid[index])
         }
       },
 
@@ -30,6 +43,20 @@ export default class Storestore {
           }
 
           return null
+        },
+
+        selectedHex: state => {
+          if (!state.map || !state.activeLayoutId) return {}
+          var layout = state.map.layouts.find(layout => {
+            return layout.id === state.activeLayoutId
+          })
+
+          if (state.selectedHex) {
+            var index = (layout.width * state.selectedHex.y) + state.selectedHex.x
+            var hex = layout.grid[index]
+
+            return hex ? hex : {}
+          }
         }
       },
 
@@ -48,13 +75,32 @@ export default class Storestore {
           Cable.pushLayout(layout)
         },
 
+        addEntity(state, payload) {
+          if (!state.selectedHex) { return }
+          var layout = state.map.layouts.find((layout) => {
+            return layout.id === state.activeLayoutId
+          })
+          var index = (layout.width * state.selectedHex.y) + state.selectedHex.x
+          if (!layout.grid[index]) {
+            layout.grid[index] = {}
+          }
+          var hex = layout.grid[index]
+
+          if(!hex.entities) {
+            hex.entities = {}
+          }
+
+          layout.grid.splice(index, 1, Object.assign({}, hex, {
+            entities: payload
+          }))
+        },
+
         addMap (state, map) {
           state.map = map
         },
 
         addLayout (state, layout) {
           state.map.layouts.push(layout)
-          console.log(layout, state.map.layouts)
         },
 
         addLeft (state) {
@@ -150,7 +196,15 @@ export default class Storestore {
        },
 
        updateTool(state, payload) {
+         if (state.tool.type === 'hex' && payload.type === 'type' && payload.value !== 'hex') {
+           state.selectedHex = null
+         }
+
          state.tool[payload.type] = payload.value
+       },
+
+       selectHex(state, payload) {
+         state.selectedHex = payload
        },
 
        setDefaultLayout(state, payload) {

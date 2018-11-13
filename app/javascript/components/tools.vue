@@ -7,16 +7,22 @@
          v-bind:selected="type"
          v-bind:onUpdate="updateTool.bind(this, 'type')" />
 
-      <toolbox v-bind:options="coverageOptions"
-               v-bind:selected="coverage"
-               v-bind:onUpdate="updateTool.bind(this, 'coverage')" />
+      <div class="tool-wrapper" v-if="type === 'design' || type === 'fog' ">
+        <toolbox v-bind:options="coverageOptions"
+                 v-bind:selected="coverage"
+                 v-bind:onUpdate="updateTool.bind(this, 'coverage')" />
 
-      <div class="color-picker">
-        <input type="color" v-model="color" />
-      </div>
+        <div class="color-picker">
+          <input type="color" v-model="color" />
+        </div>
 
-      <icon-picker v-bind:selected="icon"
-                   v-bind:onUpdate="updateTool.bind(this, 'icon')" />
+        <icon-picker v-bind:selected="icon"
+                     v-bind:onUpdate="updateTool.bind(this, 'icon')" />
+       </div>
+
+       <div class="tool-wrapper" v-if="type === 'hex'">
+         <layout-link />
+       </div>
     </div>
     <div class="right-tools">
       <button class="toolbar-button" v-on:click="showMetadataModal()">
@@ -32,6 +38,7 @@
 import Toolbox from './toolbox.vue'
 import IconPicker from './icon-picker.vue'
 import LayoutPicker from './layout-picker.vue'
+import LayoutLink from './layout-link.vue'
 import Modal from './modal.vue'
 
 export default {
@@ -43,6 +50,7 @@ export default {
         erase: 'Erase'
       },
       typeOptions: {
+        hex: 'Hex',
         design: 'Design',
         fog: 'Fog of War'
       }
@@ -73,6 +81,7 @@ export default {
     Toolbox,
     IconPicker,
     LayoutPicker,
+    LayoutLink,
     Modal
   },
 
@@ -100,6 +109,10 @@ export default {
   .left-tools {
     display: flex;
     flex-grow: 1;
+  }
+
+  .tool-wrapper {
+    display: flex;
   }
 
   .color-picker {
