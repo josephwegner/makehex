@@ -111,6 +111,7 @@ export default class Storestore {
 
         openLayout(state, layoutId) {
           state.activeLayoutId = layoutId
+          Cable.connectToTile(layoutId)
         },
 
         updateTile(state, payload) {

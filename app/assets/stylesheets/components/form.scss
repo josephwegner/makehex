@@ -30,7 +30,8 @@ button, input {
     display: inline;
 
     &:before {
-      font: normal normal normal 1.5rem FontAwesome;
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
       content: '\f00c';
       text-rendering: auto;
       -webkit-font-smoothing: antialiased;

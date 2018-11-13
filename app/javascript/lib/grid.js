@@ -31,7 +31,9 @@ export default class Grid {
   }
 
   drawGrid (tiles) {
-    if(this.grid) return
+    if(this.grid) {
+      this.draw.clear()
+    }
 
     this.tiles = tiles;
 

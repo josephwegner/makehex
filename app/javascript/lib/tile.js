@@ -144,7 +144,6 @@ export default class Tile {
 
   onClick() {
     if (!this.store.state.editor) { return }
-
     switch (this.store.state.tool.coverage) {
       case 'single':
         this.draw()

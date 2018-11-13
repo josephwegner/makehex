@@ -11,7 +11,7 @@ class Cable {
     this.store.watch((state) => {
       if (!state.map) return null
       return state.map.id
-    }, this.connectToMapResources.bind(this))
+    }, this.connectToMap.bind(this))
   }
 
   disconnectFromMapResources() {
@@ -20,19 +20,37 @@ class Cable {
   }
 
   connectToMapResources() {
+    connectToTile(this.store.state.activeLayoutId)
+    connectToMap(this.store.state.map.id)
+  }
+
+  connectToTile(layoutId) {
+    if (this.tileChannel) { this.disconnectFromTile() }
+
+    console.log('connect to tile')
     this.tileChannel = this.ac.subscriptions.create({
       channel: 'TileChannel',
-      layout: this.store.state.activeLayoutId
+      layout: layoutId
     }, { received: this.layoutUpdate.bind(this) })
+  }
 
+  connectToMap() {
+    if (this.mapChannel) {
+      // noop
+    }
     this.mapChannel = this.ac.subscriptions.create({
       channel: 'MapChannel',
       map: this.store.state.map.id
     }, { received: this.mapUpdate.bind(this) })
   }
 
+  disconnectFromTile() {
+    this.tileChannel.unsubscribe()
+    delete this.tileChannel
+  }
+
   sendTileUpdate(data) {
-    console.log('send tile update')
+    console.log('sendTileUpdate')
     this.tileChannel.send({
       method: 'updateTiles',
       payload: data
