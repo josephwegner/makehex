@@ -1,0 +1,53 @@
+.form-group {
+  width: 100%;
+  margin-bottom: 1rem;
+
+  label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--black);
+    display: block;
+    margin-bottom: .25rem;
+  }
+
+  input {
+    width: 100%;
+    font-size: 1.5rem;
+    color: var(--black);
+    background-color: var(--darkWhite);
+    border: 2px solid var(--darkGray);
+    border-radius: var(--borderRadius);
+    padding: .25rem .5rem;
+  }
+}
+
+.checkbox-group {
+  label {
+    display: inline;
+    
+    &:before {
+      font: normal normal normal 1.5rem FontAwesome;
+      content: '\f00c';
+      text-rendering: auto;
+      -webkit-font-smoothing: antialiased;
+      background-color: var(--darkWhite);
+      border-radius: var(--borderRadius);
+      padding: .25rem;
+      margin-right: .5rem;
+      vertical-align: middle;
+      cursor: pointer;
+      transition: color .125s;
+      color: var(--darkWhite);
+    }
+  }
+
+  input {
+    display: none;
+  }
+
+  :checked ~ label {
+    &:before {
+      color: var(--black);
+    }
+  }
+}
