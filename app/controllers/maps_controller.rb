@@ -23,9 +23,18 @@ class MapsController < ApplicationController
     redirect_to root_path
   end
 
+  def update
+    @map = Map.find_by_id(params[:id])
+    if @map.update_attributes(secure_params)
+      render :json => { success: true }
+    else
+      render :json => { success: false }
+    end
+  end
+
   private
 
   def secure_params
-    params.require(:map).permit(:name)
+    params.require(:map).permit(:name, :default_layout_id)
   end
 end

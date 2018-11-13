@@ -17,16 +17,19 @@
                    v-bind:onUpdate="updateTool.bind(this, 'icon')" />
     </div>
     <div class="right-tools">
-      <button>
+      <button v-on:click="showMetadataModal()">
         <i class="fa fa-cog"></i>
       </button>
     </div>
+
+    <Modal />
   </div>
 </template>
 
 <script>
 import Toolbox from './toolbox.vue'
 import IconPicker from './icon-picker.vue'
+import Modal from './modal.vue'
 
 export default {
   data: function () {
@@ -65,12 +68,17 @@ export default {
 
   components: {
     Toolbox,
-    IconPicker
+    IconPicker,
+    Modal
   },
 
   methods: {
     updateTool: function(type, value) {
       this.$store.commit('updateTool', { type, value })
+    },
+
+    showMetadataModal: function() {
+      this.$store.commit('showModal', 'Metadata')
     }
   }
 }
@@ -100,6 +108,7 @@ export default {
     color: var(--darkWhite);
     font-size: 18px;
     padding: 0;
+    cursor: pointer;
   }
 
   .color-picker {

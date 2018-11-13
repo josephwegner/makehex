@@ -6,9 +6,13 @@ export default class Storestore {
   constructor() {
     this.store = new Vuex.Store({
       state: {
+        activeLayoutId: null,
         editor: false,
         map: null,
-        activeLayoutId: null,
+        modal: {
+          open: false,
+          component: null
+        },
         tool: {
           color: '#008000',
           icon: null,
@@ -95,6 +99,11 @@ export default class Storestore {
           Cable.pushLayout(layout)
         },
 
+        closeModal (state) {
+          state.modal.open = false
+          state.modal.component = null
+        },
+
         openLayout(state, layoutId) {
           state.activeLayoutId = layoutId
         },
@@ -138,8 +147,27 @@ export default class Storestore {
          state.tool[payload.type] = payload.value
        },
 
+       setDefaultLayout(state, payload) {
+         state.map.default_layout_id = payload
+       },
+
        setEditor(state, payload) {
          state.editor = payload
+       },
+
+       setLayoutName(state, payload) {
+         state.map.layouts.find((layout) => {
+           return layout.id === state.activeLayoutId
+         }).name = payload
+       },
+
+       setMapName(state, payload) {
+         state.map.name = payload
+       },
+
+       showModal(state, payload) {
+         state.modal.open = true
+         state.modal.component = payload
        }
      }
     })
