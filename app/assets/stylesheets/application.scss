@@ -14,10 +14,6 @@
  *= require_self
  */
 
- /*
-  *= require font-awesome
-  */
-
 html,body {
   margin: 0;
   height: 100%;
@@ -72,4 +68,6 @@ html,body {
 }
 
 @import './fonts.scss';
-@import './components/form.scss'
+@import './components/form.scss';
+@import "font-awesome-sprockets";
+@import "font-awesome";

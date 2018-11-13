@@ -1,3 +1,7 @@
+button, input {
+  outline: none;
+}
+
 .form-group {
   width: 100%;
   margin-bottom: 1rem;
@@ -24,7 +28,7 @@
 .checkbox-group {
   label {
     display: inline;
-    
+
     &:before {
       font: normal normal normal 1.5rem FontAwesome;
       content: '\f00c';

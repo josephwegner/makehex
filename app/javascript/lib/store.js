@@ -52,6 +52,11 @@ export default class Storestore {
           state.map = map
         },
 
+        addLayout (state, layout) {
+          state.map.layouts.push(layout)
+          console.log(layout, state.map.layouts)
+        },
+
         addLeft (state) {
           var layout = state.map.layouts.find((layout) => {
             return layout.id === state.activeLayoutId

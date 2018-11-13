@@ -1,6 +1,6 @@
 <template>
   <div class="icon-picker">
-    <div v-if="open" class="icon-modal">
+    <div v-if="open" class="toolbar-modal">
       <svg v-for="(details, icon) in tilecons"
            v-on:click="select(icon)"
            v-bind:class="{ selected: icon === selected } ">
@@ -66,34 +66,13 @@ export default {
     position: relative;
   }
 
-  .icon-modal {
-    background-color: var(--midGray);
-    border-radius: var(--borderRadius);
-    position: absolute;
-    left: 50%;
-    bottom: 100%;
-    transform: translateX(-50%) translateY(-10px);
+  .toolbar-modal {
+    width: 15rem;
     display: flex;
     flex-wrap: wrap;
-    width: 240px;
-    box-shadow: 0 0 10px 0 var(--darkGray);
   }
 
-  .icon-modal:after {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    border-top: 7px solid transparent;
-    border-bottom: 7px solid transparent;
-    border-left: 7px solid var(--midGray);
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: rotate(90deg) translateX(-50%);
-  }
-
-  .icon-modal svg {
+  .toolbar-modal svg {
     height: 32px;
     width: 32px;
     background-color: var(--darkWhite);
@@ -103,7 +82,7 @@ export default {
     box-sizing: border-box;
   }
 
-  .icon-modal .selected {
+  .toolbar-modal .selected {
     background-color: var(--white);
   }
 

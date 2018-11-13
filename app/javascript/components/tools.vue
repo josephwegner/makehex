@@ -1,6 +1,8 @@
 <template>
   <div class="footer-tools">
     <div class="left-tools">
+      <layout-picker />
+
       <toolbox v-bind:options="typeOptions"
          v-bind:selected="type"
          v-bind:onUpdate="updateTool.bind(this, 'type')" />
@@ -17,8 +19,8 @@
                    v-bind:onUpdate="updateTool.bind(this, 'icon')" />
     </div>
     <div class="right-tools">
-      <button v-on:click="showMetadataModal()">
-        <i class="fa fa-cog"></i>
+      <button class="toolbar-button" v-on:click="showMetadataModal()">
+        <i class="fas fa-cog"></i>
       </button>
     </div>
 
@@ -29,6 +31,7 @@
 <script>
 import Toolbox from './toolbox.vue'
 import IconPicker from './icon-picker.vue'
+import LayoutPicker from './layout-picker.vue'
 import Modal from './modal.vue'
 
 export default {
@@ -69,6 +72,7 @@ export default {
   components: {
     Toolbox,
     IconPicker,
+    LayoutPicker,
     Modal
   },
 
@@ -98,19 +102,6 @@ export default {
     flex-grow: 1;
   }
 
-  button {
-    height: 100%;
-    width: var(--toolWidth);
-    box-sizing: border-box;
-    border: 2px solid var(--darkGray);
-    border-radius: var(--borderRadius);
-    background: var(--midGray);
-    color: var(--darkWhite);
-    font-size: 18px;
-    padding: 0;
-    cursor: pointer;
-  }
-
   .color-picker {
     height: 100%;
     width: var(--toolWidth);
@@ -135,4 +126,47 @@ export default {
   	border: 2px solid var(--darkGray);
     border-radius: var(--borderRadius);
   }
+</style>
+
+<style>
+
+.toolbar-button {
+  height: 100%;
+  width: var(--toolWidth);
+  box-sizing: border-box;
+  border: 2px solid var(--darkGray);
+  border-radius: var(--borderRadius);
+  background: var(--midGray);
+  color: var(--darkWhite);
+  font-size: 18px;
+  padding: 0;
+  cursor: pointer;
+}
+
+
+
+.toolbar-modal {
+  background-color: var(--midGray);
+  border-radius: var(--borderRadius);
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%) translateY(-1rem);
+  box-shadow: 0 0 10px 0 var(--darkGray);
+}
+
+.toolbar-modal:after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 7px solid var(--midGray);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: rotate(90deg) translateX(-50%);
+}
+
 </style>

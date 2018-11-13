@@ -1,4 +1,13 @@
 class LayoutsController < ApplicationController
+
+  def create
+    @map = Map.find(params[:map])
+    @layout = Layout.new(secure_params)
+    @layout.map = @map
+    @layout.save
+    render :json => @layout
+  end
+
   def update
     @layout = Layout.find_by_id(params[:id])
     if @layout.update_attributes(secure_params)

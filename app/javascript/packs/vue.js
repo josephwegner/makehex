@@ -9,6 +9,10 @@ import Store from '../lib/store.js'
 
 Vue.use(Vuex)
 
+//load directives
+import FocusInput from '../directives/focus-input.js'
+FocusInput(Vue)
+
 document.addEventListener('DOMContentLoaded', () => {
   var root = document.getElementsByClassName('map-root')[0]
   var mapId = root.getAttribute('data-map-id')

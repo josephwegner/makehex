@@ -15,7 +15,7 @@ class MapsController < ApplicationController
 
   def create
     @map = Map.new(secure_params)
-    @layout = Layout.create(name: 'Untitled', map: @map, height: 15, width: 25, grid: [])
+    @layout = Layout.create(name: 'Untitled', map: @map)
     @map.update(default_layout: @layout, user: current_user)
     @layout.save
     @map.save
