@@ -32,6 +32,10 @@ export default class Grid {
 
   drawGrid (tiles) {
     if(this.grid) {
+      this.grid.forEach(hex => {
+        hex.tile.teardown()
+      })
+
       this.draw.clear()
     }
 

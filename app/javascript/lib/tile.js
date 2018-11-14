@@ -10,12 +10,11 @@ function defaultTileFeatures() {
 
 export default class Tile {
 
-
-
   constructor(hex, grid, store) {
     this.hex = hex
     this.grid = grid
     this.store = store
+    this.objectsWithListeners = []
 
 
     const { x, y } = this.hex.toPoint()
@@ -26,8 +25,21 @@ export default class Tile {
     this.render()
   }
 
+  clearListeners() {
+    while(this.objectsWithListeners.length) {
+      var obj = this.objectsWithListeners.shift()
+      obj.off('click')
+    }
+  }
+
+  teardown() {
+    this.propertyWatcher()
+    this.selectedWatcher()
+    this.clearListeners()
+  }
+
   watch() {
-    this.store.watch((state, getters) => {
+    this.propertyWatcher = this.store.watch((state, getters) => {
       // This is some hacky shit right here, but it is the fastest way I can find
       // to diff the objects
       // I would be very open to suggestions of better ways to do this
@@ -39,7 +51,7 @@ export default class Tile {
         .join('_')
     }, this.render.bind(this))
 
-    this.store.watch((state, getters) => {
+    this.selectedWatcher = this.store.watch((state, getters) => {
       if (!state.selectedHex) { return false }
 
       return state.selectedHex.x === this.hex.x && state.selectedHex.y === this.hex.y
@@ -47,6 +59,7 @@ export default class Tile {
   }
 
   render() {
+    this.clearListeners()
     this.ele.clear()
     var features = this.features()
 
@@ -65,6 +78,7 @@ export default class Tile {
         .fill(features.color)
 
       this.ele.click(this.onClick.bind(this))
+      this.objectsWithListeners.push(this.ele)
 
       if (features.icon) {
         this.ele.use(features.icon, '/packs/tilecons.svg')
@@ -103,12 +117,13 @@ export default class Tile {
     var entities = this.features().entities || {}
 
     if (entities.in && entities.in.link) {
-      this.ele.use('arrow-out-right', '/packs/tilecons.svg')
+      var link = this.ele.use('arrow-out-right', '/packs/tilecons.svg')
         .size('20', '20')
         .stroke('#000')
         .attr({ x: this.hex.width() / 4, y: 4 })
         .addClass('clickable-svg')
         .click(this.followLink.bind(this, entities.in.link))
+      this.objectsWithListeners.push(link)
     }
   }
 
