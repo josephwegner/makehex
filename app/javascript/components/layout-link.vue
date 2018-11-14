@@ -4,9 +4,14 @@
       <ul>
         <li v-for="layout in layouts"
             v-on:click="select(layout.id)"
-            v-bind:class="{selected: layout.id === selectedLayout }">
+            v-bind:class="{selected: layout.id === (selectedLayout ? selectedLayout.id : null) }">
 
           {{ layout.name }}
+        </li>
+        <li v-on:click="select(null)"
+            v-bind:class="{selected: selectedLayout === null }">
+
+            Nowhere
         </li>
       </ul>
     </div>
@@ -55,6 +60,8 @@ export default {
           return -1
         }
         return 0
+      }).filter(l => {
+        return l.id !== this.$store.state.activeLayoutId
       })
     }
   },

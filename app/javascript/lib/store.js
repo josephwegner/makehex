@@ -30,7 +30,7 @@ export default class Storestore {
         },
 
         async sendTileUpdate ({ getters }, index) {
-          Cable.sendTileUpdate(getters.activeLayout.grid[index])
+          Cable.sendTileUpdate(Object.assign({}, getters.activeLayout.grid[index], {index: index}))
         }
       },
 
@@ -169,23 +169,11 @@ export default class Storestore {
           }
 
           payload.forEach(updates => {
-            var tile = layout.grid[updates.index]
-
-            if(tile) {
-              for (var feature in updates) {
-                if (feature === 'index') continue
-                if (tile.hasOwnProperty(feature)) {
-                  tile[feature] = updates[feature]
-                } else {
-                  Vue.set(tile, feature, updates[feature])
-                }
-              }
-            } else {
-              var features = Object.assign({}, updates)
-              var index = updates.index
-
-              Vue.set(layout.grid, index, Object.assign({}, updates, { index: undefined }))
-            }
+            var tile = layout.grid[updates.index] || {}
+            var index = updates.index
+            var finalValues = Object.assign({}, tile, updates)
+            delete finalValues.index
+            layout.grid.splice(index, 1, finalValues)
           })
        },
 

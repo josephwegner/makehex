@@ -40,15 +40,8 @@ export default class Tile {
 
   watch() {
     this.propertyWatcher = this.store.watch((state, getters) => {
-      // This is some hacky shit right here, but it is the fastest way I can find
-      // to diff the objects
-      // I would be very open to suggestions of better ways to do this
-      var tile = getters.activeLayout.grid[this.index()]
-      if (!tile) { return null; }
-
-      return Object.values(Object.getOwnPropertyDescriptors(tile))
-        .map(p => { return p.hasOwnProperty('value') ? null : p.get() })
-        .join('_')
+      var tile = getters.activeLayout.grid[this.index()] || null
+      return tile
     }, this.render.bind(this))
 
     this.selectedWatcher = this.store.watch((state, getters) => {
