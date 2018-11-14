@@ -9,8 +9,7 @@
  * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
- *
- *= require_tree .
+ * .
  *= require_self
  */
 
@@ -20,6 +19,7 @@ html,body {
   width: 100%;
   font-size: 16px;
   font-family: 'Source Sans Pro', sans-serif;
+  background-color: var(--midGray);
 }
 
 :root {
@@ -55,6 +55,7 @@ html,body {
   --midGreen: #105D2A;
   --darkGreen: #003E15;
 
+  --lightestGray: #505050;
   --lightGray: #3b3b3b;
   --midGray: #3c3c3c;
   --gray: #333;

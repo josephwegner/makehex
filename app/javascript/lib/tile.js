@@ -58,11 +58,11 @@ export default class Tile {
 
     if (!features.fog || this.store.state.editor) {
       var strokeWidth = 1
-      var strokeColor = '#999'
+      var strokeColor = '#232323'
       if (this.store.state.selectedHex) {
         if(this.store.state.selectedHex.x === this.hex.x && this.store.state.selectedHex.y === this.hex.y) {
           strokeWidth = 3
-          strokeColor = '#333'
+          strokeColor = '#999'
         }
       }
 
@@ -85,21 +85,21 @@ export default class Tile {
       }
     } else {
       this.ele.polygon(this.hex.corners().map(({ x, y }) => `${x},${y}`))
-        .stroke({ width: 1, color: '#999' })
-        .fill('#888')
+        .stroke({ width: 1, color: '#232323' })
+        .fill('#999')
         .attr('mask', 'url(#fog)')
     }
   }
 
   renderSelectedHex() {
     var strokeWidth = 1
-    var strokeColor = '#999'
+    var strokeColor = '#232323'
     if(this.store.state.selectedHex &&
        this.store.state.selectedHex.x === this.hex.x &&
        this.store.state.selectedHex.y === this.hex.y) {
 
       strokeWidth = 3
-      strokeColor = '#333'
+      strokeColor = '#999'
       this.ele.front()
     }
 

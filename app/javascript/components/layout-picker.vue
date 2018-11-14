@@ -9,7 +9,7 @@
           {{ layout.name }}
         </li>
       </ul>
-      <button class="add-layout-button" v-on:click="addLayoutForm = !addLayoutForm">Add Layout</button>
+      <button class="form-submit" v-on:click="addLayoutForm = !addLayoutForm">Add Layout</button>
       <div v-if="addLayoutForm" class="add-layout-form">
         <input type="text" placeholder="Layout Name" v-model="newLayoutName" v-focus />
         <button class="submit-layout" v-on:click="addLayout()">
@@ -119,6 +119,7 @@ export default {
     padding: .5rem;
     transition: background .125s;
     cursor: pointer;
+    color: var(--white);
   }
 
   li:first-child {
@@ -140,23 +141,8 @@ export default {
     background: var(--gray);
   }
 
-  .add-layout-button {
-    background-color: var(--blue);
-    transition: background-color .125s;
-    cursor: pointer;
-    width: 100%;
-    min-width: 10rem;
-    padding: .5rem 0;
-    color: var(--white);
-    border: none;
-    border-radius: var(--borderRadius);
-    margin-top: .5rem;
-    font-weight: 700;
-
-  }
-
-  .add-layout-button:hover {
-    background-color: var(--midBlue);
+  .form-submit {
+    font-size: .75rem;
   }
 
   .add-layout-form {
@@ -170,6 +156,7 @@ export default {
     font-size: 1rem;
     padding: .5rem;
     margin-top: .5rem;
+    color: var(--white);
   }
 
   .submit-layout {

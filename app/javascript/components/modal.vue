@@ -54,7 +54,7 @@ export default {
    left: 50%;
    transform: translateX(-50%) translateY(-50%);
    width: 44rem;
-   background: var(--lightGray);
+   background: var(--lightestGray);
    border-radius: var(--borderRadius);
    border: 2px solid var(--gray);
    padding: 1rem;
@@ -76,7 +76,7 @@ export default {
 </style>
 
 <style>
-  * {
+  .modal-bg * {
     color: var(--white);
   }
 </style>

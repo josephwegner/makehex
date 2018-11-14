@@ -100,14 +100,14 @@ export default class Grid {
     verticalGrid.forEach((hex, index) => {
       var points = hex.toPoint()
       this.addRight.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
-        .stroke({ width: 1, color: '#dcdcdc' })
-        .fill('#fff')
+        .stroke({ width: 1, color: '#333' })
+        .fill('#505050')
         .translate(hex.width() + points.x, points.y + hex.corners()[1].y)
 
       //if (index === 0) return
       this.addLeft.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
-        .stroke({ width: 1, color: '#dcdcdc' })
-        .fill('#fff')
+        .stroke({ width: 1, color: '#333' })
+        .fill('#505050')
         .translate(points.x, points.y)
     })
 
@@ -115,8 +115,8 @@ export default class Grid {
       if (index === 0) return
       var points = hex.toPoint()
       this.addBottom.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
-        .stroke({ width: 1, color: '#dcdcdc' })
-        .fill('#fff')
+        .stroke({ width: 1, color: '#333' })
+        .fill('#505050')
         .translate(points.x, hex.corners()[1].y + points.y)
     })
 
@@ -124,8 +124,8 @@ export default class Grid {
       if (index === 0 || index === unitsRight) return
       var points = hex.toPoint()
       this.addTop.polygon(hex.corners().map(({ x, y }) => `${x},${y}`))
-        .stroke({ width: 1, color: '#dcdcdc' })
-        .fill('#fff')
+        .stroke({ width: 1, color: '#333' })
+        .fill('#505050')
         .translate(points.x, points.y)
     })
   }

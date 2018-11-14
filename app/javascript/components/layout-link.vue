@@ -120,6 +120,7 @@ export default {
     padding: .5rem;
     transition: background .125s;
     cursor: pointer;
+    color: var(--white);
   }
 
   li:first-child {

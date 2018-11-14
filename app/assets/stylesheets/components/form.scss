@@ -22,12 +22,17 @@ button, input {
     border: 2px solid var(--darkGray);
     border-radius: var(--borderRadius);
     padding: .25rem .5rem;
+    box-sizing: border-box;
   }
 }
 
 .checkbox-group {
   label {
-    display: inline;
+    font-size: 1rem;
+    display: inline-block;
+    font-weight: 600;
+    color: var(--black);
+    padding-bottom: .25rem;
 
     &:before {
       font-family: 'Font Awesome 5 Free';
@@ -54,5 +59,34 @@ button, input {
     &:before {
       color: var(--black);
     }
+  }
+}
+
+.form-submit {
+  background-color: var(--blue);
+  transition: background-color .125s;
+  cursor: pointer;
+  width: 100%;
+  min-width: 10rem;
+  padding: .5rem 0;
+  color: var(--white);
+  border: none;
+  border-radius: var(--borderRadius);
+  margin-top: .5rem;
+  font-weight: 700;
+  font-size: 1rem;
+
+  &:hover {
+    background-color: var(--midBlue);
+  }
+}
+
+.form-footer-links {
+  margin-top: 1rem;
+  
+  a {
+    color: var(--darkGray);
+    padding: .25rem 0;
+    display: block;
   }
 }
