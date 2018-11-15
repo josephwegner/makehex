@@ -24,3 +24,9 @@ function hexClick(component, index) {
     overflow: scroll;
   }
 </style>
+
+<style>
+  #hex-holder > svg {
+    z-index: 2;
+  }
+</style>

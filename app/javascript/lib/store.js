@@ -14,6 +14,7 @@ export default class Storestore {
           component: null
         },
         selectedHex: null,
+        hoveredHex: null,
         tool: {
           color: '#008000',
           icon: null,
@@ -153,6 +154,10 @@ export default class Storestore {
         closeModal (state) {
           state.modal.open = false
           state.modal.component = null
+        },
+
+        hoverHex(state, payload) {
+          state.hoveredHex = payload
         },
 
         openLayout(state, layoutId) {

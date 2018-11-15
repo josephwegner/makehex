@@ -30,16 +30,22 @@
       </button>
     </div>
 
+    <toolbar-panes>
+      <hex-zoom />
+    </toolbar-panes>
+
     <Modal />
   </div>
 </template>
 
 <script>
 import Toolbox from './toolbox.vue'
+import HexZoom from './panes/hex-zoom.vue'
 import IconPicker from './icon-picker.vue'
 import LayoutPicker from './layout-picker.vue'
 import LayoutLink from './layout-link.vue'
 import Modal from './modal.vue'
+import ToolbarPanes from './toolbar-panes.vue'
 
 export default {
   data: function () {
@@ -79,10 +85,12 @@ export default {
 
   components: {
     Toolbox,
+    HexZoom,
     IconPicker,
     LayoutPicker,
     LayoutLink,
-    Modal
+    Modal,
+    ToolbarPanes
   },
 
   methods: {
@@ -104,6 +112,8 @@ export default {
     display: flex;
     padding: 8px;
     box-sizing: border-box;
+    position: relative;
+    z-index: 1;
   }
 
   .left-tools {

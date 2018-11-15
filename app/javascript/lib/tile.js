@@ -29,6 +29,7 @@ export default class Tile {
     while(this.objectsWithListeners.length) {
       var obj = this.objectsWithListeners.shift()
       obj.off('click')
+      obj.off('mouseover')
     }
   }
 
@@ -66,11 +67,17 @@ export default class Tile {
         }
       }
 
-      this.hexPoly = this.ele.polygon(this.hex.corners().map(({ x, y }) => `${x},${y}`))
+      this.hexPoly = this.ele.use('hex', '/packs/tilecons.svg')
+        .size(39, 46)
         .stroke({ width: strokeWidth, color: strokeColor })
         .fill(features.color)
 
+      /*this.ele.polygon(this.hex.corners().map(({ x, y }) => `${x},${y}`))
+        .stroke({ width: strokeWidth, color: strokeColor })
+        .fill(features.color)*/
+
       this.ele.click(this.onClick.bind(this))
+      this.ele.mouseover(this.onHover.bind(this))
       this.objectsWithListeners.push(this.ele)
 
       if (features.icon) {
@@ -222,6 +229,10 @@ export default class Tile {
           break;
       }
     }
+  }
+
+  onHover() {
+    this.store.commit('hoverHex', {x: this.hex.x, y: this.hex.y })
   }
 }
 
