@@ -37,7 +37,7 @@ export default class Storestore {
           Cable.sendTileUpdate(Object.assign({}, getters.activeLayout.grid[index], {index: index}))
         },
 
-        eraseTile ({commit, state, getters}) {
+        eraseTile ({commit, state, getters}, index) {
           var tile = getters.activeLayout.grid[index] || {}
           var newFeatures = {
             index: index
@@ -50,7 +50,10 @@ export default class Storestore {
 
           switch (state.tool.type) {
             case 'design':
-              Object.assign(newFeatures, {fog: currentFeatures.fog})
+              Object.assign(newFeatures, {fog: currentFeatures.fog}, {
+                icon: null,
+                color: '#FFFFFF'
+              })
               break
 
             case 'fog':

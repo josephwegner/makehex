@@ -168,7 +168,8 @@ export default {
             //Check old hex for a match
             if(this.tilesMatch(oldHex, section) || this.tilesMatch(newHex, section)) {
               var hasNeighbor = section.locations.some((index) => {
-                return this.tilesNeighbors(this.cubeCoords(index), this.cubeCoords(oldHex.index))
+                return index === oldHex.index ||
+                       this.tilesNeighbors(this.cubeCoords(index), this.cubeCoords(oldHex.index))
               })
 
               if(hasNeighbor) {
@@ -290,6 +291,7 @@ export default {
       })
     }, (newGrid, oldGrid) => {
       oldGrid = oldGrid || []
+      newGrid = newGrid || []
 
       var changed = []
       if(!oldGrid.hasOwnProperty())

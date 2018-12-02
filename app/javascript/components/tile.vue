@@ -161,11 +161,11 @@ export default {
 
     onHover($event) {
       this.$emit('hover', this.index)
-      if (this.viewOnly || !this.dragging) { return }
+      if (this.viewOnly) { return }
       if (this.$store.state.tool.type !== 'hex') {
         this.$store.commit('hoverHex', {q: this.coords().q, r: this.coords().r })
       }
-      if ($event.buttons) {
+      if ($event.buttons && this.dragging) {
         this.onClick()
       }
     },
