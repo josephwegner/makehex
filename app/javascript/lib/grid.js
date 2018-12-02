@@ -7,11 +7,11 @@ const DEBUG_LOG = false
 
 export default class Grid {
   constructor (element, store) {
-    this.draw = SVG(element)
+    //this.draw = SVG(element)
     this.hexSize = 20
     this.store = store
 
-    this.watch()
+    //this.watch()
   }
 
   watch () {

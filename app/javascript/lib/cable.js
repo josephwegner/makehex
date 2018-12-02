@@ -49,6 +49,7 @@ class Cable {
   }
 
   sendTileUpdate(data) {
+    return
     this.tileChannel.send({
       method: 'updateTiles',
       payload: data
@@ -56,6 +57,7 @@ class Cable {
   }
 
   pushLayout(layout) {
+    return
     this.tileChannel.send({
       method: 'pushLayout',
       payload: layout

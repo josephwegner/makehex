@@ -8,6 +8,7 @@ import Cable from '../lib/cable.js'
 import Store from '../lib/store.js'
 
 Vue.use(Vuex)
+Vue.config.performance = true
 
 //load directives
 import FocusInput from '../directives/focus-input.js'

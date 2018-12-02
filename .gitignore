@@ -4,3 +4,4 @@ log
 public/packs
 .env
 dump.rdb
+**/.DS_Store

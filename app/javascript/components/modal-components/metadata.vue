@@ -78,7 +78,6 @@ export default {
     },
 
     save () {
-      console.log('save')
       Promise.all([
         API.updateMap(this.$store.state.map.id, {
           name: this.mapName,

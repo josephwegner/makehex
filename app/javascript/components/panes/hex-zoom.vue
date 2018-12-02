@@ -5,29 +5,45 @@
       <svg xmlns="http://www.w3.org/2000/svg"
            version="1.1"
            xmlns:xlink="http://www.w3.org/1999/xlink"
-           v-if="hex">
+           viewBox="0 0 39 46">
 
-        <use xlink:href="/packs/tilecons.svg#hex"
-             stroke-width="1"
-             v-bind:fill="hex.color || '#FFF'">
-        </use>
-      </svg>
+        <tile v-if="hex"
+          v-bind="hex"
+          v-bind:index="1"
+          v-bind:gridWidth="1"
+          v-bind:viewOnly="true"
+          v-bind:xOffset="-17"
+          v-bind:yOffset="-30" />
+
+        </svg>
     </div>
   </div>
 </template>
 
 <script>
+import Tile from '../tile.vue'
+
 export default {
   computed: {
     hex() {
-      console.log('hex', this.$store.state.hoveredHex)
-      if (!this.$store.state.hoveredHex) { return null }
       var layout = this.$store.getters.activeLayout
-      var hex = this.$store.state.hoveredHex
+      var hex;
+      if (this.$store.state.tool.type === 'hex') {
+        hex = this.$store.state.selectedHex
+      } else {
+        hex = this.$store.state.hoveredHex
+      }
 
-      var index = (layout.width * hex.y) + hex.x
+      if (!hex) { return null }
+
+      var index = (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
+
       return layout.grid[index]
     }
+  },
+
+  components: {
+    Tile
   }
 }
 
@@ -38,7 +54,12 @@ export default {
     width: 12rem;
   }
 
+  .pane-content {
+    text-align: center;
+  }
+
   svg {
-    width: 100%;
+    width: 8rem;
+    display: inline;
   }
 </style>

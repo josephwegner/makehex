@@ -1,14 +1,15 @@
 <template>
   <div id="hex-holder">
+    <grid />
   </div>
 </template>
 
 <script>
-import Grid from '../lib/grid.js'
+import Grid from './grid.vue'
 
 export default {
-  mounted: function () {
-    new Grid(this.$el, this.$store)
+  components: {
+    Grid
   }
 }
 

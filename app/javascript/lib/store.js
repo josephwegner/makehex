@@ -25,13 +25,65 @@ export default class Storestore {
 
       actions: {
         async addEntity ({ commit, dispatch, getters, state }, payload) {
-          var index = (getters.activeLayout.width * state.selectedHex.y) + state.selectedHex.x
+          var layout = getters.activeLayout
+          var hex = state.selectedHex
+          var index = (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
+
           await commit('addEntity', payload)
           dispatch('sendTileUpdate', index)
         },
 
         async sendTileUpdate ({ getters }, index) {
           Cable.sendTileUpdate(Object.assign({}, getters.activeLayout.grid[index], {index: index}))
+        },
+
+        eraseTile ({commit, state, getters}) {
+          var tile = getters.activeLayout.grid[index] || {}
+          var newFeatures = {
+            index: index
+          }
+          var currentFeatures = {
+            color: tile.color,
+            fog: tile.fog,
+            icon: tile.icon
+          }
+
+          switch (state.tool.type) {
+            case 'design':
+              Object.assign(newFeatures, {fog: currentFeatures.fog})
+              break
+
+            case 'fog':
+              Object.assign(newFeatures, currentFeatures, {fog: false})
+              break
+          }
+
+          commit('updateTile', newFeatures)
+          Cable.sendTileUpdate(newFeatures)
+        },
+
+        drawTile ({ commit, state, getters }, index) {
+          var tile = getters.activeLayout.grid[index] || {}
+          var data = {
+            color: tile.color,
+            fog: tile.fog,
+            icon: tile.icon,
+            index: index
+          }
+
+          switch(state.tool.type) {
+            case 'design':
+              data.color = state.tool.color || data.color
+              data.icon = state.tool.icon || data.icon
+              break
+
+            case 'fog':
+              data.fog = state.tool.coverage === 'erase' ? false : true
+              break
+          }
+
+          commit('updateTile', data)
+          Cable.sendTileUpdate(data)
         }
       },
 
@@ -53,10 +105,11 @@ export default class Storestore {
           })
 
           if (state.selectedHex) {
-            var index = (layout.width * state.selectedHex.y) + state.selectedHex.x
-            var hex = layout.grid[index]
+            var hex = state.selectedHex
+            var index = (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
+            var selectedHex = layout.grid[index]
 
-            return hex ? hex : {}
+            return selectedHex ? selectedHex : {}
           }
         }
       },
@@ -81,7 +134,8 @@ export default class Storestore {
           var layout = state.map.layouts.find((layout) => {
             return layout.id === state.activeLayoutId
           })
-          var index = (layout.width * state.selectedHex.y) + state.selectedHex.x
+          var hex = state.selectedHex
+          var index = (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
           if (!layout.grid[index]) {
             layout.grid[index] = {}
           }
@@ -98,6 +152,12 @@ export default class Storestore {
 
         addMap (state, map) {
           state.map = map
+          state.map.layouts.forEach(layout => {
+            var empty = new Array(layout.width * layout.height).fill({})
+            layout.grid = empty.map((cell, index) => {
+              return layout.grid[index] || {}
+            })
+          })
         },
 
         addLayout (state, layout) {

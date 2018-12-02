@@ -19,6 +19,7 @@ export default {
     bottom: 100%;
     padding: 0 2rem;
     box-sizing: border-box;
+    pointer-events: none;
   }
 </style>
 
