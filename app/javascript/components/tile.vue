@@ -19,12 +19,13 @@
          v-bind:width="width"></use>
 
     <use v-if="inEntities.link && !fog"
-         href="/packs/tilecons.svg#arrow-out-right"
+         href="#arrow-out-right"
          class="clickable-svg"
          height="20"
          width="20"
          x="11.5"
-         y="4"></use>
+         y="4"
+         v-on:click="openLayout(inEntities.link)"></use>
   </g>
 </template>
 
@@ -159,6 +160,10 @@ export default {
       if ($event.buttons) {
         this.onClick()
       }
+    },
+
+    openLayout(id) {
+      this.$store.commit('openLayout', id)
     }
   }
 }

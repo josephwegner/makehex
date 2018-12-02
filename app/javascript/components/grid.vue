@@ -50,7 +50,8 @@
        v-on:mouseup="dragging = false"
        v-on:mouseleave="dragging = false">
 
-      <tile v-for="(tile, index) in regularTiles"
+      <tile v-for="(tile, index) in grid"
+            v-if="index !== selectedIndex"
             v-bind:key="key(index)"
             v-bind="tile"
             v-bind:index="index"
@@ -64,7 +65,7 @@
             v-bind="grid[selectedIndex]"
             v-bind:index="selectedIndex"
             v-bind:gridWidth="width"
-            v-bind:yOffset="31"
+            v-bind:yOffset="60"
             v-bind:xOffset="35"
             v-on:click="onTileClick"
             v-on:hover="onTileHover" />
@@ -102,14 +103,6 @@ export default {
     height () {
       if (!this.$store.getters.activeLayout) { return 0 }
       return this.$store.getters.activeLayout.height
-    },
-
-    regularTiles () {
-      if (!this.selectedIndex) { return this.grid }
-
-      return this.grid.filter((tile, index) => {
-        return index !== this.selectedIndex
-      })
     },
 
     selectedIndex () {
