@@ -73,6 +73,10 @@ export default {
       type: String,
       default: '#FFF'
     },
+    dragging: {
+      type: Boolean,
+      default: false
+    },
     icon: {
       type: String
     },
@@ -145,7 +149,7 @@ export default {
             break;
 
           case 'fill':
-            this.fillFromIndex(this.index)
+            this.$emit('fill', this.index)
             break;
 
           case  'erase':
@@ -157,7 +161,7 @@ export default {
 
     onHover($event) {
       this.$emit('hover', this.index)
-      if (this.viewOnly) { return }
+      if (this.viewOnly || !this.dragging) { return }
       if (this.$store.state.tool.type !== 'hex') {
         this.$store.commit('hoverHex', {q: this.coords().q, r: this.coords().r })
       }

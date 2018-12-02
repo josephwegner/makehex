@@ -61,14 +61,18 @@
             v-bind:index="index"
             v-bind:gridWidth="width"
             v-bind:yOffset="60"
-            v-bind:xOffset="35" />
+            v-bind:xOffset="35"
+            v-on:fill="fillFromIndex"
+            v-bind:dragging="dragging" />
       <tile v-if="selectedIndex >= 0"
             v-bind:key="key(selectedIndex)"
             v-bind="grid[selectedIndex]"
             v-bind:index="selectedIndex"
             v-bind:gridWidth="width"
             v-bind:yOffset="60"
-            v-bind:xOffset="35" />
+            v-bind:xOffset="35"
+            v-on:fill="fillFromIndex"
+            v-bind:dragging="dragging" />
     </g>
   </svg>
 </template>
@@ -253,7 +257,7 @@ export default {
       a = a || {}
       b = b || {}
       for(var prop of FILL_PROPS) {
-        if (a[prop] !== b[prop]) {
+        if ((a[prop] || null) !== (b[prop] || null)) {
           return false
         }
       }
@@ -272,8 +276,10 @@ export default {
   },
 
   mounted: function() {
-    this.$store.watch((state, getters) => {
+    this.$store.watch(function(state, getters) {
       if (!getters.activeLayout) { return null }
+      if (state.tool.coverage !== 'fill') { return null }
+
       return getters.activeLayout.grid.map(tile => {
         var obj = {}
         tile = tile || {}
@@ -294,8 +300,17 @@ export default {
         }
       })
 
-      //requestIdleCallback(this.computeFillSections.bind(this, changed))
+      setTimeout(this.computeFillSections.bind(this, changed), 0)
     }, { deep: true })
+
+    this.$store.watch(function(state) {
+      return state.tool.coverage === 'fill'
+    }, () => {
+      if(this.$store.state.tool.coverage === 'fill') {
+        this.fillSections = []
+        this.computeFillSections()
+      }
+    })
   }
 }
 </script>
