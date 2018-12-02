@@ -10,7 +10,7 @@
          v-bind:data-r="coords().r"
          v-bind:data-index="index"
          v-on:mouseover="onHover($event)"
-         v-on:mousedown="onClick()">
+         v-on:mousedown="onClick($event)">
     </use>
 
     <use v-if="icon && !fog"
@@ -130,7 +130,9 @@ export default {
       return coords
     },
 
-    onClick() {
+    onClick($event) {
+      this.$emit('click', this.index, $event)
+      if (this.viewOnly) { return }
       var state = this.$store.state
       if (!state.editor) { return }
 
@@ -154,6 +156,8 @@ export default {
     },
 
     onHover($event) {
+      this.$emit('hover', this.index)
+      if (this.viewOnly) { return }
       if (this.$store.state.tool.type !== 'hex') {
         this.$store.commit('hoverHex', {q: this.coords().q, r: this.coords().r })
       }

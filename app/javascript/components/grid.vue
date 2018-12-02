@@ -5,7 +5,7 @@
        v-bind:width="(width + 2) * 35"
        v-bind:height="(height + 3) * 31">
 
-    <g id="top-add">
+    <g id="top-add" data-addDir="Top">
       <tile v-for="n in (addWidth * 2)"
             v-bind:key="key(`top-${n}`)"
             v-bind="addHex"
@@ -13,18 +13,20 @@
             v-bind:index="n"
             v-bind:gridWidth="width"
             v-bind:xOffset="39 - 4"
-            v-on:click="addRows.bind(this, 'Top')" />
+            v-on:click="addRows"
+            v-bind:viewOnly="true" />
     </g>
-    <g id="left-add">
+    <g id="left-add" data-addDir="Left">
       <tile v-for="n in addHeight"
             v-bind:key="key(`left-${n}`)"
             v-bind="addHex"
             v-bind:selectable="false"
             v-bind:index="n"
             v-bind:yOffset="60"
-            v-on:click="addRows.bind(this, 'Left')" />
+            v-on:click="addRows"
+            v-bind:viewOnly="true" />
     </g>
-    <g id="right-add">
+    <g id="right-add" data-addDir="Right">
       <tile v-for="n in addHeight"
             v-bind:key="key(`right-${n}`)"
             v-bind="addHex"
@@ -32,9 +34,10 @@
             v-bind:index="n"
             v-bind:yOffset="60"
             v-bind:xOffset="(34 * (width + 1)) + 2"
-            v-on:click="addRows.bind(this, 'Right')" />
+            v-on:click="addRows"
+            v-bind:viewOnly="true" />
     </g>
-    <g id="bottom-add">
+    <g id="bottom-add" data-addDir="Bottom">
       <tile v-for="n in addWidth"
             v-bind:key="key(`bottom-${n}`)"
             v-bind="addHex"
@@ -43,7 +46,8 @@
             v-bind:gridWidth="width"
             v-bind:xOffset="height % 2 ? 17 : 35"
             v-bind:yOffset="(30 * (height + 2))"
-            v-on:click="addRows.bind(this, 'Bottom')" />
+            v-on:click="addRows"
+            v-bind:viewOnly="true" />
     </g>
     <g id="map-tiles"
        v-on:mousedown="dragging = true"
@@ -57,18 +61,14 @@
             v-bind:index="index"
             v-bind:gridWidth="width"
             v-bind:yOffset="60"
-            v-bind:xOffset="35"
-            v-on:click="onTileClick"
-            v-on:hover="onTileHover" />
+            v-bind:xOffset="35" />
       <tile v-if="selectedIndex >= 0"
             v-bind:key="key(selectedIndex)"
             v-bind="grid[selectedIndex]"
             v-bind:index="selectedIndex"
             v-bind:gridWidth="width"
             v-bind:yOffset="60"
-            v-bind:xOffset="35"
-            v-on:click="onTileClick"
-            v-on:hover="onTileHover" />
+            v-bind:xOffset="35" />
     </g>
   </svg>
 </template>
@@ -133,7 +133,8 @@ export default {
   },
 
   methods: {
-    addRows (dir) {
+    addRows (index, e) {
+      var dir = e.target.parentElement.parentElement.dataset.addDir
       this.$store.commit(`add${dir}`)
     },
 
@@ -246,12 +247,6 @@ export default {
 
     key (index) {
       return `${this.$store.getters.activeLayout.id}-${index}`
-    },
-
-    onTileClick(index) {
-    },
-
-    onTileHover(index, $event) {
     },
 
     tilesMatch(a, b) {
