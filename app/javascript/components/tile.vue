@@ -26,19 +26,45 @@
          x="11.5"
          y="4"
          v-on:click="openLayout(inEntities.link)"></use>
+
+
+    <component v-for="entity in dirEntities"
+               ng-if="entity.entity"
+               v-bind:is="entity.entity"
+               v-bind:color="color"
+               v-bind:dir="entity.dir" />
+
   </g>
 </template>
 
 <script>
 import Cable from '../lib/cable.js'
+import Door from './entities/door.vue'
 
 const WIDTH = 39
 const HEIGHT = 46
 
 export default {
+  components: {
+    Door
+  },
+
   computed: {
     inEntities() {
       return this.entities.in ? this.entities.in : {}
+    },
+
+    dirEntities() {
+      var entities = []
+      for (var dir in this.entities) {
+        if (dir === 'in') { continue }
+
+        entities.push({
+          dir: dir,
+          entity: this.entities[dir]
+        })
+      }
+      return entities
     },
 
     mask() {
@@ -132,6 +158,18 @@ export default {
       var qOffset = Math.ceil(coords.r / -2)
       coords.q = (this.index % this.gridWidth) + qOffset
       return coords
+    },
+
+    entityComponent(entity) {
+      switch (entity) {
+        case 'door':
+          return Door
+          break
+
+        default:
+          return null
+          break
+      }
     },
 
     onClick($event) {

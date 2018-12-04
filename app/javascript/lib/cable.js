@@ -48,10 +48,17 @@ class Cable {
     delete this.tileChannel
   }
 
-  sendTileUpdate(data) {
+  sendTileUpdate(ids) {
+    if (typeof(ids) === "number") {
+      ids = [ids]
+    }
+    var updates = ids.map(id => {
+      return Object.assign({index: id}, this.store.getters.activeLayout.grid[id])
+    })
+
     this.tileChannel.send({
       method: 'updateTiles',
-      payload: data
+      payload: updates
     })
   }
 

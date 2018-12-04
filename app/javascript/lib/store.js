@@ -34,7 +34,7 @@ export default class Storestore {
         },
 
         async sendTileUpdate ({ getters }, index) {
-          Cable.sendTileUpdate(Object.assign({}, getters.activeLayout.grid[index], {index: index}))
+          Cable.sendTileUpdate(index)
         },
 
         eraseTile ({commit, state, getters}, index) {
@@ -62,7 +62,7 @@ export default class Storestore {
           }
 
           commit('updateTile', newFeatures)
-          Cable.sendTileUpdate(newFeatures)
+          Cable.sendTileUpdate(index)
         },
 
         drawTile ({ commit, state, getters }, index) {
@@ -86,7 +86,7 @@ export default class Storestore {
           }
 
           commit('updateTile', data)
-          Cable.sendTileUpdate(data)
+          Cable.sendTileUpdate(index)
         }
       },
 
@@ -148,8 +148,9 @@ export default class Storestore {
             hex.entities = {}
           }
 
+          var entities = Object.assign({}, hex.entities, payload)
           layout.grid.splice(index, 1, Object.assign({}, hex, {
-            entities: payload
+            entities: entities
           }))
         },
 

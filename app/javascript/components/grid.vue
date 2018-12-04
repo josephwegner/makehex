@@ -52,7 +52,7 @@
     <g id="map-tiles"
        v-on:mousedown="dragging = true"
        v-on:mouseup="dragging = false"
-       v-on:mouseleave="dragging = false">
+       v-on:mouseleave="onMouseLeave">
 
       <tile v-for="(tile, index) in grid"
             v-if="index !== selectedIndex"
@@ -247,7 +247,7 @@ export default {
       })
 
       this.$store.commit('updateTile', updates)
-      Cable.sendTileUpdate(updates)
+      Cable.sendTileUpdate(indexes)
     },
 
     key (index) {
@@ -273,6 +273,11 @@ export default {
       )
 
       return distance === 1
+    },
+
+    onMouseLeave() {
+      this.dragging = false
+      this.$store.commit('hoverHex', null)
     }
   },
 

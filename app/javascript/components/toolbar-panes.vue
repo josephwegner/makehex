@@ -31,6 +31,7 @@ export default {
     border: 2px solid var(--darkGray);
     border-bottom: none;
     z-index: 3;
+    pointer-events: all;
   }
 
   .toolbar-panes .pane-header {
