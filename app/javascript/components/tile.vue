@@ -5,7 +5,7 @@
          v-bind:height="height"
          v-bind:stroke="selected ? '#999' : stroke"
          v-bind:stroke-width="selected ? 3 : 1"
-         v-bind:fill="fog ? '#cdcdcd' : color"
+         v-bind:fill="fog && !isEditor ? '#cdcdcd' : color"
          v-bind:data-q="coords().q"
          v-bind:data-r="coords().r"
          v-bind:data-index="index"
@@ -50,6 +50,10 @@ export default {
   },
 
   computed: {
+    isEditor() {
+      return this.$store.state.editor
+    },
+
     inEntities() {
       return this.entities.in ? this.entities.in : {}
     },
