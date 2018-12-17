@@ -1,5 +1,5 @@
 {
-  "name": "cast-morningboard",
+  "name": "hexamagon",
   "private": true,
   "dependencies": {
     "@rails/webpacker": "3.5",

@@ -165,6 +165,9 @@ export default class Storestore {
         },
 
         addLayout (state, layout) {
+          layout.grid = Array(layout.width * layout.height)
+          layout.grid.fill({})
+
           state.map.layouts.push(layout)
         },
 
