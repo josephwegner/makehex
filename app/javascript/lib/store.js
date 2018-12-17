@@ -247,9 +247,18 @@ export default class Storestore {
        },
 
        updateLayoutGrid(state, payload) {
-         state.map.layouts.find((layout) => {
+         var layout = state.map.layouts.find((layout) => {
            return layout.id === payload.layout
-         }).grid = payload.grid
+         })
+
+         payload.grid.forEach(layout => {
+           var empty = new Array(layout.width * layout.height).fill({})
+           payload.grid = empty.map((cell, index) => {
+             return payload.grid[index] || {}
+           })
+         })
+
+         layout.grid = payload.grid
        },
 
        updateTool(state, payload) {
