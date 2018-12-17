@@ -2,6 +2,7 @@ export default {
   createLayout: function(mapId, name) {
     return fetch(`/layouts`, {
       method: 'POST',
+      credentials: 'same-origin',
       body: JSON.stringify({
         map: mapId,
         layout: {
@@ -23,6 +24,7 @@ export default {
   updateMap: function(id, params) {
     return fetch(`/maps/${id}`, {
       method: 'PUT',
+      credentials: 'same-origin',
       body: JSON.stringify({
         map: params
       }),
@@ -36,6 +38,7 @@ export default {
   updateLayout: function(id, params) {
     return fetch(`/layouts/${id}`, {
       method: 'PUT',
+      credentials: 'same-origin',
       body: JSON.stringify({
         layout: params
       }),
