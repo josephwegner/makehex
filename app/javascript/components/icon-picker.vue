@@ -1,6 +1,11 @@
 <template>
   <div class="icon-picker">
     <div v-if="open" class="toolbar-modal">
+      <svg v-on:click="select(null)"
+           v-bind:class="{ selected: !selected, chooseEmpty: true } ">
+
+        <use href="/packs/tilecons.svg#denied" />
+      </svg>
       <svg v-for="(details, icon) in tilecons"
            v-on:click="select(icon)"
            v-bind:class="{ selected: icon === selected } ">
@@ -101,7 +106,8 @@ export default {
     stroke: var(--darkGray);
   }
 
-  .selected-icon.empty svg {
+  .selected-icon.empty svg,
+  .chooseEmpty {
     stroke: var(--red);
   }
 </style>
