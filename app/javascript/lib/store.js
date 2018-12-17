@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import Cable from './cable.js'
+import Undo from './undo.js'
 
 export default class Storestore {
   constructor() {
@@ -286,7 +287,9 @@ export default class Storestore {
          state.modal.open = true
          state.modal.component = payload
        }
-     }
+     },
+
+     plugins: [Undo]
     })
   }
 }
