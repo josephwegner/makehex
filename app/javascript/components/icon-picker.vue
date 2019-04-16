@@ -16,7 +16,7 @@
 
     <div class="selected-icon"
          v-bind:class="{ empty: empty }"
-         v-on:click="open = !open" >
+         v-on:click="$emit('click')" >
 
       <svg><use v-bind:href="'/packs/tilecons.svg#' + previewIcon" />
       </svg>
@@ -30,7 +30,6 @@ import Tilecons from '../lib/tilecons.js'
 export default {
   data() {
     return {
-      open: false,
       tilecons: Tilecons
     }
   },
@@ -51,12 +50,12 @@ export default {
         this.onUpdate(null)
       } else {
         this.onUpdate(icon)
-        this.open = false
+        this.$emit('close')
       }
     }
   },
 
-  props: ['selected', 'onUpdate']
+  props: ['open', 'selected', 'onUpdate']
 }
 
 </script>
