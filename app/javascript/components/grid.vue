@@ -80,8 +80,8 @@
 <script>
 import Cable from '../lib/cable.js'
 import Tile from './tile.vue'
-
-const FILL_PROPS = ['color', 'icon']
+import GridEvents from '../lib/grid-events.js'
+import utils from '../lib/utils.js'
 
 export default {
   components: {
@@ -166,7 +166,7 @@ export default {
           for(var i=0; i<this.fillSections.length; i++) {
             var section = this.fillSections[i]
             //Check old hex for a match
-            if(this.tilesMatch(oldHex, section) || this.tilesMatch(newHex, section)) {
+            if(utils.tilesMatch(oldHex, section) || utils.tilesMatch(newHex, section)) {
               var hasNeighbor = section.locations.some((index) => {
                 return index === oldHex.index ||
                        this.tilesNeighbors(this.cubeCoords(index), this.cubeCoords(oldHex.index))
@@ -199,7 +199,7 @@ export default {
         }
         var initialTile = tilesToCheck.shift()
 
-        for(var prop of FILL_PROPS) {
+        for(var prop of utils.FILL_PROPS) {
           section[prop] = initialTile[prop]
         }
 
@@ -209,7 +209,7 @@ export default {
           section.locations.push(curHex.index)
 
           tilesToCheck.forEach((tile, index) => {
-            if(!this.tilesMatch(this.grid[curHex.index], this.grid[tile.index])) { return }
+            if(!utils.tilesMatch(this.grid[curHex.index], this.grid[tile.index])) { return }
             if (this.tilesNeighbors(tile, curHex)) {
               queue.push(tile)
               tilesToCheck.splice(index, 1)
@@ -224,8 +224,10 @@ export default {
     },
 
     fillFromIndex(index) {
+      var tile = this.grid[index]
+
       var indexes = this.fillSections.find(section => {
-        if (!this.tilesMatch(section, this.grid[index])) { return false }
+        if (!utils.tilesMatch(section, tile)) { return false }
         return section.locations.indexOf(index) >= 0
       }).locations
       var tool = this.$store.state.tool
@@ -246,23 +248,12 @@ export default {
         return Object.assign({}, this.grid[i], features, {index: i})
       })
 
-      this.$store.commit('updateTile', updates)
+      this.$store.commit('updateTile', { tiles: updates, source: 'fill' })
       Cable.sendTileUpdate(indexes)
     },
 
     key (index) {
       return `${this.$store.getters.activeLayout.id}-${index}`
-    },
-
-    tilesMatch(a, b) {
-      a = a || {}
-      b = b || {}
-      for(var prop of FILL_PROPS) {
-        if ((a[prop] || null) !== (b[prop] || null)) {
-          return false
-        }
-      }
-      return true
     },
 
     tilesNeighbors(a, b) {
@@ -282,33 +273,11 @@ export default {
   },
 
   mounted: function() {
-    this.$store.watch(function(state, getters) {
-      if (!getters.activeLayout) { return null }
-      if (state.tool.coverage !== 'fill') { return null }
-
-      return getters.activeLayout.grid.map(tile => {
-        var obj = {}
-        tile = tile || {}
-        for(var prop of FILL_PROPS) {
-          obj[prop] = tile[prop]
-        }
-        return obj
-      })
-    }, (newGrid, oldGrid) => {
-      oldGrid = oldGrid || []
-      newGrid = newGrid || []
-
-      var changed = []
-      if(!oldGrid.hasOwnProperty())
-      oldGrid.forEach((oldEle, index) => {
-        var newEle = newGrid[index]
-        if(!this.tilesMatch(oldEle, newEle)) {
-          changed.push(Object.assign({}, oldEle, { index: index }))
-        }
-      })
-
-      setTimeout(this.computeFillSections.bind(this, changed), 0)
-    }, { deep: true })
+    GridEvents.on('tileChange', (changed) => {
+      if (this.$store.state.tool.coverage === 'fill') {
+        setTimeout(this.computeFillSections.bind(this, changed), 0)
+      }
+    })
 
     this.$store.watch(function(state) {
       return state.tool.coverage === 'fill'

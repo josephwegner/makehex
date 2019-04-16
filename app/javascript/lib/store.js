@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import Cable from './cable.js'
-import Undo from './undo.js'
+import GridEvents from './grid-events.js'
 
 export default class Storestore {
   constructor() {
@@ -13,6 +13,10 @@ export default class Storestore {
         modal: {
           open: false,
           component: null
+        },
+        undoState: {
+          undoCount: 0,
+          redoCount: 0
         },
         selectedHex: null,
         hoveredHex: null,
@@ -62,7 +66,7 @@ export default class Storestore {
               break
           }
 
-          commit('updateTile', newFeatures)
+          commit('updateTile', { tiles: newFeatures, source: 'editor' })
           Cable.sendTileUpdate(index)
         },
 
@@ -86,8 +90,13 @@ export default class Storestore {
               break
           }
 
-          commit('updateTile', data)
+          commit('updateTile', { tiles: data, source: 'editor' })
           Cable.sendTileUpdate(index)
+        },
+
+        overwrite ({ commit }, data) {
+          commit('updateTile', { tiles: data, source: 'overwrite' })
+          Cable.sendTileUpdate(data.map((tile) => { return tile.index }))
         }
       },
 
@@ -230,21 +239,33 @@ export default class Storestore {
           Cable.connectToTile(layoutId)
         },
 
+        undoStatus(state, payload) {
+          state.undoState.undoCount = payload.undoCount
+          state.undoState.redoCount = payload.redoCount
+        },
+
         updateTile(state, payload) {
           var layout = state.map.layouts.find((layout) => {
             return layout.id === state.activeLayoutId
           })
-          if (!payload.length) {
-            payload = [payload]
-          }
 
-          payload.forEach(updates => {
+          var tiles = payload.tiles.length ? payload.tiles : [payload.tiles]
+          var changes = []
+
+          tiles.forEach(updates => {
             var tile = layout.grid[updates.index] || {}
+
             var index = updates.index
+            changes.push(Object.assign({index: index}, tile))
+
             var finalValues = Object.assign({}, tile, updates)
             delete finalValues.index
             layout.grid.splice(index, 1, finalValues)
           })
+
+          if (['server', 'overwrite'].indexOf(payload.source) === -1) {
+            GridEvents.changed(changes)
+          }
        },
 
        updateLayoutGrid(state, payload) {
@@ -289,7 +310,7 @@ export default class Storestore {
        }
      },
 
-     plugins: [Undo]
+     plugins: [GridEvents.addStore.bind(GridEvents)]
     })
   }
 }

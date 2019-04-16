@@ -40,6 +40,7 @@
 <script>
 import Cable from '../lib/cable.js'
 import Door from './entities/door.vue'
+import utils from '../lib/utils.js'
 
 const WIDTH = 39
 const HEIGHT = 46
@@ -101,7 +102,7 @@ export default {
     },
     color: {
       type: String,
-      default: '#FFF'
+      default: utils.constants.TILE.color
     },
     dragging: {
       type: Boolean,
@@ -112,7 +113,7 @@ export default {
     },
     fog: {
       type: Boolean,
-      default: false
+      default: utils.constants.TILE.fog
     },
     entities: {
       type: Object,

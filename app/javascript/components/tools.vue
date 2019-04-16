@@ -25,6 +25,16 @@
        </div>
     </div>
     <div class="right-tools">
+      <button class="toolbar-button"
+              v-on:click="undo()"
+              v-bind:style="{ visibility: undoCount ? 'visible' : 'hidden' }">
+        <i class="fas fa-undo-alt"></i>
+      </button>
+      <button class="toolbar-button"
+              v-on:click="redo()"
+              v-bind:style="{ visibility: redoCount ? 'visible' : 'hidden' }">
+        <i class="fas fa-redo-alt"></i>
+      </button>
       <button class="toolbar-button" v-on:click="showMetadataModal()">
         <i class="fas fa-cog"></i>
       </button>
@@ -46,6 +56,7 @@ import LayoutPicker from './layout-picker.vue'
 import LayoutLink from './layout-link.vue'
 import Modal from './modal.vue'
 import ToolbarPanes from './toolbar-panes.vue'
+import GridEvents from '../lib/grid-events.js'
 
 export default {
   data: function () {
@@ -80,6 +91,12 @@ export default {
       set (value) {
         this.updateTool('color', value)
       }
+    },
+    undoCount () {
+      return this.$store.state.undoState.undoCount
+    },
+    redoCount () {
+      return this.$store.state.undoState.redoCount
     }
   },
 
@@ -100,6 +117,14 @@ export default {
 
     showMetadataModal: function() {
       this.$store.commit('showModal', 'Metadata')
+    },
+
+    undo: function() {
+      GridEvents.undo()
+    },
+
+    redo: function() {
+      GridEvents.redo()
     }
   }
 }
