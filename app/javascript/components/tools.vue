@@ -12,12 +12,16 @@
                  v-bind:selected="coverage"
                  v-bind:onUpdate="updateTool.bind(this, 'coverage')" />
 
-        <div class="color-picker">
-          <input type="color" v-model="color" />
-        </div>
-
+        <color-picker v-bind:selected="color"
+                      v-bind:onUpdate="updateTool.bind(this, 'color')"
+                      v-bind:open="openModal === 'color'"
+                      v-on:click="toggleModal('color')"
+                      v-on:close="closeModal('color')" />
         <icon-picker v-bind:selected="icon"
-                     v-bind:onUpdate="updateTool.bind(this, 'icon')" />
+                     v-bind:onUpdate="updateTool.bind(this, 'icon')"
+                     v-bind:open="openModal === 'icon'"
+                     v-on:click="toggleModal('icon')"
+                     v-on:close="closeModal('icon')" />
        </div>
 
        <div class="tool-wrapper" v-if="type === 'hex'">
@@ -51,6 +55,7 @@
 <script>
 import Toolbox from './toolbox.vue'
 import HexZoom from './panes/hex-zoom.vue'
+import ColorPicker from './color-picker.vue'
 import IconPicker from './icon-picker.vue'
 import LayoutPicker from './layout-picker.vue'
 import LayoutLink from './layout-link.vue'
@@ -70,7 +75,8 @@ export default {
         hex: 'Hex',
         design: 'Design',
         fog: 'Fog of War'
-      }
+      },
+      openModal: null
     }
   },
 
@@ -103,6 +109,7 @@ export default {
   components: {
     Toolbox,
     HexZoom,
+    ColorPicker,
     IconPicker,
     LayoutPicker,
     LayoutLink,
@@ -125,6 +132,20 @@ export default {
 
     redo: function() {
       GridEvents.redo()
+    },
+
+    closeModal(modal) {
+      if (this.openModal === modal) {
+        this.openModal = null
+      }
+    },
+
+    toggleModal(modal) {
+      if (this.openModal === modal) {
+        this.openModal = null
+      } else {
+        this.openModal = modal
+      }
     }
   }
 }

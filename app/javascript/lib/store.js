@@ -111,6 +111,22 @@ export default class Storestore {
           return null
         },
 
+        activeColors: state => {
+          if (!state.map || !state.activeLayoutId) return {}
+          var layout = state.map.layouts.find(layout => {
+            return layout.id === state.activeLayoutId
+          })
+
+          var colorObj = {}
+          layout.grid.forEach(tile => {
+            if (tile.color) {
+              colorObj[tile.color] = true
+            }
+          })
+
+          return Object.keys(colorObj)
+        },
+
         selectedHex: state => {
           if (!state.map || !state.activeLayoutId) return {}
           var layout = state.map.layouts.find(layout => {
