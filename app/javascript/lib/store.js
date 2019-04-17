@@ -24,7 +24,8 @@ export default class Storestore {
           color: '#008000',
           icon: null,
           type: 'design',
-          coverage: 'single'
+          coverage: 'single',
+          fogType: 'fog'
         }
       },
 
@@ -86,7 +87,7 @@ export default class Storestore {
               break
 
             case 'fog':
-              data.fog = state.tool.coverage === 'erase' ? false : true
+              data.fog = state.tool.fogType === 'fog' ? false : true
               break
           }
 
@@ -292,11 +293,9 @@ export default class Storestore {
            return layout.id === payload.layout
          })
 
-         payload.grid.forEach(layout => {
-           var empty = new Array(layout.width * layout.height).fill({})
-           payload.grid = empty.map((cell, index) => {
-             return payload.grid[index] || {}
-           })
+         var empty = new Array(layout.width * layout.height).fill({})
+         payload.grid = empty.map((cell, index) => {
+           return payload.grid[index] || {}
          })
 
          layout.grid = payload.grid
