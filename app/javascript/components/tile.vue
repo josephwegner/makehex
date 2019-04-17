@@ -185,6 +185,8 @@ export default {
 
       if (state.tool.type === 'hex') {
         this.$store.commit('selectHex', {q: this.coords().q, r: this.coords().r })
+      } else if (state.tool.type === 'erase') {
+        this.$store.dispatch('eraseTile', this.index)
       } else {
         switch (state.tool.coverage) {
           case 'single':
@@ -193,10 +195,6 @@ export default {
 
           case 'fill':
             this.$emit('fill', this.index)
-            break;
-
-          case  'erase':
-            this.$store.dispatch('eraseTile', this.index)
             break;
         }
       }

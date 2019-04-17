@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import Vue from 'vue'
 import Cable from './cable.js'
 import GridEvents from './grid-events.js'
+import utils from './utils.js'
 
 export default class Storestore {
   constructor() {
@@ -24,7 +25,8 @@ export default class Storestore {
           color: '#008000',
           icon: null,
           type: 'design',
-          coverage: 'single'
+          coverage: 'single',
+          fogType: 'fog'
         }
       },
 
@@ -43,27 +45,11 @@ export default class Storestore {
         },
 
         eraseTile ({commit, state, getters}, index) {
-          var tile = getters.activeLayout.grid[index] || {}
           var newFeatures = {
-            index: index
-          }
-          var currentFeatures = {
-            color: tile.color,
-            fog: tile.fog,
-            icon: tile.icon
-          }
-
-          switch (state.tool.type) {
-            case 'design':
-              Object.assign(newFeatures, {fog: currentFeatures.fog}, {
-                icon: null,
-                color: '#FFFFFF'
-              })
-              break
-
-            case 'fog':
-              Object.assign(newFeatures, currentFeatures, {fog: false})
-              break
+            index: index,
+            color: utils.constants.TILE.color,
+            fog: utils.constants.TILE.fog,
+            icon: utils.constants.TILE.icon
           }
 
           commit('updateTile', { tiles: newFeatures, source: 'editor' })
@@ -86,7 +72,7 @@ export default class Storestore {
               break
 
             case 'fog':
-              data.fog = state.tool.coverage === 'erase' ? false : true
+              data.fog = state.tool.fogType === 'fog' ? true : false
               break
           }
 
@@ -292,11 +278,9 @@ export default class Storestore {
            return layout.id === payload.layout
          })
 
-         payload.grid.forEach(layout => {
-           var empty = new Array(layout.width * layout.height).fill({})
-           payload.grid = empty.map((cell, index) => {
-             return payload.grid[index] || {}
-           })
+         var empty = new Array(layout.width * layout.height).fill({})
+         payload.grid = empty.map((cell, index) => {
+           return payload.grid[index] || {}
          })
 
          layout.grid = payload.grid

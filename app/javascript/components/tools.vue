@@ -7,7 +7,7 @@
          v-bind:selected="type"
          v-bind:onUpdate="updateTool.bind(this, 'type')" />
 
-      <div class="tool-wrapper" v-if="type === 'design' || type === 'fog' ">
+      <div class="tool-wrapper" v-if="type === 'design'">
         <toolbox v-bind:options="coverageOptions"
                  v-bind:selected="coverage"
                  v-bind:onUpdate="updateTool.bind(this, 'coverage')" />
@@ -22,6 +22,16 @@
                      v-bind:open="openModal === 'icon'"
                      v-on:click="toggleModal('icon')"
                      v-on:close="closeModal('icon')" />
+       </div>
+
+       <div class="tool-wrapper" v-if="type === 'fog'">
+          <toolbox v-bind:options="coverageOptions"
+                   v-bind:selected="coverage"
+                   v-bind:onUpdate="updateTool.bind(this, 'coverage')" />
+
+          <toolbox v-bind:options="fogOptions"
+                   v-bind:selected="fogType"
+                   v-bind:onUpdate="updateTool.bind(this, 'fogType')" />
        </div>
 
        <div class="tool-wrapper" v-if="type === 'hex'">
@@ -68,13 +78,17 @@ export default {
     return {
       coverageOptions: {
         single: 'Single',
-        fill: 'Fill',
-        erase: 'Erase'
+        fill: 'Fill'
       },
       typeOptions: {
         hex: 'Hex',
         design: 'Design',
-        fog: 'Fog of War'
+        fog: 'Fog of War',
+        erase: 'Erase'
+      },
+      fogOptions: {
+        fog: 'Fog',
+        nofog: 'No Fog'
       },
       openModal: null
     }
@@ -89,6 +103,9 @@ export default {
     },
     icon () {
       return this.$store.state.tool.icon
+    },
+    fogType () {
+      return this.$store.state.tool.fogType
     },
     color: {
       get () {

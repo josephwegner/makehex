@@ -240,7 +240,7 @@ export default {
           break
 
         case 'fog':
-          features.fog = this.$store.state.tool.coverage === 'erase' ? false : true
+          features.fog = this.$store.state.tool.fogType === 'fog' ? true : false
           break
       }
 
