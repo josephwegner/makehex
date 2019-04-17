@@ -78,13 +78,13 @@ export default {
     return {
       coverageOptions: {
         single: 'Single',
-        fill: 'Fill',
-        erase: 'Erase'
+        fill: 'Fill'
       },
       typeOptions: {
         hex: 'Hex',
         design: 'Design',
-        fog: 'Fog of War'
+        fog: 'Fog of War',
+        erase: 'Erase'
       },
       fogOptions: {
         fog: 'Fog',
