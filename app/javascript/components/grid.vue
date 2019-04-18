@@ -17,7 +17,7 @@
             v-on:click="addRows"
             v-bind:viewOnly="true" />
         <tile v-for="n in (addWidth)"
-              v-bind:key="key(`top-${n}`)"
+              v-bind:key="key(`2top-${n}`)"
               v-bind="addHex"
               v-bind:selectable="false"
               v-bind:r="1"
@@ -68,7 +68,7 @@
        v-on:mouseleave="onMouseLeave">
        <g v-for="(cells, q) in grid">
         <tile v-for="(tile, r) in cells"
-              v-if="r !== selectedIndex"
+              v-if="r !== selectedHex.r || q !== selectedHex.q"
               v-bind:key="key(q, r)"
               v-bind="tile"
               v-bind:q="parseInt(q)"
@@ -78,18 +78,17 @@
               v-bind:xOffset="35"
               v-on:fill="fillFromIndex"
               v-bind:dragging="dragging" />
-        <!--
-        <tile v-if="selectedIndex >= 0"
-              v-bind:key="key(selectedIndex)"
-              v-bind="grid[selectedIndex]"
-              v-bind:index="selectedIndex"
-              v-bind:gridWidth="width"
-              v-bind:yOffset="60"
-              v-bind:xOffset="35"
-              v-on:fill="fillFromIndex"
-              v-bind:dragging="dragging" />
-        -->
       </g>
+      <tile v-if="selectedHex.q >= 0"
+            v-bind:key="key(selectedHex.q, selectedHex.r)"
+            v-bind="grid[selectedHex.q][selectedHex.r]"
+            v-bind:q="parseInt(selectedHex.q)"
+            v-bind:r="parseInt(selectedHex.r)"
+            v-bind:gridWidth="width"
+            v-bind:yOffset="60"
+            v-bind:xOffset="35"
+            v-on:fill="fillFromIndex"
+            v-bind:dragging="dragging" />
     </g>
   </svg>
 </template>
@@ -126,17 +125,13 @@ export default {
       return this.$store.getters.activeLayout.height
     },
 
-    selectedIndex () {
-      if (!this.$store.state.selectedHex) { return -1 }
-      var hex = this.$store.state.selectedHex
-      var layout = this.$store.getters.activeLayout
-
-      return (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
-    },
-
     width () {
       if (!this.$store.getters.activeLayout) { return 0 }
       return this.$store.getters.activeLayout.width
+    },
+
+    selectedHex () {
+      return this.$store.state.selectedHex ? this.$store.state.selectedHex : {q: -1, r: -1}
     }
   },
 
@@ -271,7 +266,8 @@ export default {
 
     key () {
       var joined = Array.prototype.join.call(arguments, '-')
-      return `${this.$store.getters.activeLayout.id}-${joined}`
+      var id = this.$store.getters.activeLayout ? this.$store.getters.activeLayout.id : 'nolayout'
+      return `${id}-${joined}`
     },
 
     tilesNeighbors(a, b) {
