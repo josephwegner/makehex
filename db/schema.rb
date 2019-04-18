@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181113134306) do
+ActiveRecord::Schema.define(version: 20190418011234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,7 +18,7 @@ ActiveRecord::Schema.define(version: 20181113134306) do
   create_table "layouts", force: :cascade do |t|
     t.string "name"
     t.bigint "map_id"
-    t.jsonb "grid", default: []
+    t.jsonb "grid", default: {}
     t.integer "height", default: 15
     t.integer "width", default: 25
     t.index ["map_id"], name: "index_layouts_on_map_id"

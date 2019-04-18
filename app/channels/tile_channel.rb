@@ -21,6 +21,7 @@ class TileChannel < ApplicationCable::Channel
   private
 
   def update_tiles(updates, params)
+    return #noop until we fix the index_to_coords change
     if !updates.kind_of?(Array)
       updates = [updates]
     end
@@ -36,6 +37,7 @@ class TileChannel < ApplicationCable::Channel
   end
 
   def update_layout(updates, params)
+    return #noop until we fix the index_to_coords change
     layout = Layout.find(params[:layout])
     layout.update!(secure_params(updates))
 

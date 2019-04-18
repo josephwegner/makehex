@@ -168,11 +168,32 @@ export default class Storestore {
 
         addMap (state, map) {
           state.map = map
+
+          // It's a bit nasty, but iterate over the map in x,y coords
+          // and fill in any blanks. The reason to do it in x,y
+          // is because our map is a rectangle. It's far easier to iterate
+          // over a rectangle in x,y than in q,r
           state.map.layouts.forEach(layout => {
-            var empty = new Array(layout.width * layout.height).fill({})
-            layout.grid = empty.map((cell, index) => {
-              return layout.grid[index] || {}
-            })
+            for (var x=0; x<layout.width; x++) {
+              for (var y=0; y<layout.height; y++) {
+                var index = (y*layout.width) + x
+
+                var r =  Math.floor(index  / layout.width)
+                var qOffset = Math.ceil(r / -2)
+                var q = (index % layout.width) + qOffset
+
+                if (!layout.grid[q]) {
+                  layout.grid[q] = {}
+                }
+                if(!layout.grid[q][r]) {
+                  layout.grid[q][r] = {
+                    color: utils.constants.TILE.color,
+                    fog: utils.constants.TILE.fog,
+                    icon: utils.constants.TILE.icon
+                  }
+                }
+              }
+            }
           })
         },
 

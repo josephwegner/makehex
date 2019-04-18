@@ -6,22 +6,34 @@
        v-bind:height="(height + 3) * 31">
 
     <g id="top-add" data-addDir="Top">
-      <tile v-for="n in (addWidth * 2)"
+      <tile v-for="n in (addWidth)"
             v-bind:key="key(`top-${n}`)"
             v-bind="addHex"
             v-bind:selectable="false"
-            v-bind:index="n"
+            v-bind:r="0"
+            v-bind:q="n - 1"
             v-bind:gridWidth="width"
             v-bind:xOffset="39 - 4"
             v-on:click="addRows"
             v-bind:viewOnly="true" />
+        <tile v-for="n in (addWidth)"
+              v-bind:key="key(`top-${n}`)"
+              v-bind="addHex"
+              v-bind:selectable="false"
+              v-bind:r="1"
+              v-bind:q="n - 1"
+              v-bind:gridWidth="width"
+              v-bind:xOffset="39 - 4"
+              v-on:click="addRows"
+              v-bind:viewOnly="true" />
     </g>
     <g id="left-add" data-addDir="Left">
       <tile v-for="n in addHeight"
             v-bind:key="key(`left-${n}`)"
             v-bind="addHex"
             v-bind:selectable="false"
-            v-bind:index="n"
+            v-bind:r="n"
+            v-bind:q="Math.floor((n-1) / -2)"
             v-bind:yOffset="60"
             v-on:click="addRows"
             v-bind:viewOnly="true" />
@@ -31,21 +43,22 @@
             v-bind:key="key(`right-${n}`)"
             v-bind="addHex"
             v-bind:selectable="false"
-            v-bind:index="n"
+            v-bind:r="n"
+            v-bind:q="width + (Math.floor((n-1) / -2))"
             v-bind:yOffset="60"
-            v-bind:xOffset="(34 * (width + 1)) + 2"
+            v-bind:xOffset="35"
             v-on:click="addRows"
             v-bind:viewOnly="true" />
     </g>
     <g id="bottom-add" data-addDir="Bottom">
-      <tile v-for="n in addWidth"
+      <tile v-for="n in (addWidth + 1)"
             v-bind:key="key(`bottom-${n}`)"
             v-bind="addHex"
             v-bind:selectable="false"
-            v-bind:index="n"
+            v-bind:r="height + 2"
+            v-bind:q="Math.floor(height / -2) + n - 2"
             v-bind:gridWidth="width"
-            v-bind:xOffset="height % 2 ? 17 : 35"
-            v-bind:yOffset="(30 * (height + 2))"
+            v-bind:xOffset="39 - 4"
             v-on:click="addRows"
             v-bind:viewOnly="true" />
     </g>
@@ -53,26 +66,30 @@
        v-on:mousedown="dragging = true"
        v-on:mouseup="dragging = false"
        v-on:mouseleave="onMouseLeave">
-
-      <tile v-for="(tile, index) in grid"
-            v-if="index !== selectedIndex"
-            v-bind:key="key(index)"
-            v-bind="tile"
-            v-bind:index="index"
-            v-bind:gridWidth="width"
-            v-bind:yOffset="60"
-            v-bind:xOffset="35"
-            v-on:fill="fillFromIndex"
-            v-bind:dragging="dragging" />
-      <tile v-if="selectedIndex >= 0"
-            v-bind:key="key(selectedIndex)"
-            v-bind="grid[selectedIndex]"
-            v-bind:index="selectedIndex"
-            v-bind:gridWidth="width"
-            v-bind:yOffset="60"
-            v-bind:xOffset="35"
-            v-on:fill="fillFromIndex"
-            v-bind:dragging="dragging" />
+       <g v-for="(cells, q) in grid">
+        <tile v-for="(tile, r) in cells"
+              v-if="r !== selectedIndex"
+              v-bind:key="key(q, r)"
+              v-bind="tile"
+              v-bind:q="parseInt(q)"
+              v-bind:r="parseInt(r)"
+              v-bind:gridWidth="width"
+              v-bind:yOffset="60"
+              v-bind:xOffset="35"
+              v-on:fill="fillFromIndex"
+              v-bind:dragging="dragging" />
+        <!--
+        <tile v-if="selectedIndex >= 0"
+              v-bind:key="key(selectedIndex)"
+              v-bind="grid[selectedIndex]"
+              v-bind:index="selectedIndex"
+              v-bind:gridWidth="width"
+              v-bind:yOffset="60"
+              v-bind:xOffset="35"
+              v-on:fill="fillFromIndex"
+              v-bind:dragging="dragging" />
+        -->
+      </g>
     </g>
   </svg>
 </template>
@@ -252,8 +269,9 @@ export default {
       Cable.sendTileUpdate(indexes)
     },
 
-    key (index) {
-      return `${this.$store.getters.activeLayout.id}-${index}`
+    key () {
+      var joined = Array.prototype.join.call(arguments, '-')
+      return `${this.$store.getters.activeLayout.id}-${joined}`
     },
 
     tilesNeighbors(a, b) {
