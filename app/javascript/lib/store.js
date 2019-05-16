@@ -37,7 +37,7 @@ export default class Storestore {
           var index = (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
 
           await commit('addEntity', payload)
-          dispatch('sendTileUpdate', index)
+          dispatch('sendTileUpdate', hex)
         },
 
         async sendTileUpdate ({ getters }, coords) {
@@ -162,21 +162,22 @@ export default class Storestore {
           var layout = state.map.layouts.find((layout) => {
             return layout.id === state.activeLayoutId
           })
-          var hex = state.selectedHex
-          var index = (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
-          if (!layout.grid[index]) {
-            layout.grid[index] = {}
-          }
-          var hex = layout.grid[index]
+          var selectedHex = state.selectedHex
+          var newGrid = {}
+          newGrid[selectedHex.q] = layout.grid[selectedHex.q] || {}
+
+          var hex = layout.grid[selectedHex.q][selectedHex.r]
 
           if(!hex.entities) {
             hex.entities = {}
           }
 
           var entities = Object.assign({}, hex.entities, payload)
-          layout.grid.splice(index, 1, Object.assign({}, hex, {
+          newGrid[selectedHex.q][selectedHex.r] = Object.assign({}, hex, {
             entities: entities
-          }))
+          })
+
+          layout.grid = Object.assign({}, layout.grid, newGrid)
         },
 
         addMap (state, map) {
