@@ -40,49 +40,59 @@ export default class Storestore {
           dispatch('sendTileUpdate', index)
         },
 
-        async sendTileUpdate ({ getters }, index) {
-          Cable.sendTileUpdate(index)
+        async sendTileUpdate ({ getters }, coords) {
+          Cable.sendTileUpdate(coords)
         },
 
-        eraseTile ({commit, state, getters}, index) {
-          var newFeatures = {
-            index: index,
+        eraseTile ({commit, state, getters}, coords) {
+          var newFeatures = {}
+          newFeatures[q] = {}
+          newFeatures[q][r]= {
             color: utils.constants.TILE.color,
             fog: utils.constants.TILE.fog,
             icon: utils.constants.TILE.icon
           }
 
           commit('updateTile', { tiles: newFeatures, source: 'editor' })
-          Cable.sendTileUpdate(index)
+          Cable.sendTileUpdate(coords)
         },
 
-        drawTile ({ commit, state, getters }, index) {
-          var tile = getters.activeLayout.grid[index] || {}
-          var data = {
+        drawTile ({ commit, state, getters }, coords) {
+          var tile = getters.activeLayout.grid[coords.q][coords.r] || {}
+          var props = {
             color: tile.color,
             fog: tile.fog,
-            icon: tile.icon,
-            index: index
+            icon: tile.icon
           }
 
           switch(state.tool.type) {
             case 'design':
-              data.color = state.tool.color || data.color
-              data.icon = state.tool.icon || data.icon
+              props.color = state.tool.color || props.color
+              props.icon = state.tool.icon || props.icon
               break
 
             case 'fog':
-              data.fog = state.tool.fogType === 'fog' ? true : false
+              props.fog = state.tool.fogType === 'fog' ? true : false
               break
           }
 
+          var data = {}
+          data[coords.q] = {}
+          data[coords.q][coords.r] = props
+
           commit('updateTile', { tiles: data, source: 'editor' })
-          Cable.sendTileUpdate(index)
+          Cable.sendTileUpdate(coords)
         },
 
         overwrite ({ commit }, data) {
           commit('updateTile', { tiles: data, source: 'overwrite' })
-          Cable.sendTileUpdate(data.map((tile) => { return tile.index }))
+          var coords = []
+          for (var q in data) {
+            for (var r in data[q]) {
+              coords.push({q: q, r: r})
+            }
+          }
+          Cable.sendTileUpdate(coords)
         }
       },
 
@@ -104,11 +114,14 @@ export default class Storestore {
           })
 
           var colorObj = {}
-          layout.grid.forEach(tile => {
-            if (tile.color) {
-              colorObj[tile.color] = true
+          for(var q in layout.grid) {
+            for (var r in layout.grid[q]) {
+              var color = layout.grid[q][r].color
+              if (color) {
+                colorObj[color] = true
+              }
             }
-          })
+          }
 
           return Object.keys(colorObj)
         },
@@ -274,20 +287,32 @@ export default class Storestore {
           var layout = state.map.layouts.find((layout) => {
             return layout.id === state.activeLayoutId
           })
+          var changes = {}
+          var finalValues = {}
 
-          var tiles = payload.tiles.length ? payload.tiles : [payload.tiles]
-          var changes = []
+          for (var q in payload.tiles) {
+            for (var r in payload.tiles[q]) {
+              var updates = payload.tiles[q][r]
+              var tile = layout.grid[q][r] || {}
 
-          tiles.forEach(updates => {
-            var tile = layout.grid[updates.index] || {}
+              if (!changes[q]) {
+                changes[q] = {}
+                finalValues[q] = {}
+              }
 
-            var index = updates.index
-            changes.push(Object.assign({index: index}, tile))
+              changes[q][r] = Object.assign(
+                {q: q, r: r},
+                tile
+              )
+              finalValues[q][r] = Object.assign({}, tile, updates)
+            }
+          }
 
-            var finalValues = Object.assign({}, tile, updates)
-            delete finalValues.index
-            layout.grid.splice(index, 1, finalValues)
-          })
+          var newGrid = {}
+          for (var q in finalValues) {
+            newGrid[q] = Object.assign({}, layout.grid[q], finalValues[q])
+          }
+          layout.grid = Object.assign({}, layout.grid, newGrid)
 
           if (['server', 'overwrite'].indexOf(payload.source) === -1) {
             GridEvents.changed(changes)

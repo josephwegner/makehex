@@ -48,12 +48,12 @@ class Cable {
     delete this.tileChannel
   }
 
-  sendTileUpdate(ids) {
-    if (typeof(ids) === "number") {
-      ids = [ids]
+  sendTileUpdate(coords) {
+    if (coords.length === undefined) {
+      coords = [coords]
     }
-    var updates = ids.map(id => {
-      return Object.assign({index: id}, this.store.getters.activeLayout.grid[id])
+    var updates = coords.map(coord => {
+      return Object.assign({q: coord.q, r: coord.r}, this.store.getters.activeLayout.grid[coord.q][coord.r])
     })
 
     this.tileChannel.send({
