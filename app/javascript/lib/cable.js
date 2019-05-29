@@ -70,7 +70,8 @@ class Cable {
   }
 
   layoutUpdate(data) {
-    this.store.commit('updateTile', { tiles: data, source: 'server' })
+    console.log(data)
+    //this.store.commit('updateTile', { tiles: data, source: 'server' })
   }
 
   mapUpdate(data) {

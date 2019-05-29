@@ -21,15 +21,22 @@ class TileChannel < ApplicationCable::Channel
   private
 
   def update_tiles(updates, params)
-    return #noop until we fix the index_to_coords change
     if !updates.kind_of?(Array)
       updates = [updates]
     end
 
-    ActionCable.server.broadcast("layout_#{params[:layout]}_tiles", updates)
+    updateGrid = {}
+    updates.each do |tile|
+      if !updateGrid.has_key?(tile['q'])
+        updateGrid[tile['q']] = {}
+      end
+      updateGrid[tile['q']][tile['r']] = updates
+    end
+
+    ActionCable.server.broadcast("layout_#{params[:layout]}_tiles", updateGrid)
     Redis.current.with do |conn|
       updates.each do |tile|
-        conn.hset(params[:layout], tile['index'], tile.reject { |k| k == 'index' }.to_json)\
+        conn.hset(params[:layout], "#{tile['q']}_#{tile['r']}", tile.reject { |k| ['q', 'r'].include?(k) }.to_json)
       end
     end
 
@@ -37,7 +44,6 @@ class TileChannel < ApplicationCable::Channel
   end
 
   def update_layout(updates, params)
-    return #noop until we fix the index_to_coords change
     layout = Layout.find(params[:layout])
     layout.update!(secure_params(updates))
 
