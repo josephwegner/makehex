@@ -4,6 +4,15 @@ import Cable from './cable.js'
 import GridEvents from './grid-events.js'
 import utils from './utils.js'
 
+function defaultTile () {
+  return {
+    color: utils.constants.TILE.color,
+    fog: utils.constants.TILE.fog,
+    icon: utils.constants.TILE.icon,
+    entities: {}
+  }
+}
+
 export default class Storestore {
   constructor() {
     this.store = new Vuex.Store({
@@ -46,12 +55,8 @@ export default class Storestore {
 
         eraseTile ({commit, state, getters}, coords) {
           var newFeatures = {}
-          newFeatures[q] = {}
-          newFeatures[q][r]= {
-            color: utils.constants.TILE.color,
-            fog: utils.constants.TILE.fog,
-            icon: utils.constants.TILE.icon
-          }
+          newFeatures[coords.q] = {}
+          newFeatures[coords.q][coords.r]= defaultTile()
 
           commit('updateTile', { tiles: newFeatures, source: 'editor' })
           Cable.sendTileUpdate(coords)
@@ -149,10 +154,20 @@ export default class Storestore {
             return layout.id === state.activeLayoutId
           })
 
-          var newTiles = new Array(layout.width)
-          newTiles.fill(null)
-          layout.grid = layout.grid.concat(newTiles)
+          var newGrid = Object.assign({}, layout.grid)
+          var q = Math.floor((layout.height - 1) / -2)
+          var maxQ = layout.width + q
+          while (q < maxQ) {
+            if (newGrid[q] === undefined) {
+              newGrid[q] = {}
+            }
+
+            newGrid[q][layout.height] = defaultTile()
+            q++
+          }
+
           layout.height++
+          layout.grid = newGrid
 
           Cable.pushLayout(layout)
         },
@@ -200,11 +215,7 @@ export default class Storestore {
                   layout.grid[q] = {}
                 }
                 if(!layout.grid[q][r]) {
-                  layout.grid[q][r] = {
-                    color: utils.constants.TILE.color,
-                    fog: utils.constants.TILE.fog,
-                    icon: utils.constants.TILE.icon
-                  }
+                  layout.grid[q][r] = defaultTile()
                 }
               }
             }
@@ -223,33 +234,52 @@ export default class Storestore {
             return layout.id === state.activeLayoutId
           })
 
-          var oldWidth = layout.width
-          var insertAt = layout.width * layout.height - oldWidth
-
-          while(insertAt >= 0) {
-            layout.grid.splice(insertAt, 0, null)
-            insertAt -= oldWidth
-          }
           layout.width++
+          var newGrid = {}
+          Object.keys(layout.grid).forEach((oldQ) => {
+            var newQ = parseInt(oldQ) + 1
+            newGrid[newQ] = layout.grid[oldQ]
+            if (newQ <= 0) {
+              newGrid[newQ][newQ * -2] = defaultTile()
+              newGrid[newQ][(newQ * -2) + 1] = defaultTile()
+            }
+          })
+          var newQ = Math.floor((layout.height / -2) + 1)
 
+          newGrid[newQ] = {}
+          newGrid[newQ][layout.height - 1] = defaultTile()
+          if (!(layout.height % 2)) {
+            newGrid[newQ][layout.height - 2] = defaultTile()
+          }
+
+          layout.grid = newGrid
           Cable.pushLayout(layout)
         },
 
         addRight (state) {
-          var layout = state.map.layouts.find((layout) => {
-            return layout.id === state.activeLayoutId
-          })
+            var layout = state.map.layouts.find((layout) => {
+              return layout.id === state.activeLayoutId
+            })
 
-          var oldWidth = layout.width
-          var insertAt = layout.width * layout.height
+            var newGrid = Object.assign(layout.grid)
 
-          while(insertAt > 0) {
-            layout.grid.splice(insertAt, 0, null)
-            insertAt -= oldWidth
-          }
-          layout.width++
+            var q = layout.width
+            var r = 0
+            while (r < layout.height) {
+              if (newGrid[q] === undefined) {
+                newGrid[q] = {}
+              }
 
-          Cable.pushLayout(layout)
+              newGrid[q][r] = defaultTile()
+
+              q = layout.width - Math.floor((r + 1) / 2)
+              r++
+            }
+
+            layout.width++
+
+            layout.grid = newGrid
+            Cable.pushLayout(layout)
         },
 
         addTop (state) {
@@ -257,11 +287,25 @@ export default class Storestore {
             return layout.id === state.activeLayoutId
           })
 
-          var newTiles = new Array(layout.width * 2)
-          newTiles.fill(null)
-          layout.grid = newTiles.concat(layout.grid)
+          var newGrid = {}
+          Object.keys(layout.grid).forEach(q => {
+            q = parseInt(q)
+            if (!newGrid[q - 1]) { newGrid[q - 1] = {} }
+            if (!newGrid[q]) { newGrid[q] = {} }
+
+            Object.keys(layout.grid[q]).forEach(r => {
+              r = parseInt(r)
+              newGrid[q - 1][r + 2] = layout.grid[q][r]
+            })
+
+            if (q >= 0) {
+              newGrid[q][0] = defaultTile()
+              newGrid[q][1] = defaultTile()
+            }
+          })
           layout.height += 2
 
+          layout.grid = newGrid
           Cable.pushLayout(layout)
         },
 
