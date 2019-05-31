@@ -10,8 +10,6 @@ import Store from '../lib/store.js'
 Vue.use(Vuex)
 Vue.config.performance = true
 
-console.log('here', process)
-
 //load directives
 import FocusInput from '../directives/focus-input.js'
 FocusInput(Vue)

@@ -369,10 +369,26 @@ export default class Storestore {
            return layout.id === payload.layout
          })
 
-         var empty = new Array(layout.width * layout.height).fill({})
-         payload.grid = empty.map((cell, index) => {
-           return payload.grid[index] || {}
-         })
+         // It's a bit nasty, but iterate over the map in x,y coords
+         // and fill in any blanks. The reason to do it in x,y
+         // is because our map is a rectangle. It's far easier to iterate
+         // over a rectangle in x,y than in q,r
+         for (var x=0; x<layout.width; x++) {
+           for (var y=0; y<layout.height; y++) {
+             var index = (y*layout.width) + x
+
+             var r =  Math.floor(index  / layout.width)
+             var qOffset = Math.ceil(r / -2)
+             var q = (index % layout.width) + qOffset
+
+             if (!payload.grid[q]) {
+               payload.grid[q] = {}
+             }
+             if(!payload.grid[q][r]) {
+               payload.grid[q][r] = defaultTile()
+             }
+           }
+         }
 
          layout.grid = payload.grid
        },
