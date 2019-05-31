@@ -57,8 +57,7 @@
             v-bind:index="1"
             v-bind:gridWidth="1"
             v-bind:viewOnly="true"
-            v-bind:xOffset="-17"
-            v-bind:yOffset="-30" />
+            v-bind:selectable="false" />
 
           </svg>
         </div>
@@ -82,9 +81,7 @@ export default {
 
       if (!hex) { return null }
 
-      var index = (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
-
-      return layout.grid[index]
+      return layout.grid[hex.q][hex.r]
     },
 
     editMode() {

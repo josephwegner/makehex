@@ -6,9 +6,8 @@
          v-bind:stroke="selected ? '#999' : stroke"
          v-bind:stroke-width="selected ? 3 : 1"
          v-bind:fill="fog && !isEditor ? '#cdcdcd' : color"
-         v-bind:data-q="coords().q"
-         v-bind:data-r="coords().r"
-         v-bind:data-index="index"
+         v-bind:data-q="q"
+         v-bind:data-r="r"
          v-on:mouseover="onHover($event)"
          v-on:mousedown="onClick($event)">
     </use>
@@ -79,24 +78,27 @@ export default {
     selected() {
       return this.selectable &&
              this.$store.state.selectedHex &&
-             this.$store.state.selectedHex.q === this.coords().q &&
-             this.$store.state.selectedHex.r === this.coords().r
+             this.$store.state.selectedHex.q === this.q &&
+             this.$store.state.selectedHex.r === this.r
     },
 
     translation() {
       // Each of these tiles has 2px of padding on it so subtract 4+1 before calculating position
       // Except ignore that for Y. There's probably a nice math way to figure out how much
       // to set each tile into each other... but I'm lazy so, #magicstrings
-      var coords = this.coords()
-      var yTranslation = (coords.r * (HEIGHT - 16)) + this.yOffset;
-      var xTranslation = ((coords.q + (coords.r * .5)) * (WIDTH - 5)) + this.xOffset;
+      var yTranslation = (this.r * (HEIGHT - 16)) + this.yOffset;
+      var xTranslation = ((this.q + (this.r * .5)) * (WIDTH - 5)) + this.xOffset;
 
       return `matrix(1,0,0,1,${xTranslation},${yTranslation})`
     }
   },
 
   props: {
-    index: {
+    q: {
+      type: Number,
+      default: 0
+    },
+    r: {
       type: Number,
       default: 0
     },
@@ -157,13 +159,6 @@ export default {
   },
 
   methods: {
-    coords() {
-      var coords = {}
-      coords.r =  Math.floor(this.index  / this.gridWidth)
-      var qOffset = Math.ceil(coords.r / -2)
-      coords.q = (this.index % this.gridWidth) + qOffset
-      return coords
-    },
 
     entityComponent(entity) {
       switch (entity) {
@@ -178,33 +173,35 @@ export default {
     },
 
     onClick($event) {
-      this.$emit('click', this.index, $event)
+      var coords = {q: this.q, r: this.r}
+
+      this.$emit('click', coords, $event)
       if (this.viewOnly) { return }
       var state = this.$store.state
       if (!state.editor) { return }
 
       if (state.tool.type === 'hex') {
-        this.$store.commit('selectHex', {q: this.coords().q, r: this.coords().r })
+        this.$store.commit('selectHex', coords)
       } else if (state.tool.type === 'erase') {
-        this.$store.dispatch('eraseTile', this.index)
+        this.$store.dispatch('eraseTile', coords)
       } else {
         switch (state.tool.coverage) {
           case 'single':
-            this.$store.dispatch('drawTile', this.index)
+            this.$store.dispatch('drawTile', coords)
             break;
 
           case 'fill':
-            this.$emit('fill', this.index)
+            this.$emit('fill', coords)
             break;
         }
       }
     },
 
     onHover($event) {
-      this.$emit('hover', this.index)
+      this.$emit('hover', {q: this.q, r: this.r})
       if (this.viewOnly) { return }
       if (this.$store.state.tool.type !== 'hex') {
-        this.$store.commit('hoverHex', {q: this.coords().q, r: this.coords().r })
+        this.$store.commit('hoverHex', {q: this.q, r: this.r })
       }
       if ($event.buttons && this.dragging) {
         this.onClick()

@@ -25,10 +25,18 @@ class TileChannel < ApplicationCable::Channel
       updates = [updates]
     end
 
-    ActionCable.server.broadcast("layout_#{params[:layout]}_tiles", updates)
     Redis.current.with do |conn|
+      updateGrid = {}
       updates.each do |tile|
-        conn.hset(params[:layout], tile['index'], tile.reject { |k| k == 'index' }.to_json)\
+        features = tile.reject { |k| ['q', 'r'].include?(k) }
+
+        if !updateGrid.has_key?(tile['q'])
+          updateGrid[tile['q']] = {}
+        end
+        updateGrid[tile['q']][tile['r']] = features
+
+        ActionCable.server.broadcast("layout_#{params[:layout]}_tiles", updateGrid)
+        conn.hset(params[:layout], "#{tile['q']}_#{tile['r']}", features.to_json)
       end
     end
 

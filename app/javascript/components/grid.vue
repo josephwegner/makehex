@@ -6,22 +6,34 @@
        v-bind:height="(height + 3) * 31">
 
     <g id="top-add" data-addDir="Top">
-      <tile v-for="n in (addWidth * 2)"
+      <tile v-for="n in (addWidth)"
             v-bind:key="key(`top-${n}`)"
             v-bind="addHex"
             v-bind:selectable="false"
-            v-bind:index="n"
+            v-bind:r="0"
+            v-bind:q="n - 1"
             v-bind:gridWidth="width"
             v-bind:xOffset="39 - 4"
             v-on:click="addRows"
             v-bind:viewOnly="true" />
+        <tile v-for="n in (addWidth)"
+              v-bind:key="key(`2top-${n}`)"
+              v-bind="addHex"
+              v-bind:selectable="false"
+              v-bind:r="1"
+              v-bind:q="n - 1"
+              v-bind:gridWidth="width"
+              v-bind:xOffset="39 - 4"
+              v-on:click="addRows"
+              v-bind:viewOnly="true" />
     </g>
     <g id="left-add" data-addDir="Left">
       <tile v-for="n in addHeight"
             v-bind:key="key(`left-${n}`)"
             v-bind="addHex"
             v-bind:selectable="false"
-            v-bind:index="n"
+            v-bind:r="n"
+            v-bind:q="Math.floor((n-1) / -2)"
             v-bind:yOffset="60"
             v-on:click="addRows"
             v-bind:viewOnly="true" />
@@ -31,21 +43,22 @@
             v-bind:key="key(`right-${n}`)"
             v-bind="addHex"
             v-bind:selectable="false"
-            v-bind:index="n"
+            v-bind:r="n"
+            v-bind:q="width + (Math.floor((n-1) / -2))"
             v-bind:yOffset="60"
-            v-bind:xOffset="(34 * (width + 1)) + 2"
+            v-bind:xOffset="35"
             v-on:click="addRows"
             v-bind:viewOnly="true" />
     </g>
     <g id="bottom-add" data-addDir="Bottom">
-      <tile v-for="n in addWidth"
+      <tile v-for="n in (addWidth + 1)"
             v-bind:key="key(`bottom-${n}`)"
             v-bind="addHex"
             v-bind:selectable="false"
-            v-bind:index="n"
+            v-bind:r="height + 2"
+            v-bind:q="Math.floor(height / -2) + n - 2"
             v-bind:gridWidth="width"
-            v-bind:xOffset="height % 2 ? 17 : 35"
-            v-bind:yOffset="(30 * (height + 2))"
+            v-bind:xOffset="39 - 4"
             v-on:click="addRows"
             v-bind:viewOnly="true" />
     </g>
@@ -53,25 +66,28 @@
        v-on:mousedown="dragging = true"
        v-on:mouseup="dragging = false"
        v-on:mouseleave="onMouseLeave">
-
-      <tile v-for="(tile, index) in grid"
-            v-if="index !== selectedIndex"
-            v-bind:key="key(index)"
-            v-bind="tile"
-            v-bind:index="index"
+       <g v-for="(cells, q) in grid">
+        <tile v-for="(tile, r) in cells"
+              v-if="r !== selectedHex.r || q !== selectedHex.q"
+              v-bind:key="key(q, r)"
+              v-bind="tile"
+              v-bind:q="parseInt(q)"
+              v-bind:r="parseInt(r)"
+              v-bind:gridWidth="width"
+              v-bind:yOffset="60"
+              v-bind:xOffset="35"
+              v-on:fill="fillFromCoords"
+              v-bind:dragging="dragging" />
+      </g>
+      <tile v-if="selectedHex.q >= 0"
+            v-bind:key="key(selectedHex.q, selectedHex.r)"
+            v-bind="grid[selectedHex.q][selectedHex.r]"
+            v-bind:q="parseInt(selectedHex.q)"
+            v-bind:r="parseInt(selectedHex.r)"
             v-bind:gridWidth="width"
             v-bind:yOffset="60"
             v-bind:xOffset="35"
-            v-on:fill="fillFromIndex"
-            v-bind:dragging="dragging" />
-      <tile v-if="selectedIndex >= 0"
-            v-bind:key="key(selectedIndex)"
-            v-bind="grid[selectedIndex]"
-            v-bind:index="selectedIndex"
-            v-bind:gridWidth="width"
-            v-bind:yOffset="60"
-            v-bind:xOffset="35"
-            v-on:fill="fillFromIndex"
+            v-on:fill="fillFromCoords"
             v-bind:dragging="dragging" />
     </g>
   </svg>
@@ -109,17 +125,13 @@ export default {
       return this.$store.getters.activeLayout.height
     },
 
-    selectedIndex () {
-      if (!this.$store.state.selectedHex) { return -1 }
-      var hex = this.$store.state.selectedHex
-      var layout = this.$store.getters.activeLayout
-
-      return (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
-    },
-
     width () {
       if (!this.$store.getters.activeLayout) { return 0 }
       return this.$store.getters.activeLayout.width
+    },
+
+    selectedHex () {
+      return this.$store.state.selectedHex ? this.$store.state.selectedHex : {q: -1, r: -1}
     }
   },
 
@@ -154,26 +166,40 @@ export default {
       return coords
     },
 
-    computeFillSections (changedIndexes) {
-      var indexesToCheck = []
+    computeFillSections (changeGrid) {
+      if (!changeGrid) {
+        changeGrid = {}
+      }
+
+      var coordsToCheck = []
+      var changes = []
+      for (var q in changeGrid) {
+        for (var r in changeGrid[q]) {
+          changes.push(changeGrid[q][r])
+        }
+      }
 
       if(this.fillSections.length) {
         // Pull out any fillSections that might have been effected by the changes
-        while(this.fillSections.length && changedIndexes.length) {
-          var oldHex = changedIndexes.shift()
-          var newHex = this.grid[oldHex.index]
+        while(this.fillSections.length && changes.length) {
+          var oldHex = changes.shift()
+          var newHex = this.grid[oldHex.q][oldHex.r]
 
           for(var i=0; i<this.fillSections.length; i++) {
             var section = this.fillSections[i]
             //Check old hex for a match
             if(utils.tilesMatch(oldHex, section) || utils.tilesMatch(newHex, section)) {
-              var hasNeighbor = section.locations.some((index) => {
-                return index === oldHex.index ||
-                       this.tilesNeighbors(this.cubeCoords(index), this.cubeCoords(oldHex.index))
+              var hasNeighbor = section.locations.some((coord) => {
+                var hex = {
+                  q: coord[0],
+                  r: coord[1]
+                }
+                return (hex.q === oldHex.q && hex.r === oldHex.r) ||
+                       this.tilesNeighbors(hex, oldHex)
               })
 
               if(hasNeighbor) {
-                indexesToCheck = indexesToCheck.concat(section.locations)
+                coordsToCheck = coordsToCheck.concat(section.locations)
                 this.fillSections.splice(i, 1)
                 i--
               }
@@ -181,23 +207,41 @@ export default {
           }
         }
       } else {
-        indexesToCheck = this.grid.map((t, i) => { return i })
+        for (var q in this.grid) {
+          coordsToCheck = coordsToCheck.concat(Object.keys(this.grid[q]).map(r => {
+            return [q, r]
+          }))
+        }
       }
 
-      var tilesToCheck = indexesToCheck.map(index => {
-        return Object.assign({},
-          this.grid[index] || {},
-          this.cubeCoords(index),
-          { index: index }
+      var tilesToCheck = {}
+      for (var coords of coordsToCheck) {
+        var q = coords[0]
+        var r = coords[1]
+        if (!tilesToCheck[q]) {
+          tilesToCheck[q] = {}
+        }
+        tilesToCheck[q][r] = Object.assign({},
+          this.grid[q][r] || {},
+          {q: parseInt(q), r: parseInt(r)}
         )
-      })
+      }
 
       var sections = []
-      while(tilesToCheck.length) {
+      var qs
+      while((qs = Object.keys(tilesToCheck)).length) {
         var section = {
           locations: []
         }
-        var initialTile = tilesToCheck.shift()
+
+        var initialQ = parseInt(qs.shift())
+        var initialR = parseInt(Object.keys(tilesToCheck[initialQ]).shift())
+        var initialTile = tilesToCheck[initialQ][initialR]
+
+        delete tilesToCheck[initialTile.q][initialTile.r]
+        if (Object.keys(tilesToCheck[initialTile.q]).length === 0) {
+          delete tilesToCheck[initialTile.q]
+        }
 
         for(var prop of utils.FILL_PROPS) {
           section[prop] = initialTile[prop]
@@ -206,13 +250,28 @@ export default {
         var queue = [initialTile]
         while(queue.length) {
           var curHex = queue.shift()
-          section.locations.push(curHex.index)
 
-          tilesToCheck.forEach((tile, index) => {
-            if(!utils.tilesMatch(this.grid[curHex.index], this.grid[tile.index])) { return }
-            if (this.tilesNeighbors(tile, curHex)) {
-              queue.push(tile)
-              tilesToCheck.splice(index, 1)
+          section.locations.push([curHex.q, curHex.r])
+
+          var neighbors = []
+          neighbors.push((tilesToCheck[curHex.q] || {})[curHex.r + 1])
+          neighbors.push((tilesToCheck[curHex.q] || {})[curHex.r - 1])
+          if (tilesToCheck[curHex.q - 1]) {
+            neighbors.push((tilesToCheck[curHex.q - 1] || {})[curHex.r])
+            neighbors.push((tilesToCheck[curHex.q - 1] || {})[curHex.r + 1])
+          }
+          if (tilesToCheck[curHex.q + 1]) {
+            neighbors.push((tilesToCheck[curHex.q + 1] || {})[curHex.r])
+            neighbors.push((tilesToCheck[curHex.q + 1] || {})[curHex.r - 1])
+          }
+
+          neighbors.forEach(neighbor => {
+            if(neighbor !== undefined && utils.tilesMatch(this.grid[curHex.q][curHex.r], this.grid[neighbor.q][neighbor.r])) {
+              queue.push(neighbor)
+              delete tilesToCheck[neighbor.q][neighbor.r]
+              if (Object.keys(tilesToCheck[neighbor.q]).length === 0) {
+                delete tilesToCheck[neighbor.q]
+              }
             }
           })
         }
@@ -223,13 +282,16 @@ export default {
       this.fillSections = this.fillSections.concat(sections)
     },
 
-    fillFromIndex(index) {
-      var tile = this.grid[index]
+    fillFromCoords(coords) {
+      var tile = this.grid[coords.q][coords.r]
 
-      var indexes = this.fillSections.find(section => {
+      var locations = this.fillSections.find(section => {
         if (!utils.tilesMatch(section, tile)) { return false }
-        return section.locations.indexOf(index) >= 0
+        return section.locations.some(locCoord => {
+          return locCoord[0] === coords.q && locCoord[1] === coords.r
+        })
       }).locations
+
       var tool = this.$store.state.tool
 
       var features = {}
@@ -244,23 +306,33 @@ export default {
           break
       }
 
-      var updates = indexes.map(i => {
-        return Object.assign({}, this.grid[i], features, {index: i})
+      var updates = {}
+      var coordHashes = []
+      locations.forEach(coord => {
+        var q = coord[0]
+        var r = coord[1]
+        if (updates[q] === undefined) {
+          updates[q] = {}
+        }
+
+        coordHashes.push({q: q, r: r})
+        updates[q][r] = Object.assign({}, this.grid[q][r], features)
       })
 
       this.$store.commit('updateTile', { tiles: updates, source: 'fill' })
-      Cable.sendTileUpdate(indexes)
+      Cable.sendTileUpdate(coordHashes)
     },
 
-    key (index) {
-      return `${this.$store.getters.activeLayout.id}-${index}`
+    key () {
+      var joined = Array.prototype.join.call(arguments, '-')
+      var id = this.$store.getters.activeLayout ? this.$store.getters.activeLayout.id : 'nolayout'
+      return `${id}-${joined}`
     },
 
     tilesNeighbors(a, b) {
       var distance = Math.max(
         Math.abs(a.q - b.q),
         Math.abs(a.r - b.r),
-        Math.abs(a.s - b.s)
       )
 
       return distance === 1

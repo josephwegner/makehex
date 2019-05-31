@@ -14,8 +14,14 @@ class TileUpdateWorker
 
       layout = Layout.find_by_id(layout_id)
 
-      tiles.each do |index, features|
-        layout.grid[index.to_i] = JSON.parse(features)
+      tiles.each do |coords_s, features|
+        coords = coords_s.split('_')
+        if !layout.grid.has_key?(coords[0])
+          puts 'q doesnt exist'
+          layout.grid[coords[0]] = {}
+        end
+
+        layout.grid[coords[0]][coords[1]] = JSON.parse(features)
       end
 
       layout.save!

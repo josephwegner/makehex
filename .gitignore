@@ -5,4 +5,5 @@ public/packs
 .env
 dump.rdb
 STATUS
+db/*.dump
 **/.DS_Store

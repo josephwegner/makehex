@@ -4,6 +4,15 @@ import Cable from './cable.js'
 import GridEvents from './grid-events.js'
 import utils from './utils.js'
 
+function defaultTile () {
+  return {
+    color: utils.constants.TILE.color,
+    fog: utils.constants.TILE.fog,
+    icon: utils.constants.TILE.icon,
+    entities: {}
+  }
+}
+
 export default class Storestore {
   constructor() {
     this.store = new Vuex.Store({
@@ -37,52 +46,58 @@ export default class Storestore {
           var index = (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
 
           await commit('addEntity', payload)
-          dispatch('sendTileUpdate', index)
+          dispatch('sendTileUpdate', hex)
         },
 
-        async sendTileUpdate ({ getters }, index) {
-          Cable.sendTileUpdate(index)
+        async sendTileUpdate ({ getters }, coords) {
+          Cable.sendTileUpdate(coords)
         },
 
-        eraseTile ({commit, state, getters}, index) {
-          var newFeatures = {
-            index: index,
-            color: utils.constants.TILE.color,
-            fog: utils.constants.TILE.fog,
-            icon: utils.constants.TILE.icon
-          }
+        eraseTile ({commit, state, getters}, coords) {
+          var newFeatures = {}
+          newFeatures[coords.q] = {}
+          newFeatures[coords.q][coords.r]= defaultTile()
 
           commit('updateTile', { tiles: newFeatures, source: 'editor' })
-          Cable.sendTileUpdate(index)
+          Cable.sendTileUpdate(coords)
         },
 
-        drawTile ({ commit, state, getters }, index) {
-          var tile = getters.activeLayout.grid[index] || {}
-          var data = {
+        drawTile ({ commit, state, getters }, coords) {
+          var tile = getters.activeLayout.grid[coords.q][coords.r] || {}
+          var props = {
             color: tile.color,
             fog: tile.fog,
-            icon: tile.icon,
-            index: index
+            icon: tile.icon
           }
 
           switch(state.tool.type) {
             case 'design':
-              data.color = state.tool.color || data.color
-              data.icon = state.tool.icon || data.icon
+              props.color = state.tool.color || props.color
+              props.icon = state.tool.icon || props.icon
               break
 
             case 'fog':
-              data.fog = state.tool.fogType === 'fog' ? true : false
+              props.fog = state.tool.fogType === 'fog' ? true : false
               break
           }
 
+          var data = {}
+          data[coords.q] = {}
+          data[coords.q][coords.r] = props
+
           commit('updateTile', { tiles: data, source: 'editor' })
-          Cable.sendTileUpdate(index)
+          Cable.sendTileUpdate(coords)
         },
 
         overwrite ({ commit }, data) {
           commit('updateTile', { tiles: data, source: 'overwrite' })
-          Cable.sendTileUpdate(data.map((tile) => { return tile.index }))
+          var coords = []
+          for (var q in data) {
+            for (var r in data[q]) {
+              coords.push({q: q, r: r})
+            }
+          }
+          Cable.sendTileUpdate(coords)
         }
       },
 
@@ -104,11 +119,14 @@ export default class Storestore {
           })
 
           var colorObj = {}
-          layout.grid.forEach(tile => {
-            if (tile.color) {
-              colorObj[tile.color] = true
+          for(var q in layout.grid) {
+            for (var r in layout.grid[q]) {
+              var color = layout.grid[q][r].color
+              if (color) {
+                colorObj[color] = true
+              }
             }
-          })
+          }
 
           return Object.keys(colorObj)
         },
@@ -136,10 +154,20 @@ export default class Storestore {
             return layout.id === state.activeLayoutId
           })
 
-          var newTiles = new Array(layout.width)
-          newTiles.fill(null)
-          layout.grid = layout.grid.concat(newTiles)
+          var newGrid = Object.assign({}, layout.grid)
+          var q = Math.floor((layout.height - 1) / -2)
+          var maxQ = layout.width + q
+          while (q < maxQ) {
+            if (newGrid[q] === undefined) {
+              newGrid[q] = {}
+            }
+
+            newGrid[q][layout.height] = defaultTile()
+            q++
+          }
+
           layout.height++
+          layout.grid = newGrid
 
           Cable.pushLayout(layout)
         },
@@ -149,30 +177,48 @@ export default class Storestore {
           var layout = state.map.layouts.find((layout) => {
             return layout.id === state.activeLayoutId
           })
-          var hex = state.selectedHex
-          var index = (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
-          if (!layout.grid[index]) {
-            layout.grid[index] = {}
-          }
-          var hex = layout.grid[index]
+          var selectedHex = state.selectedHex
+          var newGrid = {}
+          newGrid[selectedHex.q] = layout.grid[selectedHex.q] || {}
+
+          var hex = layout.grid[selectedHex.q][selectedHex.r]
 
           if(!hex.entities) {
             hex.entities = {}
           }
 
           var entities = Object.assign({}, hex.entities, payload)
-          layout.grid.splice(index, 1, Object.assign({}, hex, {
+          newGrid[selectedHex.q][selectedHex.r] = Object.assign({}, hex, {
             entities: entities
-          }))
+          })
+
+          layout.grid = Object.assign({}, layout.grid, newGrid)
         },
 
         addMap (state, map) {
           state.map = map
+
+          // It's a bit nasty, but iterate over the map in x,y coords
+          // and fill in any blanks. The reason to do it in x,y
+          // is because our map is a rectangle. It's far easier to iterate
+          // over a rectangle in x,y than in q,r
           state.map.layouts.forEach(layout => {
-            var empty = new Array(layout.width * layout.height).fill({})
-            layout.grid = empty.map((cell, index) => {
-              return layout.grid[index] || {}
-            })
+            for (var x=0; x<layout.width; x++) {
+              for (var y=0; y<layout.height; y++) {
+                var index = (y*layout.width) + x
+
+                var r =  Math.floor(index  / layout.width)
+                var qOffset = Math.ceil(r / -2)
+                var q = (index % layout.width) + qOffset
+
+                if (!layout.grid[q]) {
+                  layout.grid[q] = {}
+                }
+                if(!layout.grid[q][r]) {
+                  layout.grid[q][r] = defaultTile()
+                }
+              }
+            }
           })
         },
 
@@ -188,33 +234,52 @@ export default class Storestore {
             return layout.id === state.activeLayoutId
           })
 
-          var oldWidth = layout.width
-          var insertAt = layout.width * layout.height - oldWidth
-
-          while(insertAt >= 0) {
-            layout.grid.splice(insertAt, 0, null)
-            insertAt -= oldWidth
-          }
           layout.width++
+          var newGrid = {}
+          Object.keys(layout.grid).forEach((oldQ) => {
+            var newQ = parseInt(oldQ) + 1
+            newGrid[newQ] = layout.grid[oldQ]
+            if (newQ <= 0) {
+              newGrid[newQ][newQ * -2] = defaultTile()
+              newGrid[newQ][(newQ * -2) + 1] = defaultTile()
+            }
+          })
+          var newQ = Math.floor((layout.height / -2) + 1)
 
+          newGrid[newQ] = {}
+          newGrid[newQ][layout.height - 1] = defaultTile()
+          if (!(layout.height % 2)) {
+            newGrid[newQ][layout.height - 2] = defaultTile()
+          }
+
+          layout.grid = newGrid
           Cable.pushLayout(layout)
         },
 
         addRight (state) {
-          var layout = state.map.layouts.find((layout) => {
-            return layout.id === state.activeLayoutId
-          })
+            var layout = state.map.layouts.find((layout) => {
+              return layout.id === state.activeLayoutId
+            })
 
-          var oldWidth = layout.width
-          var insertAt = layout.width * layout.height
+            var newGrid = Object.assign(layout.grid)
 
-          while(insertAt > 0) {
-            layout.grid.splice(insertAt, 0, null)
-            insertAt -= oldWidth
-          }
-          layout.width++
+            var q = layout.width
+            var r = 0
+            while (r < layout.height) {
+              if (newGrid[q] === undefined) {
+                newGrid[q] = {}
+              }
 
-          Cable.pushLayout(layout)
+              newGrid[q][r] = defaultTile()
+
+              q = layout.width - Math.floor((r + 1) / 2)
+              r++
+            }
+
+            layout.width++
+
+            layout.grid = newGrid
+            Cable.pushLayout(layout)
         },
 
         addTop (state) {
@@ -222,11 +287,25 @@ export default class Storestore {
             return layout.id === state.activeLayoutId
           })
 
-          var newTiles = new Array(layout.width * 2)
-          newTiles.fill(null)
-          layout.grid = newTiles.concat(layout.grid)
+          var newGrid = {}
+          Object.keys(layout.grid).forEach(q => {
+            q = parseInt(q)
+            if (!newGrid[q - 1]) { newGrid[q - 1] = {} }
+            if (!newGrid[q]) { newGrid[q] = {} }
+
+            Object.keys(layout.grid[q]).forEach(r => {
+              r = parseInt(r)
+              newGrid[q - 1][r + 2] = layout.grid[q][r]
+            })
+
+            if (q >= 0) {
+              newGrid[q][0] = defaultTile()
+              newGrid[q][1] = defaultTile()
+            }
+          })
           layout.height += 2
 
+          layout.grid = newGrid
           Cable.pushLayout(layout)
         },
 
@@ -253,20 +332,32 @@ export default class Storestore {
           var layout = state.map.layouts.find((layout) => {
             return layout.id === state.activeLayoutId
           })
+          var changes = {}
+          var finalValues = {}
 
-          var tiles = payload.tiles.length ? payload.tiles : [payload.tiles]
-          var changes = []
+          for (var q in payload.tiles) {
+            for (var r in payload.tiles[q]) {
+              var updates = payload.tiles[q][r]
+              var tile = layout.grid[q][r] || {}
 
-          tiles.forEach(updates => {
-            var tile = layout.grid[updates.index] || {}
+              if (!changes[q]) {
+                changes[q] = {}
+                finalValues[q] = {}
+              }
 
-            var index = updates.index
-            changes.push(Object.assign({index: index}, tile))
+              changes[q][r] = Object.assign(
+                {q: q, r: r},
+                tile
+              )
+              finalValues[q][r] = Object.assign({}, tile, updates)
+            }
+          }
 
-            var finalValues = Object.assign({}, tile, updates)
-            delete finalValues.index
-            layout.grid.splice(index, 1, finalValues)
-          })
+          var newGrid = {}
+          for (var q in finalValues) {
+            newGrid[q] = Object.assign({}, layout.grid[q], finalValues[q])
+          }
+          layout.grid = Object.assign({}, layout.grid, newGrid)
 
           if (['server', 'overwrite'].indexOf(payload.source) === -1) {
             GridEvents.changed(changes)
@@ -278,10 +369,26 @@ export default class Storestore {
            return layout.id === payload.layout
          })
 
-         var empty = new Array(layout.width * layout.height).fill({})
-         payload.grid = empty.map((cell, index) => {
-           return payload.grid[index] || {}
-         })
+         // It's a bit nasty, but iterate over the map in x,y coords
+         // and fill in any blanks. The reason to do it in x,y
+         // is because our map is a rectangle. It's far easier to iterate
+         // over a rectangle in x,y than in q,r
+         for (var x=0; x<layout.width; x++) {
+           for (var y=0; y<layout.height; y++) {
+             var index = (y*layout.width) + x
+
+             var r =  Math.floor(index  / layout.width)
+             var qOffset = Math.ceil(r / -2)
+             var q = (index % layout.width) + qOffset
+
+             if (!payload.grid[q]) {
+               payload.grid[q] = {}
+             }
+             if(!payload.grid[q][r]) {
+               payload.grid[q][r] = defaultTile()
+             }
+           }
+         }
 
          layout.grid = payload.grid
        },
