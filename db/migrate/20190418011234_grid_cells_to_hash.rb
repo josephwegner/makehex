@@ -10,18 +10,20 @@ class GridCellsToHash < ActiveRecord::Migration[5.1]
     change_column_default :layouts, :grid, from: [], to: {}
     Layout.all.each do |l|
       grid = {}
-      l.grid.each_with_index do |cell, index|
-        next if cell.nil?
+      if !l.grid.nil?
+        l.grid.each_with_index do |cell, index|
+          next if cell.nil?
 
-        r = (index / l.width).floor
-        qOffset = (r / -2.to_f).ceil
-        q = (index % l.width) + qOffset
+          r = (index / l.width).floor
+          qOffset = (r / -2.to_f).ceil
+          q = (index % l.width) + qOffset
 
-        if !grid.has_key?(q)
-          grid[q] = {}
+          if !grid.has_key?(q)
+            grid[q] = {}
+          end
+
+          grid[q][r] = cell
         end
-
-        grid[q][r] = cell
       end
 
       l.grid = grid
