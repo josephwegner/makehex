@@ -72,8 +72,8 @@ export default class Storestore {
 
           switch(state.tool.type) {
             case 'design':
-              props.color = state.tool.color || props.color
-              props.icon = state.tool.icon || props.icon
+              props.color = state.tool.color
+              props.icon = state.tool.icon
               break
 
             case 'fog':

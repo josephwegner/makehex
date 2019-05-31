@@ -70,7 +70,7 @@ class Cable {
   }
 
   layoutUpdate(data) {
-    mthis.store.commit('updateTile', { tiles: data, source: 'server' })
+    this.store.commit('updateTile', { tiles: data, source: 'server' })
   }
 
   mapUpdate(data) {
