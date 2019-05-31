@@ -13,6 +13,7 @@
     </use>
 
     <use v-if="icon && !fog"
+         class="icon"
          v-bind:href="`/packs/tilecons.svg#${icon}`"
          v-bind:height="height"
          v-bind:width="width"></use>
@@ -216,5 +217,7 @@ export default {
 </script>
 
 <style scoped>
-
+  .icon {
+    pointer-events: none;
+  }
 </style>

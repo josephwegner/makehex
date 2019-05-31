@@ -297,8 +297,8 @@ export default {
       var features = {}
       switch(tool.type) {
         case 'design':
-          if (tool.color) { features.color = tool.color }
-          if (tool.icon) { features.icon = tool.icon }
+          features.color = tool.color
+          features.icon = tool.icon
           break
 
         case 'fog':
