@@ -8,7 +8,9 @@
            v-bind:class="{ selected: color === selected } ">
       </div>
 
-      <input type="color" class="color-select" v-on:input="select($event.target.value)" />
+      <input type="color"
+             class="color-select"
+             v-on:input="select($event.target.value)" />
     </div>
 
     <div class="color-tab selected-color"
@@ -29,7 +31,6 @@ export default {
   methods: {
     select(color) {
       this.onUpdate(color)
-      this.$emit('close')
     }
   },
 
