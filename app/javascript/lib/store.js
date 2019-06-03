@@ -345,11 +345,16 @@ export default class Storestore {
                 finalValues[q] = {}
               }
 
-              changes[q][r] = Object.assign(
-                {q: q, r: r},
-                tile
-              )
-              finalValues[q][r] = Object.assign({}, tile, updates)
+              if (updates === null) {
+                changes[q][r] = defaultTile()
+                finalValues[q][r] = defaultTile()
+              } else {
+                changes[q][r] = Object.assign(
+                  {q: q, r: r},
+                  tile
+                )
+                finalValues[q][r] = Object.assign({}, tile, updates)
+              }
             }
           }
 

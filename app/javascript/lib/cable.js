@@ -2,7 +2,7 @@ import ActionCable from 'actioncable'
 
 class Cable {
   constructor() {
-    this.ac = ActionCable.createConsumer();
+    this.ac = ActionCable.createConsumer()
   }
 
   loadStore(store) {
