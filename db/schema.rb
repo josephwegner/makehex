@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190603110613) do
+ActiveRecord::Schema.define(version: 20190611203921) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,9 @@ ActiveRecord::Schema.define(version: 20190603110613) do
     t.string "token_label"
     t.bigint "map_id"
     t.bigint "user_id"
+    t.integer "layout"
+    t.integer "location_q"
+    t.integer "location_r"
     t.index ["code"], name: "index_players_on_code"
     t.index ["map_id"], name: "index_players_on_map_id"
     t.index ["user_id"], name: "index_players_on_user_id"
