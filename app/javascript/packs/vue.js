@@ -17,9 +17,12 @@ FocusInput(Vue)
 document.addEventListener('DOMContentLoaded', () => {
   var root = document.getElementsByClassName('map-root')[0]
   var mapId = root.getAttribute('data-map-id')
+  var mapCode = root.getAttribute('data-map-code')
   var isEditor = root.getAttribute('data-editor') === 'true'
 
-  var store = new Store().store
+  var store = new Store({
+    mapCode: mapCode
+  }).store
   const editor = new Vue({
     el: '.map',
     store: store,

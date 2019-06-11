@@ -13,13 +13,14 @@ function defaultTile () {
   }
 }
 
-export default class Storestore {
-  constructor() {
+export default class Store {
+  constructor(props) {
     this.store = new Vuex.Store({
       state: {
         activeLayoutId: null,
         editor: false,
         map: null,
+        mapCode: props.mapCode,
         modal: {
           open: false,
           component: null

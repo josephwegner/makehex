@@ -6,12 +6,26 @@ button, input {
   width: 100%;
   margin-bottom: 1rem;
 
+  &.inline-form {
+    display: flex;
+
+    > div {
+      flex: auto;
+    }
+  }
+
   label {
     font-size: 1rem;
     font-weight: 600;
     color: var(--black);
     display: block;
     margin-bottom: .25rem;
+  }
+
+  .sublabel {
+    font-size: .75rem;
+    padding-bottom: .25rem;
+    display: inline-block;
   }
 
   input {
@@ -23,6 +37,12 @@ button, input {
     border-radius: var(--borderRadius);
     padding: .25rem .5rem;
     box-sizing: border-box;
+
+    &[type='color'] {
+      padding: 0;
+      border: none;
+      background: transparent;
+    }
   }
 }
 
@@ -83,10 +103,19 @@ button, input {
 
 .form-footer-links {
   margin-top: 1rem;
-  
+
   a {
     color: var(--darkGray);
     padding: .25rem 0;
     display: block;
   }
+}
+
+aside.error {
+  background-color: var(--red);
+  color: var(--white);
+  text-align: center;
+  padding: .5rem;
+  border-radius: var(--borderRadius);
+  margin-bottom: 1rem;
 }

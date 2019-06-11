@@ -1,63 +1,64 @@
 <template>
   <div class="footer-tools">
-    <div class="left-tools">
-      <layout-picker />
+    <div class="toolbar">
+      <div class="left-tools">
+        <layout-picker />
 
-      <toolbox v-bind:options="typeOptions"
-         v-bind:selected="type"
-         v-bind:onUpdate="updateTool.bind(this, 'type')" />
+        <toolbox v-bind:options="typeOptions"
+           v-bind:selected="type"
+           v-bind:onUpdate="updateTool.bind(this, 'type')" />
 
-      <div class="tool-wrapper" v-if="type === 'design'">
-        <toolbox v-bind:options="coverageOptions"
-                 v-bind:selected="coverage"
-                 v-bind:onUpdate="updateTool.bind(this, 'coverage')" />
-
-        <color-picker v-bind:selected="color"
-                      v-bind:onUpdate="updateTool.bind(this, 'color')"
-                      v-bind:open="openModal === 'color'"
-                      v-on:click="toggleModal('color')"
-                      v-on:close="closeModal('color')" />
-        <icon-picker v-bind:selected="icon"
-                     v-bind:onUpdate="updateTool.bind(this, 'icon')"
-                     v-bind:open="openModal === 'icon'"
-                     v-on:click="toggleModal('icon')"
-                     v-on:close="closeModal('icon')" />
-       </div>
-
-       <div class="tool-wrapper" v-if="type === 'fog'">
+        <div class="tool-wrapper" v-if="type === 'design'">
           <toolbox v-bind:options="coverageOptions"
                    v-bind:selected="coverage"
                    v-bind:onUpdate="updateTool.bind(this, 'coverage')" />
 
-          <toolbox v-bind:options="fogOptions"
-                   v-bind:selected="fogType"
-                   v-bind:onUpdate="updateTool.bind(this, 'fogType')" />
-       </div>
+          <color-picker v-bind:selected="color"
+                        v-bind:onUpdate="updateTool.bind(this, 'color')"
+                        v-bind:open="openModal === 'color'"
+                        v-on:click="toggleModal('color')"
+                        v-on:close="closeModal('color')" />
+          <icon-picker v-bind:selected="icon"
+                       v-bind:onUpdate="updateTool.bind(this, 'icon')"
+                       v-bind:open="openModal === 'icon'"
+                       v-on:click="toggleModal('icon')"
+                       v-on:close="closeModal('icon')" />
+         </div>
 
-       <div class="tool-wrapper" v-if="type === 'hex'">
-         <layout-link />
-       </div>
+         <div class="tool-wrapper" v-if="type === 'fog'">
+            <toolbox v-bind:options="coverageOptions"
+                     v-bind:selected="coverage"
+                     v-bind:onUpdate="updateTool.bind(this, 'coverage')" />
+
+            <toolbox v-bind:options="fogOptions"
+                     v-bind:selected="fogType"
+                     v-bind:onUpdate="updateTool.bind(this, 'fogType')" />
+         </div>
+
+         <div class="tool-wrapper" v-if="type === 'hex'">
+           <layout-link />
+         </div>
+      </div>
+      <div class="right-tools">
+        <button class="toolbar-button"
+                v-on:click="undo()"
+                v-bind:style="{ visibility: undoCount ? 'visible' : 'hidden' }">
+          <i class="fas fa-undo-alt"></i>
+        </button>
+        <button class="toolbar-button"
+                v-on:click="redo()"
+                v-bind:style="{ visibility: redoCount ? 'visible' : 'hidden' }">
+          <i class="fas fa-redo-alt"></i>
+        </button>
+        <button class="toolbar-button" v-on:click="showMetadataModal()">
+          <i class="fas fa-cog"></i>
+        </button>
+      </div>
+
+      <toolbar-panes>
+        <hex-zoom />
+      </toolbar-panes>
     </div>
-    <div class="right-tools">
-      <button class="toolbar-button"
-              v-on:click="undo()"
-              v-bind:style="{ visibility: undoCount ? 'visible' : 'hidden' }">
-        <i class="fas fa-undo-alt"></i>
-      </button>
-      <button class="toolbar-button"
-              v-on:click="redo()"
-              v-bind:style="{ visibility: redoCount ? 'visible' : 'hidden' }">
-        <i class="fas fa-redo-alt"></i>
-      </button>
-      <button class="toolbar-button" v-on:click="showMetadataModal()">
-        <i class="fas fa-cog"></i>
-      </button>
-    </div>
-
-    <toolbar-panes>
-      <hex-zoom />
-    </toolbar-panes>
-
     <Modal />
   </div>
 </template>
@@ -169,7 +170,7 @@ export default {
 </script>
 
 <style scoped>
-  .footer-tools {
+  .toolbar {
     background-color: var(--lightGray);
     height: var(--toolbarWidth);
     display: flex;

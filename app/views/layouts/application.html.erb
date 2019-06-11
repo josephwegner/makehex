@@ -11,9 +11,6 @@
   </head>
 
   <body>
-    <% flash.each do |key, value| %>
-      <div class="alert alert-<%= key %>"><%= value %></div>
-    <% end %>
     <%= yield %>
     <svg style="overflow: hidden; top: -100%; left: -100%; position: absolute; opacity: 0;">
       <defs>

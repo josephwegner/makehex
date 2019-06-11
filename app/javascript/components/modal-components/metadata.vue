@@ -1,6 +1,10 @@
 <template>
   <div class="form">
-    <h2>Map Info {{ originals.mapName }}</h2>
+    <h2>Map Info</h2>
+    <p class="share-url">
+      <span>Share URL:</span>
+      <span>{{shareURL}}</span>
+    </p>
     <div class="form-group">
       <label for="map-name">Map Name</label>
       <input v-model="mapName" id="map-name" type="text" />
@@ -23,6 +27,10 @@ import API from '../../lib/api.js'
 
 export default {
   computed: {
+    shareURL () {
+      return `${window.location.protocol}//${window.location.host}/maps/${this.$store.state.mapCode}`
+    },
+
     mapName: {
       get () {
         return this.$store.state.map ? this.$store.state.map.name : ''
@@ -98,6 +106,22 @@ export default {
 <style scoped>
   h2 {
     text-align: center;
+    color: var(--darkWhite);
+    margin-bottom: 0;
+  }
+
+  .share-url {
+    text-align: center;
+    font-size: .75rem;
+    margin: .5rem auto 2rem auto;
+  }
+
+  .share-url span:first-child {
+    color: var(--darkWhite);
+    font-weight: 600;
+  }
+
+  .share-url span:last-child {
     color: var(--darkWhite);
   }
 
