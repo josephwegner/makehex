@@ -37,6 +37,7 @@ gem 'redis-rails'
 gem 'webpacker', '~> 3.5'
 gem 'connection_pool'
 gem 'devise'
+gem 'premailer-rails'
 gem 'font-awesome-sass', '~> 5.5.0'
 
 # Use Capistrano for deployment
