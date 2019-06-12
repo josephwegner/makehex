@@ -1,10 +1,10 @@
-# Hexamagon
+# MakeHex
 
-Hexamagon is a live-play hex mapping tool. It excells at creating low-fideltiy hex-based maps that can be used in real-time during your gaming sessions to give players a clear and immersive experience of the game.
+MakeHex is a live-play hex mapping tool. It excells at creating low-fideltiy hex-based maps that can be used in real-time during your gaming sessions to give players a clear and immersive experience of the game.
 
 ## Hosting
 
-A key component of Hexmagon is its ability to be run and hosted easily by players that are so inclined. You can certainly create maps using our [hosted service](https://hexamagon.joewegner.com), but you are also more than welcome to host elsewhere and manage the tool yourself. There are a few components and configuration you should understand when setting up a Hexamagon instance.
+A key component of Hexmagon is its ability to be run and hosted easily by players that are so inclined. You can certainly create maps using our [hosted service](https://www.makehex.com), but you are also more than welcome to host elsewhere and manage the tool yourself. There are a few components and configuration you should understand when setting up a MakeHex instance.
 
 If you're lucky, you can kick off the app with two simple commands:
 
@@ -26,7 +26,7 @@ RAILS_ENV=production bundle exec rails s
 
 ### Sidekiq
 
-In order to avoid overloading the database with tons of updates, Hexamagon batches layout updates and commits them via a background worker called [Sidekiq](https://github.com/mperham/sidekiq). Again, Sidekiq is a Ruby library, so you will definitely need Ruby installed.
+In order to avoid overloading the database with tons of updates, MakeHex batches layout updates and commits them via a background worker called [Sidekiq](https://github.com/mperham/sidekiq). Again, Sidekiq is a Ruby library, so you will definitely need Ruby installed.
 
 ```
 bundle exec sidekiq
@@ -34,7 +34,7 @@ bundle exec sidekiq
 
 ### Redis
 
-Hexamagon relies on Redis for many things. From websockets, to sidekiq jobs, to caching tile updates, Redis is absolutely critical. I won't get into the intricacies here of running [Redis](https://redis.io/), but I'd recommend spending some time getting it right. It's a core piece of Hexamagon, and it being performant will be very valuable.
+MakeHex relies on Redis for many things. From websockets, to sidekiq jobs, to caching tile updates, Redis is absolutely critical. I won't get into the intricacies here of running [Redis](https://redis.io/), but I'd recommend spending some time getting it right. It's a core piece of MakeHex, and it being performant will be very valuable.
 
 Redis is usually started with
 ```

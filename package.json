@@ -1,5 +1,5 @@
 {
-  "name": "hexamagon",
+  "name": "makehex",
   "private": true,
   "dependencies": {
     "@rails/webpacker": "3.5",

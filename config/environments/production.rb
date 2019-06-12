@@ -61,9 +61,9 @@ config.webpacker.check_yarn_integrity = false
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment)
-  # config.active_job.queue_adapter     = :resque
+  config.active_job.queue_adapter     = :sidekiq
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: 'hexamagon.joewegner.com' }
+  config.action_mailer.default_url_options = { host: 'www.makehex.com' }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

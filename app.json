@@ -1,5 +1,5 @@
 {
-  "name": "hexamagon",
+  "name": "makehex",
   "scripts": {},
   "env": {
     "GRID_UPDATE_INTERVAL": {
