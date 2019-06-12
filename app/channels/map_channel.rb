@@ -6,7 +6,29 @@ class MapChannel < ApplicationCable::Channel
   end
 
   def receive(data)
-    # noop
-    puts 'received data for map channel, nothing to do with it.'
+
+      return unless data['method']
+
+      case data['method']
+      when 'movePlayer'
+        move_player(data['payload'], params)
+
+      end
+  end
+
+  private
+
+  def move_player(player_data, params)
+    puts 'here'
+    puts player_data
+    player = Player.find_by_id(player_data['id'])
+
+    if player.map.id == params[:map]
+      player.update(location_q: player_data['q'], location_r: player_data['r'], layout: player_data['layout'])
+      ActionCable.server.broadcast("map_#{params[:map]}", {
+        method: 'updatePlayer',
+        payload: player_data
+      })
+    end
   end
 end

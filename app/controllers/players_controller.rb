@@ -19,7 +19,9 @@ class PlayersController < ApplicationController
       end
 
       session[@map.cookie_auth_token] = true
-      @editor = false
+      session[:player_token] ||= "#{@player.code}_#{@map.access_code}"
+
+      @player_id = @player.id
       render :template => "maps/show_map"
     end
   end
@@ -31,9 +33,14 @@ class PlayersController < ApplicationController
     @player.map = map
     @player.save
 
-    if @player.errors
+    if !@player.valid?
       redirect_to "/maps/#{map.access_code}", flash: { create_errors: @player.errors.full_messages }
     else
+      UserMailer.with({
+        user: map.user,
+        player: @player,
+        map: map
+      }).new_player_email.deliver_later
       redirect_to "/maps/#{map.access_code}/#{@player.code}"
     end
   end
@@ -41,11 +48,17 @@ class PlayersController < ApplicationController
   private
 
   def secure_params
-    params.require(:player).permit(
+    sec = params.require(:player).permit(
       :code,
       :token_color,
       :token_label
     )
+
+    if sec.has_key?(:token_color) && sec[:token_color][0] = '#'
+      sec[:token_color] = sec[:token_color].slice(1, 6)
+    end
+
+    return sec
   end
 
 end

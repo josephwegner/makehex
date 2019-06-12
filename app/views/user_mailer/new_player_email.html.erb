@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>Hey! How exciting! A new player has joined your map, <%= @map.name %></p>
+
+    <%= link_to("Play your game!", url_for(@map)) %>
+
+    <p>Thanks for playing, and have a great day!</p>
+  </body>
+</html>

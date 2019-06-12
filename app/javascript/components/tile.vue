@@ -16,7 +16,8 @@
          class="icon"
          v-bind:href="`/packs/tilecons.svg#${icon}`"
          v-bind:height="height"
-         v-bind:width="width"></use>
+         v-bind:width="width"
+         v-bind:stroke="entityColor"></use>
 
     <use v-if="inEntities.link && !fog"
          href="#arrow-out-right"
@@ -25,13 +26,24 @@
          width="20"
          x="11.5"
          y="4"
-         v-on:click="openLayout(inEntities.link)"></use>
+         v-on:click="openLayout(inEntities.link)"
+         v-bind:stroke="entityColor"
+         v-bind:fill="entityColor"></use>
+
+    <text v-if="label && !fog"
+          x="12"
+          y="26"
+          v-bind:stroke="entityColor"
+          v-bind:fill="entityColor">
+
+          {{label}}
+    </text>
 
 
     <component v-for="entity in dirEntities"
                ng-if="entity.entity"
                v-bind:is="entity.entity"
-               v-bind:color="color"
+               v-bind:color="entityColor"
                v-bind:dir="entity.dir" />
 
   </g>
@@ -51,6 +63,19 @@ export default {
   },
 
   computed: {
+    entityColor() {
+      var color = this.color.replace('#','')
+      if (color.length === 3) {
+        color = color + color
+      }
+
+      var r = parseInt(color.substr(0,2),16);
+    	var g = parseInt(color.substr(2,2),16);
+    	var b = parseInt(color.substr(4,2),16);
+    	var yiq = ((r*299)+(g*587)+(b*114))/1000;
+    	return (yiq >= 65) ? '#222' : '#DDD';
+    },
+
     isEditor() {
       return this.$store.state.editor
     },
@@ -124,6 +149,10 @@ export default {
         return { in: {} }
       }
     },
+    label: {
+      type: String,
+      default: ''
+    },
     stroke: {
       type: String,
       default: '#232323'
@@ -179,12 +208,13 @@ export default {
       this.$emit('click', coords, $event)
       if (this.viewOnly) { return }
       var state = this.$store.state
-      if (!state.editor) { return }
 
       if (state.tool.type === 'hex') {
         this.$store.commit('selectHex', coords)
       } else if (state.tool.type === 'erase') {
         this.$store.dispatch('eraseTile', coords)
+      } else if (state.tool.type === 'player' && !this.fog) {
+        this.$store.dispatch('movePlayer', coords)
       } else {
         switch (state.tool.coverage) {
           case 'single':
@@ -219,5 +249,11 @@ export default {
 <style scoped>
   .icon {
     pointer-events: none;
+  }
+
+  text {
+    font-size: .75rem;
+    font-family: 'TeX Gyre Bonum';
+    letter-spacing: 1px;
   }
 </style>

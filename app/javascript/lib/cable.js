@@ -40,7 +40,17 @@ class Cable {
     this.mapChannel = this.ac.subscriptions.create({
       channel: 'MapChannel',
       map: this.store.state.map.id
-    }, { received: this.mapUpdate.bind(this) })
+    }, { received: (message) => {
+      switch (message.method) {
+        case 'pushLayout':
+          this.mapUpdate(message.payload)
+          break
+
+        case 'updatePlayer':
+          this.receivePlayer(message.payload)
+          break
+      }
+    }})
   }
 
   disconnectFromTile() {
@@ -75,6 +85,17 @@ class Cable {
 
   mapUpdate(data) {
     this.store.commit('updateLayoutGrid', data)
+  }
+
+  receivePlayer(data) {
+    this.store.commit('movePlayer', data)
+  }
+
+  updatePlayer(player) {
+    this.mapChannel.send({
+      method: 'movePlayer',
+      payload: player
+    })
   }
 }
 

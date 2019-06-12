@@ -1,7 +1,7 @@
 <ul>
 <% current_user.maps.each do |map| %>
   <li>
-    <%= link_to map.name, map_path(map) %>
+    <%= link_to map.name, url_for(@map) %>
   </li>
 <% end %>
 </ul>

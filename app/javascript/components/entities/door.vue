@@ -4,13 +4,12 @@
           v-bind:y1="coords.y1"
           v-bind:x2="coords.x2"
           v-bind:y2="coords.y2"
-          v-bind:stroke="color"
           stroke-width="1.2" />
     <line v-bind:x1="coords.x1"
           v-bind:y1="coords.y1"
           v-bind:x2="coords.x1 + 5"
           v-bind:y2="coords.y1 - 7"
-          stroke="#000"
+          v-bind:stroke="color"
           stroke-width="2" />
   </g>
 </template>
@@ -71,7 +70,7 @@ export default {
     }
   },
 
-  props: ['color', 'dir']
+  props: ['color', 'dir', 'fill']
 }
 </script>
 

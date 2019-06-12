@@ -26,7 +26,7 @@ class TileChannel < ApplicationCable::Channel
     end
 
     layout = Layout.find(params[:layout])
-    
+
     if layout.map.user.id == current_user
       Redis.current.with do |conn|
         updateGrid = {}

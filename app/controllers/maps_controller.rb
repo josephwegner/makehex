@@ -45,15 +45,14 @@ class MapsController < ApplicationController
     @map = Map.find_by_id(params[:id])
 
     if @map.user == current_user
-      @editor = true
+      @player_id = 'dm'
       respond_to do |format|
-        format.json { render :json => @map, :include => 'layouts' }
+        format.json { render :json => @map, :include => ['layouts', 'players'] }
         format.html { render :template => "maps/show_map" }
       end
     elsif session[@map.cookie_auth_token]
-      @editor = false
       respond_to do |format|
-        format.json { render :json => @map, :include => 'layouts' }
+        format.json { render :json => @map, :include => ['layouts', 'players'] }
         format.html { not_found }
       end
     else

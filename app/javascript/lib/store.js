@@ -25,6 +25,7 @@ export default class Store {
           open: false,
           component: null
         },
+        player: props.player === 'dm' ? props.player : parseInt(props.player),
         undoState: {
           undoCount: 0,
           redoCount: 0
@@ -90,6 +91,15 @@ export default class Store {
           Cable.sendTileUpdate(coords)
         },
 
+        movePlayer({ getters }, coords) {
+          Cable.updatePlayer({
+            id: getters.player.id,
+            layout: getters.activeLayout.id,
+            q: coords.q,
+            r: coords.r
+          })
+        },
+
         overwrite ({ commit }, data) {
           commit('updateTile', { tiles: data, source: 'overwrite' })
           var coords = []
@@ -130,6 +140,15 @@ export default class Store {
           }
 
           return Object.keys(colorObj)
+        },
+
+        player: state => {
+          if (!state.map) return null
+          if (state.player === 'dm') return null
+
+          return state.map.players.find(player => {
+            return player.id === state.player
+          })
         },
 
         selectedHex: state => {
@@ -319,6 +338,22 @@ export default class Store {
           state.hoveredHex = payload
         },
 
+        movePlayer(state, player_updates) {
+          var players = []
+          state.map.players.forEach(player => {
+            if (player.id !== player_updates.id) {
+              players.push(player)
+            } else {
+              player.location_q = player_updates.q
+              player.location_r = player_updates.r
+              player.layout = player_updates.layout
+              players.push(player)
+            }
+          })
+
+          state.map = Object.assign({}, state.map, { players: players })
+        },
+
         openLayout(state, layoutId) {
           state.activeLayoutId = layoutId
           Cable.connectToTile(layoutId)
@@ -417,6 +452,9 @@ export default class Store {
 
        setEditor(state, payload) {
          state.editor = payload
+         if (!state.editor) {
+           state.tool.type = 'player'
+         }
        },
 
        setLayoutName(state, payload) {
