@@ -1,4 +1,7 @@
 class PlayersController < ApplicationController
+  layout false
+  layout 'application', :except => :token
+
   def load
     if !params[:player_code]
       redirect_to "/maps/#{map.access_code}"
@@ -42,6 +45,16 @@ class PlayersController < ApplicationController
         map: map
       }).new_player_email.deliver_later
       redirect_to "/maps/#{map.access_code}/#{@player.code}"
+    end
+  end
+
+  def token
+    puts 'here'
+    puts params['player_id']
+    @player = Player.find_by_id(params['player_id'])
+
+    if !@player
+      not_found
     end
   end
 

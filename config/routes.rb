@@ -4,7 +4,9 @@ Rails.application.routes.draw do
   root 'home#index'
   resources :maps
   resources :layouts
-  resources :players
+  resources :players do
+    get 'token'
+  end
   get 'maps/:map_code/load', to: "players#load"
   get 'maps/:map_code/:player_code', to: "players#load"
 
