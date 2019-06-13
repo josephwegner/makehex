@@ -5,6 +5,9 @@
     "EMAIL_FROM": {
       "required": true
     },
+    "RAILS_ENV": {
+      "required": true
+    },
     "GRID_UPDATE_INTERVAL": {
       "required": true
     },
