@@ -3,7 +3,7 @@
   "scripts": {},
   "env": {
     "EMAIL_FROM": {
-      required: true
+      "required": true
     },
     "GRID_UPDATE_INTERVAL": {
       "required": true
