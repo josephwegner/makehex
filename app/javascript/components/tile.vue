@@ -31,10 +31,11 @@
          v-bind:fill="entityColor"></use>
 
     <text v-if="label && !fog"
-          x="12"
+          x="19.5"
           y="26"
           v-bind:stroke="entityColor"
-          v-bind:fill="entityColor">
+          v-bind:fill="entityColor"
+          text-anchor="middle">
 
           {{label}}
     </text>
