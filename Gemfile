@@ -39,6 +39,7 @@ gem 'connection_pool'
 gem 'devise'
 gem 'premailer-rails'
 gem 'font-awesome-sass', '~> 5.5.0'
+gem 'rmagick'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

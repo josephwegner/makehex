@@ -54,6 +54,23 @@ class PlayersController < ApplicationController
     if !@player
       not_found
     end
+
+    respond_to do |format|
+      format.svg { render :template => "players/token" }
+      format.png {
+        rendered = render_to_string(:template => "players/token.svg")
+        img, data = Magick::Image.from_blob(rendered) {
+          self.format = 'SVG'
+          self.background_color = 'transparent'
+          self.size = "86.6x100"
+        }
+
+        blob = img.to_blob {
+          self.format = 'PNG'
+        }
+        send_data blob, :type => "image/png", :disposition => "inline"
+      }
+    end
   end
 
   private
