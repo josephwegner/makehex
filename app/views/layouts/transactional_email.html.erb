@@ -7,10 +7,12 @@
   <body>
     <div id="container">
       <div id="header">
-        <a href="https://www.makehex.com">
-          <%= image_tag 'logo.png', class: 'logo' %>
-          <span>MakeHex</span>
-        </a>
+        <div id="logo-wrap">
+          <a href="https://www.makehex.com">
+            <%= image_tag 'logo.png', class: 'logo' %>
+            <span>MakeHex</span>
+          </a>
+        </div>
       </div>
       <div id="content">
         <%= yield %>
