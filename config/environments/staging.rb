@@ -36,7 +36,8 @@ config.webpacker.check_yarn_integrity = false
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.action_controller.asset_host = 'http://assets.example.com'
+  config.action_controller.asset_host = "#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
+  config.action_mailer.asset_host = "#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache

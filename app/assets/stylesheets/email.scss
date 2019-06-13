@@ -16,7 +16,7 @@ html,body {
 #header {
   width: 100%;
   height: 200px;
-  background-image: url('/assets/email_header_bg.png');
+  background-image: url(asset-path('email_header_bg.png'));
   background-size: contain;
   background-repeat: no-repeat;
   background-position: right;
