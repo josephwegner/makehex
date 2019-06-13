@@ -14,7 +14,7 @@ class MapsController < ApplicationController
 
   def create
     attributes = secure_params
-    secure_params[:access_code] = generate_token
+    attributes[:access_code] = generate_token
     @map = Map.new(attributes)
 
     @layout = Layout.create(
