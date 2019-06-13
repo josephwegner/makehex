@@ -39,7 +39,7 @@
     "papertrail",
     "heroku-postgresql",
     "heroku-redis",
-    "mailgun"
+    "sendgrid"
   ],
   "buildpacks": [
     {
