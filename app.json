@@ -2,6 +2,9 @@
   "name": "makehex",
   "scripts": {},
   "env": {
+    "EMAIL_FROM": {
+      required: true
+    },
     "GRID_UPDATE_INTERVAL": {
       "required": true
     },
