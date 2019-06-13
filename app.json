@@ -6,7 +6,7 @@
       "required": true
     },
     "RAILS_ENV": {
-      "required": true
+      "value": "staging"
     },
     "GRID_UPDATE_INTERVAL": {
       "required": true
