@@ -19,8 +19,6 @@ class MapChannel < ApplicationCable::Channel
   private
 
   def move_player(player_data, params)
-    puts 'here'
-    puts player_data
     player = Player.find_by_id(player_data['id'])
 
     if player.map.id == params[:map]

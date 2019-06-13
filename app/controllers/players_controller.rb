@@ -49,8 +49,6 @@ class PlayersController < ApplicationController
   end
 
   def token
-    puts 'here'
-    puts params['player_id']
     @player = Player.find_by_id(params['player_id'])
 
     if !@player

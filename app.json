@@ -35,7 +35,8 @@
   "addons": [
     "papertrail",
     "heroku-postgresql",
-    "heroku-redis"
+    "heroku-redis",
+    "mailgun"
   ],
   "buildpacks": [
     {
