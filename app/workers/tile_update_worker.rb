@@ -17,7 +17,6 @@ class TileUpdateWorker
       tiles.each do |coords_s, features|
         coords = coords_s.split('_')
         if !layout.grid.has_key?(coords[0])
-          puts 'q doesnt exist'
           layout.grid[coords[0]] = {}
         end
 

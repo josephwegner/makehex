@@ -26,8 +26,7 @@ class TileChannel < ApplicationCable::Channel
     end
 
     layout = Layout.find(params[:layout])
-
-    if layout.map.user.id == current_user
+    if layout.map.user.id == current_user.id
       Redis.current.with do |conn|
         updateGrid = {}
         updates.each do |tile|
@@ -51,7 +50,9 @@ class TileChannel < ApplicationCable::Channel
           updateGrid[tile['q']] = {}
         end
 
-        updateGrid[tile['q']][tile['r']] = layout.grid[tile['q'].to_s][tile['r'].to_s]
+        if layout.grid[tile['q'].to_s] && layout.grid[tile['q'].to_s][tile['r'].to_s]
+          updateGrid[tile['q']][tile['r']] = layout.grid[tile['q'].to_s][tile['r'].to_s]
+        end
       end
 
       ActionCable.server.broadcast("layout_#{params[:layout]}_tiles", updateGrid)

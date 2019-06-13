@@ -13,14 +13,16 @@ class MapsController < ApplicationController
   end
 
   def create
-    @map = Map.new(secure_params)
+    attributes = secure_params
+    secure_params[:access_code] = generate_token
+    @map = Map.new(attributes)
+
     @layout = Layout.create(
       name: 'Untitled',
       map: @map,
       height: 15,
       width: 15,
-      grid: [],
-      access_code: generate_token
+      grid: {}
     )
 
     @map.update(default_layout: @layout, user: current_user)
