@@ -213,7 +213,28 @@ export default {
         this.$store.commit('selectHex', coords)
       } else if (state.tool.type === 'erase') {
         this.$store.dispatch('eraseTile', coords)
-      } else if (state.tool.type === 'player' && !this.fog) {
+      } else if (state.tool.type === 'player') {
+        if (this.fog) {
+          this.$eventHub.$emit('notification', {
+            type: 'warn',
+            message: 'That tile is not visible yet!'
+          })
+          return
+        }
+
+        var playerOnEntity = this.$store.state.map.players.find(player => {
+          return player.location_q === coords.q &&
+                 player.location_r === coords.r &&
+                 player.layout === this.$store.state.activeLayoutId
+        })
+        if (playerOnEntity) {
+          this.$eventHub.$emit('notification', {
+            type: 'deny',
+            message: "There's already a character there!"
+          })
+          return
+        }
+
         this.$store.dispatch('movePlayer', coords)
       } else {
         switch (state.tool.coverage) {

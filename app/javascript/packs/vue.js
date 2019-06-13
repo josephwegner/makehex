@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
     mapCode: mapCode,
     player: player
   }).store
+
+  Vue.prototype.$eventHub = new Vue();
   const editor = new Vue({
     el: '.map',
     store: store,
