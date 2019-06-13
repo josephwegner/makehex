@@ -102,8 +102,8 @@ config.webpacker.check_yarn_integrity = false
   config.active_record.dump_schema_after_migration = false
 
   if ENV['APP_ENV'] == 'staging'
-    config.action_controller.asset_host = "#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
-    config.action_mailer.asset_host = "#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
+    config.action_controller.asset_host = "https://#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
+    config.action_mailer.asset_host = "https://#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
     config.action_mailer.default_url_options = { host: "#{ENV['HEROKU_APP_NAME']}.herokuapp.com" }
   else
     config.action_controller.asset_host = 'https://www.makehex.com'

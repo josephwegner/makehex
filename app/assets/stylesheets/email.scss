@@ -20,7 +20,7 @@ html,body {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: right;
-  background-color: var(--midgray);
+  background-color: #3c3c3c;
 }
 
 #header a {
@@ -33,7 +33,7 @@ html,body {
 
 #header span {
   font-size: 3rem;
-  color: var(--darkwhite);
+  color: #c0c0c0;
 }
 
 .logo {
@@ -46,9 +46,9 @@ html,body {
 }
 
 .button-link {
-  color: var(--white);
+  color: #f3f3f3;
   text-decoration: none;
-  background-color: var(--green);
+  background-color: #297C46;
   padding: 1rem;
   display: inline-block;
   margin-top: 1rem;
