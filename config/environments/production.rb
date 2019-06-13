@@ -35,10 +35,6 @@ config.webpacker.check_yarn_integrity = false
 
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
-  # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = 'https://www.makehex.com'
-  config.action_mailer.asset_host = 'https://www.makehex.com'
-
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
@@ -64,7 +60,6 @@ config.webpacker.check_yarn_integrity = false
   # Use a real queuing backend for Active Job (and separate queues per environment)
   config.active_job.queue_adapter     = :sidekiq
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: 'www.makehex.com' }
   ActionMailer::Base.smtp_settings = {
     :user_name => ENV['SENDGRID_USERNAME'],
     :password => ENV['SENDGRID_PASSWORD'],
@@ -105,4 +100,14 @@ config.webpacker.check_yarn_integrity = false
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  if ENV['APP_ENV'] == 'staging'
+    config.action_controller.asset_host = "#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
+    config.action_mailer.asset_host = "#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
+    config.action_mailer.default_url_options = { host: "#{ENV['HEROKU_APP_NAME']}.herokuapp.com" }
+  else
+    config.action_controller.asset_host = 'https://www.makehex.com'
+    config.action_mailer.asset_host = 'https://www.makehex.com'
+    config.action_mailer.default_url_options = { host: 'www.makehex.com' }
+  end
 end
