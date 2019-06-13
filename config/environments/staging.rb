@@ -63,7 +63,7 @@ config.webpacker.check_yarn_integrity = false
   # Use a real queuing backend for Active Job (and separate queues per environment)
   config.active_job.queue_adapter     = :sidekiq
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: 'www.makehex.com' }
+  config.action_mailer.default_url_options = { host: "#{ENV['HEROKU_APP_NAME'].herokuapp.com}" }
   ActionMailer::Base.smtp_settings = {
     :user_name => ENV['SENDGRID_USERNAME'],
     :password => ENV['SENDGRID_PASSWORD'],
@@ -74,6 +74,12 @@ config.webpacker.check_yarn_integrity = false
     :enable_starttls_auto => true
   }
   ActionMailer::Base.delivery_method = :smtp
+
+  # Print deprecation notices to the Rails logger.
+  config.active_support.deprecation = :log
+
+  # Raise an error on page load if there are pending migrations.
+  config.active_record.migration_error = :page_load
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
