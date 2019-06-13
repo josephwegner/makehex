@@ -63,7 +63,7 @@ config.webpacker.check_yarn_integrity = false
   # Use a real queuing backend for Active Job (and separate queues per environment)
   config.active_job.queue_adapter     = :sidekiq
   config.action_mailer.perform_caching = false
-  config.action_mailer.default_url_options = { host: "#{ENV['HEROKU_APP_NAME'].herokuapp.com}" }
+  config.action_mailer.default_url_options = { host: "#{ENV['HEROKU_APP_NAME']}.herokuapp.com" }
   ActionMailer::Base.smtp_settings = {
     :user_name => ENV['SENDGRID_USERNAME'],
     :password => ENV['SENDGRID_PASSWORD'],
