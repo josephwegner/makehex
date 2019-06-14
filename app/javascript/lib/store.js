@@ -159,10 +159,7 @@ export default class Store {
 
           if (state.selectedHex) {
             var hex = state.selectedHex
-            var index = (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
-            var selectedHex = layout.grid[index]
-
-            return selectedHex ? selectedHex : {}
+            return layout.grid[hex.q][hex.r] || {}
           }
         }
       },

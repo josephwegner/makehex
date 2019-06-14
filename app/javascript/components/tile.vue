@@ -19,14 +19,14 @@
          v-bind:width="width"
          v-bind:stroke="entityColor"></use>
 
-    <use v-if="inEntities.link && !fog"
-         href="#arrow-out-right"
+    <use v-if="inEntities.link && inEntities.link.layout && !fog"
+         v-bind:href="inEntities.link.locked ? '#arrow-out-right-locked' : '#arrow-out-right'"
          class="clickable-svg"
          height="20"
          width="20"
          x="11.5"
          y="4"
-         v-on:click="openLayout(inEntities.link)"
+         v-on:click="openLayout(inEntities.link.layout)"
          v-bind:stroke="entityColor"
          v-bind:fill="entityColor"></use>
 
@@ -262,7 +262,14 @@ export default {
     },
 
     openLayout(id) {
-      this.$store.commit('openLayout', id)
+      if (!this.inEntities.link.locked || this.$store.state.editor) {
+        this.$store.commit('openLayout', id)
+      } else {
+        this.$eventHub.$emit('notification', {
+          type: 'deny',
+          message: "That's locked!"
+        })
+      }
     }
   }
 }

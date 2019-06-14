@@ -3,13 +3,13 @@
     <div v-if="open" class="toolbar-modal">
       <ul>
         <li v-for="layout in layouts"
-            v-on:click="select(layout.id)"
-            v-bind:class="{selected: layout.id === (selectedLayout ? selectedLayout.id : null) }">
+            v-on:click="select(layout.id, selectedLink.locked)"
+            v-bind:class="{selected: layout.id === (selectedLink.layout ? selectedLink.layout : null) }">
 
           {{ layout.name }}
         </li>
-        <li v-on:click="select(null)"
-            v-bind:class="{selected: selectedLayout === null }">
+        <li v-on:click="select(null, selectedLink.locked)"
+            v-bind:class="{selected: selectedLink.layout === null }">
 
             Nowhere
         </li>
@@ -18,8 +18,14 @@
 
 
     <button v-on:click="open = !open">
-      Link to: {{ selectedLayout ? selectedLayout.name : 'Nowhere' }}
+      Link to: {{ selectedLink.layout ? layoutById(selectedLink.layout).name : 'Nowhere' }}
     </button>
+    <div class="lock" v-if="selectedLink.layout">
+      <input type="checkbox"
+             v-bind:checked="selectedLink.locked"
+             v-on:change="select(selectedLink.layout, $event.target.checked)" />
+      <label>Lock for players</label>
+    </div>
   </div>
 </template>
 
@@ -32,17 +38,26 @@ export default {
       return this.$store.getters.selectedHex
     },
 
-    selectedLayout () {
+    selectedLink () {
       if (!this.$store.state.selectedHex) { return null }
       var entities = this.$store.getters.selectedHex.entities || {}
       var inEntities = entities.in ? entities.in : {}
 
-      if (inEntities.link) {
-        return this.$store.state.map.layouts.find(layout => {
-          return layout.id === inEntities.link
-        })
+      if (!inEntities.link) {
+        inEntities.link = {
+          layout: null,
+          locked: false
+        }
+      }
+
+      // This is a legacy hack from an old link data model. Deprecated 6/13/19. Should be removed eventually.
+      if (typeof(inEntities.link) === 'number') {
+        return {
+          layout: inEntities.link,
+          locked: false
+        }
       } else {
-        return null
+        return inEntities.link
       }
     },
 
@@ -74,15 +89,24 @@ export default {
   },
 
   methods: {
-    select(layout) {
+    select(layout, locked) {
       var entity = {
         in: {
-          link: layout
+          link: {
+            layout: layout,
+            locked: locked
+          }
         }
       };
 
       this.$store.dispatch('addEntity', entity)
       this.open = false
+    },
+
+    layoutById(id) {
+      return this.layouts.find(layout => {
+        return layout.id === id
+      })
     }
   }
 }
@@ -140,5 +164,14 @@ export default {
 
   li:not(.selected):hover {
     background: var(--gray);
+  }
+
+  label {
+    color: var(--darkWhite);
+    font-size: .75rem;
+  }
+
+  .lock {
+    display: inline-block;
   }
 </style>
