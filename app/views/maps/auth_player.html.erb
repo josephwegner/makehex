@@ -1,0 +1,49 @@
+<% content_for :head_tags do %>
+  <%= stylesheet_link_tag 'outofapp', media: 'all' %>
+<% end %>
+
+<div class="centered-form">
+  <h2 class="tc">Enter Your Player Code</h2>
+
+  <% if flash[:load_errors] %>
+    <% flash[:load_errors].each do |error| %>
+      <aside class="error"><%= error %></aside>
+    <% end %>
+  <% end %>
+
+  <%= form_tag("/maps/#{@map.access_code}/load", method: "get") do |f| %>
+    <div class="form-group">
+      <%= label_tag :access_code %>
+      <%= text_field_tag :player_code, nil, autofocus: true %>
+    </div>
+    <%= submit_tag "Access Map", :class => "form-submit" %>
+  <% end %>
+
+  <h3 class="tc">Or Create a New Player</h3>
+
+  <%= form_for(@new_player) do |f| %>
+    <% if flash[:create_errors] %>
+      <% flash[:create_errors].each do |error| %>
+        <aside class="error"><%= error %></aside>
+      <% end %>
+    <% end %>
+    <%= f.hidden_field :map, value: @map.id %>
+    <div class="form-group">
+      <%= f.label :access_code %>
+      <span class="sublabel">You will use this to access your character in the future.</span>
+      <%= f.text_field :code, autofocus: true %>
+    </div>
+    <div class="form-group inline-form center">
+      <div>
+        <%= f.label 'Player Label' %>
+        <%= f.text_field :token_label, maxlength: 2, size: 2, placeholder: 'MH', style: 'width: 4rem;' %>
+      </div>
+      <div>
+        <%= f.label 'Player Color' %>
+        <%= f.color_field :token_color, value: '#297C46', style: 'width: 4rem; height: 2.5rem;' %>
+      </div>
+    </div>
+    <%= f.submit "Create Player", :class => "form-submit" %>
+  <% end %>
+
+</div>

@@ -8,8 +8,11 @@ module ApplicationCable
 
     private
       def find_verified_user
-        if true
-          1
+        current_user = env['warden'].user
+        if current_user
+          current_user
+        elsif request.session[:player_token]
+          current_user = "player_#{request.session[:player_token]}"
         else
           reject_unauthorized_connection
         end

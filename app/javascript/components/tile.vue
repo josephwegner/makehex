@@ -16,22 +16,35 @@
          class="icon"
          v-bind:href="`/packs/tilecons.svg#${icon}`"
          v-bind:height="height"
-         v-bind:width="width"></use>
+         v-bind:width="width"
+         v-bind:stroke="entityColor"></use>
 
-    <use v-if="inEntities.link && !fog"
-         href="#arrow-out-right"
+    <use v-if="inEntities.link && inEntities.link.layout && !fog"
+         v-bind:href="inEntities.link.locked ? '#arrow-out-right-locked' : '#arrow-out-right'"
          class="clickable-svg"
          height="20"
          width="20"
          x="11.5"
          y="4"
-         v-on:click="openLayout(inEntities.link)"></use>
+         v-on:click="openLayout(inEntities.link.layout)"
+         v-bind:stroke="entityColor"
+         v-bind:fill="entityColor"></use>
+
+    <text v-if="label && !fog"
+          x="19.5"
+          y="26"
+          v-bind:stroke="entityColor"
+          v-bind:fill="entityColor"
+          text-anchor="middle">
+
+          {{label}}
+    </text>
 
 
     <component v-for="entity in dirEntities"
                ng-if="entity.entity"
                v-bind:is="entity.entity"
-               v-bind:color="color"
+               v-bind:color="entityColor"
                v-bind:dir="entity.dir" />
 
   </g>
@@ -51,6 +64,19 @@ export default {
   },
 
   computed: {
+    entityColor() {
+      var color = this.color.replace('#','')
+      if (color.length === 3) {
+        color = color + color
+      }
+
+      var r = parseInt(color.substr(0,2),16);
+    	var g = parseInt(color.substr(2,2),16);
+    	var b = parseInt(color.substr(4,2),16);
+    	var yiq = ((r*299)+(g*587)+(b*114))/1000;
+    	return (yiq >= 65) ? '#222' : '#DDD';
+    },
+
     isEditor() {
       return this.$store.state.editor
     },
@@ -124,6 +150,10 @@ export default {
         return { in: {} }
       }
     },
+    label: {
+      type: String,
+      default: ''
+    },
     stroke: {
       type: String,
       default: '#232323'
@@ -179,12 +209,34 @@ export default {
       this.$emit('click', coords, $event)
       if (this.viewOnly) { return }
       var state = this.$store.state
-      if (!state.editor) { return }
 
       if (state.tool.type === 'hex') {
         this.$store.commit('selectHex', coords)
       } else if (state.tool.type === 'erase') {
         this.$store.dispatch('eraseTile', coords)
+      } else if (state.tool.type === 'player') {
+        if (this.fog) {
+          this.$eventHub.$emit('notification', {
+            type: 'warn',
+            message: 'That tile is not visible yet!'
+          })
+          return
+        }
+
+        var playerOnEntity = this.$store.state.map.players.find(player => {
+          return player.location_q === coords.q &&
+                 player.location_r === coords.r &&
+                 player.layout === this.$store.state.activeLayoutId
+        })
+        if (playerOnEntity) {
+          this.$eventHub.$emit('notification', {
+            type: 'deny',
+            message: "There's already a character there!"
+          })
+          return
+        }
+
+        this.$store.dispatch('movePlayer', coords)
       } else {
         switch (state.tool.coverage) {
           case 'single':
@@ -210,7 +262,14 @@ export default {
     },
 
     openLayout(id) {
-      this.$store.commit('openLayout', id)
+      if (!this.inEntities.link.locked || this.$store.state.editor) {
+        this.$store.commit('openLayout', id)
+      } else {
+        this.$eventHub.$emit('notification', {
+          type: 'deny',
+          message: "That's locked!"
+        })
+      }
     }
   }
 }
@@ -219,5 +278,11 @@ export default {
 <style scoped>
   .icon {
     pointer-events: none;
+  }
+
+  text {
+    font-size: .75rem;
+    font-family: 'TeX Gyre Bonum';
+    letter-spacing: 1px;
   }
 </style>

@@ -17,7 +17,6 @@ class TileUpdateWorker
       tiles.each do |coords_s, features|
         coords = coords_s.split('_')
         if !layout.grid.has_key?(coords[0])
-          puts 'q doesnt exist'
           layout.grid[coords[0]] = {}
         end
 
@@ -29,8 +28,11 @@ class TileUpdateWorker
 
       if tiles.size > 0
         ActionCable.server.broadcast("map_#{layout.map.id}", {
-          layout: layout.id,
-          grid: layout.grid
+          method: 'pushLayout',
+          payload: {
+            layout: layout.id,
+            grid: layout.grid
+          }
         })
         puts "Updated #{tiles.size} tiles"
       end

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <%= stylesheet_link_tag 'email' %>
+  </head>
+  <body>
+    <div id="container">
+      <div id="header">
+        <div id="logo-wrap">
+          <a href="https://www.makehex.com">
+            <%= image_tag 'logo.png', class: 'logo' %>
+            <span>MakeHex</span>
+          </a>
+        </div>
+      </div>
+      <div id="content">
+        <%= yield %>
+      </div>
+    </div>
+  </body>
+</html>

@@ -17,16 +17,22 @@ FocusInput(Vue)
 document.addEventListener('DOMContentLoaded', () => {
   var root = document.getElementsByClassName('map-root')[0]
   var mapId = root.getAttribute('data-map-id')
-  var isEditor = root.getAttribute('data-editor') === 'true'
+  var mapCode = root.getAttribute('data-map-code')
+  var player = root.getAttribute('data-player')
 
-  var store = new Store().store
+  var store = new Store({
+    mapCode: mapCode,
+    player: player
+  }).store
+
+  Vue.prototype.$eventHub = new Vue();
   const editor = new Vue({
     el: '.map',
     store: store,
     template: '<Map/>',
     components: { Map },
     beforeCreate: function() {
-      this.$store.commit('setEditor', isEditor)
+      this.$store.commit('setEditor', player === 'dm')
       API.getMap(mapId).then((map) => {
         this.$store.commit('addMap', map)
         this.$store.commit('openLayout', map.default_layout_id)
@@ -35,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   })
 
-  if (isEditor) {
+  if (player === 'dm') {
     const tools = new Vue({
       el: '.footer-tools',
       store: store,

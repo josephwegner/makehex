@@ -5,7 +5,7 @@
        v-bind:width="(width + 2) * 35"
        v-bind:height="(height + 3) * 31">
 
-    <g id="top-add" data-addDir="Top">
+    <g v-if="isEditor" id="top-add" data-addDir="Top">
       <tile v-for="n in (addWidth)"
             v-bind:key="key(`top-${n}`)"
             v-bind="addHex"
@@ -27,7 +27,7 @@
               v-on:click="addRows"
               v-bind:viewOnly="true" />
     </g>
-    <g id="left-add" data-addDir="Left">
+    <g v-if="isEditor" id="left-add" data-addDir="Left">
       <tile v-for="n in addHeight"
             v-bind:key="key(`left-${n}`)"
             v-bind="addHex"
@@ -38,7 +38,7 @@
             v-on:click="addRows"
             v-bind:viewOnly="true" />
     </g>
-    <g id="right-add" data-addDir="Right">
+    <g v-if="isEditor" id="right-add" data-addDir="Right">
       <tile v-for="n in addHeight"
             v-bind:key="key(`right-${n}`)"
             v-bind="addHex"
@@ -50,7 +50,7 @@
             v-on:click="addRows"
             v-bind:viewOnly="true" />
     </g>
-    <g id="bottom-add" data-addDir="Bottom">
+    <g v-if="isEditor" id="bottom-add" data-addDir="Bottom">
       <tile v-for="n in (addWidth + 1)"
             v-bind:key="key(`bottom-${n}`)"
             v-bind="addHex"
@@ -74,8 +74,8 @@
               v-bind:q="parseInt(q)"
               v-bind:r="parseInt(r)"
               v-bind:gridWidth="width"
-              v-bind:yOffset="60"
-              v-bind:xOffset="35"
+              v-bind:yOffset="topOffset"
+              v-bind:xOffset="leftOffset"
               v-on:fill="fillFromCoords"
               v-bind:dragging="dragging" />
       </g>
@@ -85,10 +85,21 @@
             v-bind:q="parseInt(selectedHex.q)"
             v-bind:r="parseInt(selectedHex.r)"
             v-bind:gridWidth="width"
-            v-bind:yOffset="60"
-            v-bind:xOffset="35"
+            v-bind:yOffset="topOffset"
+            v-bind:xOffset="leftOffset"
             v-on:fill="fillFromCoords"
             v-bind:dragging="dragging" />
+    </g>
+    <g id="player-tiles">
+      <tile v-for="player in players"
+            v-bind:key="key('player', player.id)"
+            v-bind:q="player.location_q"
+            v-bind:r="player.location_r"
+            v-bind:color="'#' + player.token_color"
+            v-bind:label="player.token_label"
+            v-bind:gridWidth="width"
+            v-bind:yOffset="topOffset"
+            v-bind:xOffset="leftOffset" />
     </g>
   </svg>
 </template>
@@ -115,6 +126,22 @@ export default {
       return this.$store.getters.activeLayout.height - 1
     },
 
+    isEditor () {
+      return this.$store.state.editor
+    },
+
+    leftOffset () {
+      return this.$store.state.editor ? 35 : 5
+    },
+
+    players () {
+      if (!this.$store.getters.activeLayout) { return [] }
+
+      return this.$store.state.map.players.filter(player => {
+        return player.layout === this.$store.state.activeLayoutId
+      })
+    },
+
     grid () {
       if (!this.$store.getters.activeLayout) { return [] }
       return this.$store.getters.activeLayout.grid
@@ -123,6 +150,10 @@ export default {
     height () {
       if (!this.$store.getters.activeLayout) { return 0 }
       return this.$store.getters.activeLayout.height
+    },
+
+    topOffset () {
+      return this.$store.state.editor ? 60 : 5
     },
 
     width () {
@@ -364,4 +395,7 @@ export default {
 </script>
 
 <style scoped>
+  #player-tiles > g {
+    pointer-events: none;
+  }
 </style>

@@ -46,3 +46,26 @@
   font-weight: 700;
   src: url('/webfonts/SourceSansPro-Bold.ttf') format('truetype');
 }
+
+@font-face {
+  font-family: 'TeX Gyre Bonum';
+  font-weight: 700;
+  src: url('/webfonts/texgyrebonum-bold.otf') format('opentype');
+}
+@font-face {
+  font-family: 'TeX Gyre Bonum';
+  font-style: italic;
+  font-weight: 700;
+  src: url('/webfonts/texgyrebonum-bolditalic.otf') format('opentype');
+}
+@font-face {
+  font-family: 'TeX Gyre Bonum';
+  font-weight: 400;
+  src: url('/webfonts/texgyrebonum-regular.otf') format('opentype');
+}
+@font-face {
+  font-family: 'TeX Gyre Bonum';
+  font-weight: 400;
+  font-style: italic;
+  src: url('/webfonts/texgyrebonum-italic.otf') format('opentype');
+}

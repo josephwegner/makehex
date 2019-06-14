@@ -13,17 +13,19 @@ function defaultTile () {
   }
 }
 
-export default class Storestore {
-  constructor() {
+export default class Store {
+  constructor(props) {
     this.store = new Vuex.Store({
       state: {
         activeLayoutId: null,
         editor: false,
         map: null,
+        mapCode: props.mapCode,
         modal: {
           open: false,
           component: null
         },
+        player: props.player === 'dm' ? props.player : parseInt(props.player),
         undoState: {
           undoCount: 0,
           redoCount: 0
@@ -89,6 +91,15 @@ export default class Storestore {
           Cable.sendTileUpdate(coords)
         },
 
+        movePlayer({ getters }, coords) {
+          Cable.updatePlayer({
+            id: getters.player.id,
+            layout: getters.activeLayout.id,
+            q: coords.q,
+            r: coords.r
+          })
+        },
+
         overwrite ({ commit }, data) {
           commit('updateTile', { tiles: data, source: 'overwrite' })
           var coords = []
@@ -131,6 +142,15 @@ export default class Storestore {
           return Object.keys(colorObj)
         },
 
+        player: state => {
+          if (!state.map) return null
+          if (state.player === 'dm') return null
+
+          return state.map.players.find(player => {
+            return player.id === state.player
+          })
+        },
+
         selectedHex: state => {
           if (!state.map || !state.activeLayoutId) return {}
           var layout = state.map.layouts.find(layout => {
@@ -139,10 +159,7 @@ export default class Storestore {
 
           if (state.selectedHex) {
             var hex = state.selectedHex
-            var index = (layout.width * hex.r) + Math.floor(hex.r / 2) + hex.q
-            var selectedHex = layout.grid[index]
-
-            return selectedHex ? selectedHex : {}
+            return layout.grid[hex.q][hex.r] || {}
           }
         }
       },
@@ -318,6 +335,22 @@ export default class Storestore {
           state.hoveredHex = payload
         },
 
+        movePlayer(state, player_updates) {
+          var players = []
+          state.map.players.forEach(player => {
+            if (player.id !== player_updates.id) {
+              players.push(player)
+            } else {
+              player.location_q = player_updates.q
+              player.location_r = player_updates.r
+              player.layout = player_updates.layout
+              players.push(player)
+            }
+          })
+
+          state.map = Object.assign({}, state.map, { players: players })
+        },
+
         openLayout(state, layoutId) {
           state.activeLayoutId = layoutId
           Cable.connectToTile(layoutId)
@@ -345,11 +378,16 @@ export default class Storestore {
                 finalValues[q] = {}
               }
 
-              changes[q][r] = Object.assign(
-                {q: q, r: r},
-                tile
-              )
-              finalValues[q][r] = Object.assign({}, tile, updates)
+              if (updates === null) {
+                changes[q][r] = defaultTile()
+                finalValues[q][r] = defaultTile()
+              } else {
+                changes[q][r] = Object.assign(
+                  {q: q, r: r},
+                  tile
+                )
+                finalValues[q][r] = Object.assign({}, tile, updates)
+              }
             }
           }
 
@@ -411,6 +449,9 @@ export default class Storestore {
 
        setEditor(state, payload) {
          state.editor = payload
+         if (!state.editor) {
+           state.tool.type = 'player'
+         }
        },
 
        setLayoutName(state, payload) {

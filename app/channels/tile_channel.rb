@@ -25,22 +25,38 @@ class TileChannel < ApplicationCable::Channel
       updates = [updates]
     end
 
-    Redis.current.with do |conn|
+    layout = Layout.find(params[:layout])
+    if layout.map.user.id == current_user.id
+      Redis.current.with do |conn|
+        updateGrid = {}
+        updates.each do |tile|
+          features = tile.reject { |k| ['q', 'r'].include?(k) }
+
+          if !updateGrid.has_key?(tile['q'])
+            updateGrid[tile['q']] = {}
+          end
+          updateGrid[tile['q']][tile['r']] = features
+
+          ActionCable.server.broadcast("layout_#{params[:layout]}_tiles", updateGrid)
+          conn.hset(params[:layout], "#{tile['q']}_#{tile['r']}", features.to_json)
+        end
+      end
+
+      TileUpdateWorker.perform_in(ENV['GRID_UPDATE_INTERVAL'].to_i.seconds, params[:layout])
+    else
       updateGrid = {}
       updates.each do |tile|
-        features = tile.reject { |k| ['q', 'r'].include?(k) }
-
         if !updateGrid.has_key?(tile['q'])
           updateGrid[tile['q']] = {}
         end
-        updateGrid[tile['q']][tile['r']] = features
 
-        ActionCable.server.broadcast("layout_#{params[:layout]}_tiles", updateGrid)
-        conn.hset(params[:layout], "#{tile['q']}_#{tile['r']}", features.to_json)
+        if layout.grid[tile['q'].to_s] && layout.grid[tile['q'].to_s][tile['r'].to_s]
+          updateGrid[tile['q']][tile['r']] = layout.grid[tile['q'].to_s][tile['r'].to_s]
+        end
       end
-    end
 
-    TileUpdateWorker.perform_in(ENV['GRID_UPDATE_INTERVAL'].to_i.seconds, params[:layout])
+      ActionCable.server.broadcast("layout_#{params[:layout]}_tiles", updateGrid)
+    end
   end
 
   def update_layout(updates, params)

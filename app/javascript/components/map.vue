@@ -1,15 +1,18 @@
 <template>
   <div id="hex-holder">
     <grid />
+    <toast />
   </div>
 </template>
 
 <script>
 import Grid from './grid.vue'
+import Toast from './toast.vue'
 
 export default {
   components: {
-    Grid
+    Grid,
+    Toast
   }
 }
 
