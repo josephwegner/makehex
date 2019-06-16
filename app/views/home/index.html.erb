@@ -1,8 +1,25 @@
-<ul>
+<% content_for :head_tags do %>
+  <%= stylesheet_link_tag 'outofapp', media: 'all' %>
+<% end %>
+<h1>Maps</h1>
+<ul class="map-list">
 <% current_user.maps.each do |map| %>
-  <li>
-    <%= link_to map.name, map_path(map.id) %>
+  <li class="map-item">
+    <a href="<%= map_path(map.id) %>">
+      <div class="map-colors">
+        <% @map_colors[map.id].each do |color| %>
+          <i style="background-color: <%= color %>"></i>
+        <% end %>
+      </div>
+      <div class="details">
+        <span class="map-title"><%= map.name %></span>
+        <div>
+          <span class="sub-detail">Layouts: <%= map.layouts.count %></span>
+          <span class="sub-detail">Players: <%= map.players.count %></span>
+        </div>
+      </div>
+    </a>
   </li>
 <% end %>
 </ul>
-<%= link_to "New Map", new_map_path %>
+<%= link_to "New Map", new_map_path, class: "button", style: "margin-left: 3rem;" %>
