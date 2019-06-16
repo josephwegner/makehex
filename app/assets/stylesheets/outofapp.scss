@@ -9,3 +9,98 @@
 .tc {
   text-align: center;
 }
+
+h1 {
+  margin-left: 3rem;
+  color: var(--darkWhite);
+}
+
+.map-list {
+  list-style-type: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.map-item {
+  height: 4rem;
+  border: 1px solid var(--lightestGray);
+  background-color: var(--gray);
+  border-radius: var(--borderRadius);
+  width: 14rem;
+  margin: .5rem;
+  box-sizing: border-box;
+
+  a {
+    color: var(--white);
+    text-decoration: none;
+    height: 100%;
+    width: 100%;
+    padding: .5rem;
+    display: flex;
+    box-sizing: border-box;
+  }
+
+  .map-colors {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 2px;
+    margin-right: .5rem;
+
+    i {
+      width: .5rem;
+      flex: auto;
+
+      &:first-child {
+        border-radius: 2px 2px 0 0;
+      }
+
+      &:last-child {
+        border-radius: 0 0 2px 2px;
+      }
+    }
+  }
+
+  .details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+
+    > div {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+
+  .map-title {
+    font-weight: 600;
+    display: block;
+  }
+
+  .sub-detail {
+    font-size: .75rem;
+    color: var(--darkWhite);
+    flex: auto
+  }
+}
+
+.button {
+  background-color: var(--blue);
+  transition: background-color .125s;
+  cursor: pointer;
+  width: 100%;
+  min-width: 10rem;
+  padding: .5rem 1rem;
+  color: var(--white);
+  border: none;
+  border-radius: var(--borderRadius);
+  margin-top: .5rem;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+
+  &:hover {
+    background-color: var(--lightBlue);
+  }
+}
