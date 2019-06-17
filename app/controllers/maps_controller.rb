@@ -50,8 +50,8 @@ class MapsController < ApplicationController
     if @map.user == current_user
       @player_id = 'dm'
       respond_to do |format|
-        format.json { render :json => @map, :include => ['layouts', 'players'], :layout => "map" }
-        format.html { render :template => "maps/show_map" }
+        format.json { render :json => @map, :include => ['layouts', 'players'] }
+        format.html { render :template => "maps/show_map", :layout => "map" }
       end
     elsif session[@map.cookie_auth_token]
       respond_to do |format|
