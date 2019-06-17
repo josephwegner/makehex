@@ -1,0 +1,21 @@
+$fontColors: white, darkWhite, black, darkGray, gray, midGray, lightGray, red;
+$sizes: .5rem, .75rem, 1rem, 2rem, 3rem, 5rem, 10rem;
+$weights: 300, 400, 600, 600;
+
+@each $color in $fontColors {
+  .#{$color} {
+    color: #{$color};
+  }
+}
+
+@each $size in $sizes {
+  .f#{index($sizes, $size)} {
+    font-size: $size;
+  }
+}
+
+@each $weight in $weights {
+  .fw#{index($weights, $weight)} {
+    font-weight: $weight;
+  }
+}

@@ -1,13 +1,34 @@
+html,body {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  font-size: 16px;
+  font-family: 'Source Sans Pro', sans-serif;
+  background-color: var(--midGray);
+}
+
 .centered-form {
   width: 500px;
   margin: 100px auto auto auto;
   background-color: var(--lightestGray);
   padding: 2rem;
   border-radius: var(--borderRadius);
+
+  hr {
+    border-color: var(--darkWhite);
+    margin: 2rem 3rem;
+  }
 }
 
 .tc {
   text-align: center;
+}
+.tr {
+  text-align: right;
+}
+
+a {
+  color: var(--lighGray);
 }
 
 h1 {
@@ -85,22 +106,10 @@ h1 {
   }
 }
 
-.button {
-  background-color: var(--blue);
-  transition: background-color .125s;
-  cursor: pointer;
-  width: 100%;
-  min-width: 10rem;
-  padding: .5rem 1rem;
-  color: var(--white);
-  border: none;
-  border-radius: var(--borderRadius);
-  margin-top: .5rem;
-  font-weight: 700;
-  font-size: 1rem;
-  text-decoration: none;
-
-  &:hover {
-    background-color: var(--lightBlue);
-  }
-}
+@import './components/button.scss';
+@import './colors.scss';
+@import './components/flex.scss';
+@import './components/form.scss';
+@import './components/sizing.scss';
+@import './components/spacing.scss';
+@import './components/text.scss';

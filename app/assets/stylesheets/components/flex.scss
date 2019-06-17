@@ -1,0 +1,12 @@
+.flex {
+  display: flex;
+  align-items: center;
+
+  &.spread {
+    justify-content: space-between;
+
+  }
+  .auto {
+    flex: auto;
+  }
+}

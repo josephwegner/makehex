@@ -1,4 +1,5 @@
 class MapsController < ApplicationController
+
   def show
     # If the id is numeric, this is a direct map load. Otherwise it is an access code
     if params[:id].match(/\A[0-9]+\Z/)
@@ -49,7 +50,7 @@ class MapsController < ApplicationController
     if @map.user == current_user
       @player_id = 'dm'
       respond_to do |format|
-        format.json { render :json => @map, :include => ['layouts', 'players'] }
+        format.json { render :json => @map, :include => ['layouts', 'players'], :layout => "map" }
         format.html { render :template => "maps/show_map" }
       end
     elsif session[@map.cookie_auth_token]

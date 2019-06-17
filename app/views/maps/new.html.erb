@@ -1,6 +1,10 @@
-<%= form_with(model: @map) do |f| %>
-  <%= f.label :name %>:
-  <%= f.text_field :name %><br />
+<div class="centered-form">
+  <%= form_with(model: @map) do |f| %>
+    <div class="form-group">
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </div>
 
-  <%= f.submit %>
-<% end %>
+    <%= f.submit 'Create Map', class: 'form-submit' %>
+  <% end %>
+</div>

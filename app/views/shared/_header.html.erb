@@ -1,0 +1,9 @@
+<div class="header p bg-darkGray flex spread">
+  <a href="/" style="text-decoration: none;">
+    <%= image_tag 'logo.svg', class: 'w-3 ps-r' %>
+    <span class="white f4 vt fw1">MakeHex</span>
+  </a>
+  <% if user_signed_in? %>
+    <%= link_to "Account Settings", edit_user_registration_path, class: 'button inline outline white m0' %>
+  <% end %>
+</div>

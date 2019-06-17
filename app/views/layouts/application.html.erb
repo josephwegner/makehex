@@ -4,41 +4,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MakeHex</title>
     <%= csrf_meta_tags %>
-    <%= javascript_pack_tag 'vue', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_pack_tag 'vue', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'outofapp', media: 'all' %>
+
     <%= yield :head_tags %>
   </head>
 
   <body>
+    <%= render :partial => "shared/header" %>
+    <%= render :partial => "shared/submenu" if content_for?(:submenu) %>
+    <% if !flash.empty? %>
+      <div class="flash bg-blue tc white p">
+        <% flash.each do |name, msg| %>
+          <%= content_tag :div, msg %>
+        <% end %>
+      </div>
+    <% end %>
     <%= yield %>
-    <svg style="overflow: hidden; top: -100%; left: -100%; position: absolute; opacity: 0;">
-      <defs>
-        <mask id="fog" maskContentUnits="objectBoundingBox">
-          <g transform="rotate(45, .5, .5)" stroke-width="0.2" stroke="#444" >
-            <rect fill="#fff" x="0" y="0" width="1" height="1" stroke-width="0" />
-            <line x1=".05" y1="0" x2=".05" y2="1" stroke-width=".02" />
-            <line x1=".1" y1="0" x2=".1" y2="1" stroke-width=".02" />
-            <line x1=".15" y1="0" x2=".15" y2="1" stroke-width=".02" />
-            <line x1=".2" y1="0" x2=".2" y2="1" stroke-width=".02" />
-            <line x1=".25" y1="0" x2=".25" y2="1" stroke-width=".02" />
-            <line x1=".3" y1="0" x2=".3" y2="1" stroke-width=".02" />
-            <line x1=".35" y1="0" x2=".35" y2="1" stroke-width=".02" />
-            <line x1=".4" y1="0" x2=".4" y2="1" stroke-width=".02" />
-            <line x1=".45" y1="0" x2=".45" y2="1" stroke-width=".02" />
-            <line x1=".5" y1="0" x2=".5" y2="1" stroke-width=".02" />
-            <line x1=".55" y1="0" x2=".55" y2="1" stroke-width=".02" />
-            <line x1=".6" y1="0" x2=".6" y2="1" stroke-width=".02" />
-            <line x1=".65" y1="0" x2=".65" y2="1" stroke-width=".02" />
-            <line x1=".7" y1="0" x2=".7" y2="1" stroke-width=".02" />
-            <line x1=".75" y1="0" x2=".75" y2="1" stroke-width=".02" />
-            <line x1=".8" y1="0" x2=".8" y2="1" stroke-width=".02" />
-            <line x1=".85" y1="0" x2=".85" y2="1" stroke-width=".02" />
-            <line x1=".9" y1="0" x2=".9" y2="1" stroke-width=".02" />
-            <line x1=".95" y1="0" x2=".95" y2="1" stroke-width=".02" />
-          </g>
-        </mask>
-      </defs>
-    </svg>
+    <%= javascript_pack_tag 'outofapp', 'data-turbolinks-track': 'reload' %>
   </body>
 </html>

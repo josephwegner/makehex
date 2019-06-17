@@ -1,6 +1,7 @@
 class PlayersController < ApplicationController
   layout false
   layout 'application', :except => :token
+  layout "map", :only => [:load]
 
   def load
     if !params[:player_code]
