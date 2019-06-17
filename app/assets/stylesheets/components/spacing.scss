@@ -1,0 +1,60 @@
+$sizes: (
+  "0": 0,
+  "": 1rem, // margin
+  "s": .5rem, // margin small
+  "b": 2rem // margin big
+);
+
+@each $name, $size in $sizes {
+  .m#{$name} {
+    margin: $size;
+  }
+  .m#{$name}-x {
+    margin-left: $size;
+    margin-right: $size;
+  }
+  .m#{$name}-y {
+    margin-top: $size;
+    margin-bottom: $size;
+  }
+  .m#{$name}-t {
+    margin-top: $size;
+  }
+  .m#{$name}-l {
+    margin-left: $size;
+  }
+  .m#{$name}-r {
+    margin-right: $size;
+  }
+  .m#{$name}-b {
+    margin-bottom: $size;
+  }
+
+  .p#{$name} {
+    padding: $size;
+  }
+  .p#{$name}-x {
+    padding-left: $size;
+    padding-right: $size;
+  }
+  .p#{$name}-y {
+    padding-top: $size;
+    padding-bottom: $size;
+  }
+  .p#{$name}-t {
+    padding-top: $size;
+  }
+  .p#{$name}-l {
+    padding-left: $size;
+  }
+  .p#{$name}-r {
+    padding-right: $size;
+  }
+  .p#{$name}-b {
+    padding-bottom: $size;
+  }
+}
+
+.vt {
+  vertical-align: top;
+}

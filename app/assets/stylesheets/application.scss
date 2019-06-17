@@ -26,8 +26,20 @@ html,body {
   text-align: center;
 }
 
+.header {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@import './components/button.scss';
 @import './colors.scss';
 @import './fonts.scss';
+@import './components/flex.scss';
+@import './components/sizing.scss';
+@import './components/spacing.scss';
+@import './components/text.scss';
 @import './components/form.scss';
 @import "font-awesome-sprockets";
 @import "font-awesome";

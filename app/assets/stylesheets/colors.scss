@@ -43,3 +43,10 @@
   --darkWhite: #c0c0c0;
   --white: #f3f3f3;
 }
+
+$backgrounds: red, yellow, blue, green, lightestGray, lightGray, midGray, gray, darkGray, shadow, black, darkWhite, white;
+@each $bg in $backgrounds {
+  .bg-#{$bg} {
+    background-color: var(--#{$bg});
+  }
+}

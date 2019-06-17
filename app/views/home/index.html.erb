@@ -1,6 +1,9 @@
-<% content_for :head_tags do %>
-  <%= stylesheet_link_tag 'outofapp', media: 'all' %>
+<% content_for :submenu do %>
+  <div class="tr ps-r">
+    <%= link_to "New Map", new_map_path, class: "button inline m0" %>
+  </div>
 <% end %>
+
 <h1>Maps</h1>
 <ul class="map-list">
 <% current_user.maps.each do |map| %>
@@ -22,4 +25,3 @@
   </li>
 <% end %>
 </ul>
-<%= link_to "New Map", new_map_path, class: "button", style: "margin-left: 3rem;" %>
