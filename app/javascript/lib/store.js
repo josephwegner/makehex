@@ -4,15 +4,6 @@ import Cable from './cable.js'
 import GridEvents from './grid-events.js'
 import utils from './utils.js'
 
-function defaultTile () {
-  return {
-    color: utils.constants.TILE.color,
-    fog: utils.constants.TILE.fog,
-    icon: utils.constants.TILE.icon,
-    entities: {}
-  }
-}
-
 export default class Store {
   constructor(props) {
     this.store = new Vuex.Store({
@@ -58,7 +49,7 @@ export default class Store {
         eraseTile ({commit, state, getters}, coords) {
           var newFeatures = {}
           newFeatures[coords.q] = {}
-          newFeatures[coords.q][coords.r]= defaultTile()
+          newFeatures[coords.q][coords.r]= utils.defaultTile()
 
           commit('updateTile', { tiles: newFeatures, source: 'editor' })
           Cable.sendTileUpdate(coords)
@@ -179,7 +170,7 @@ export default class Store {
               newGrid[q] = {}
             }
 
-            newGrid[q][layout.height] = defaultTile()
+            newGrid[q][layout.height] = utils.defaultTile()
             q++
           }
 
@@ -219,30 +210,11 @@ export default class Store {
           // and fill in any blanks. The reason to do it in x,y
           // is because our map is a rectangle. It's far easier to iterate
           // over a rectangle in x,y than in q,r
-          state.map.layouts.forEach(layout => {
-            for (var x=0; x<layout.width; x++) {
-              for (var y=0; y<layout.height; y++) {
-                var index = (y*layout.width) + x
-
-                var r =  Math.floor(index  / layout.width)
-                var qOffset = Math.ceil(r / -2)
-                var q = (index % layout.width) + qOffset
-
-                if (!layout.grid[q]) {
-                  layout.grid[q] = {}
-                }
-                if(!layout.grid[q][r]) {
-                  layout.grid[q][r] = defaultTile()
-                }
-              }
-            }
-          })
+          state.map.layouts.forEach(utils.fillEmpties)
         },
 
         addLayout (state, layout) {
-          layout.grid = Array(layout.width * layout.height)
-          layout.grid.fill({})
-
+          utils.fillEmpties(layout)
           state.map.layouts.push(layout)
         },
 
@@ -257,16 +229,16 @@ export default class Store {
             var newQ = parseInt(oldQ) + 1
             newGrid[newQ] = layout.grid[oldQ]
             if (newQ <= 0) {
-              newGrid[newQ][newQ * -2] = defaultTile()
-              newGrid[newQ][(newQ * -2) + 1] = defaultTile()
+              newGrid[newQ][newQ * -2] = utils.defaultTile()
+              newGrid[newQ][(newQ * -2) + 1] = utils.defaultTile()
             }
           })
           var newQ = Math.floor((layout.height / -2) + 1)
 
           newGrid[newQ] = {}
-          newGrid[newQ][layout.height - 1] = defaultTile()
+          newGrid[newQ][layout.height - 1] = utils.defaultTile()
           if (!(layout.height % 2)) {
-            newGrid[newQ][layout.height - 2] = defaultTile()
+            newGrid[newQ][layout.height - 2] = utils.defaultTile()
           }
 
           layout.grid = newGrid
@@ -287,7 +259,7 @@ export default class Store {
                 newGrid[q] = {}
               }
 
-              newGrid[q][r] = defaultTile()
+              newGrid[q][r] = utils.defaultTile()
 
               q = layout.width - Math.floor((r + 1) / 2)
               r++
@@ -316,8 +288,8 @@ export default class Store {
             })
 
             if (q >= 0) {
-              newGrid[q][0] = defaultTile()
-              newGrid[q][1] = defaultTile()
+              newGrid[q][0] = utils.defaultTile()
+              newGrid[q][1] = utils.defaultTile()
             }
           })
           layout.height += 2
@@ -379,8 +351,8 @@ export default class Store {
               }
 
               if (updates === null) {
-                changes[q][r] = defaultTile()
-                finalValues[q][r] = defaultTile()
+                changes[q][r] = utils.defaultTile()
+                finalValues[q][r] = utils.defaultTile()
               } else {
                 changes[q][r] = Object.assign(
                   {q: q, r: r},
@@ -423,7 +395,7 @@ export default class Store {
                payload.grid[q] = {}
              }
              if(!payload.grid[q][r]) {
-               payload.grid[q][r] = defaultTile()
+               payload.grid[q][r] = utils.defaultTile()
              }
            }
          }

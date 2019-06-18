@@ -4,7 +4,7 @@ class LayoutsController < ApplicationController
   def create
     @map = Map.find(params[:map])
     @layout = Layout.new(secure_params)
-    @layout.update_attributes(grid: [], map: @map)
+    @layout.update_attributes(grid: {}, map: @map)
     @layout.save
     render :json => @layout
   end
