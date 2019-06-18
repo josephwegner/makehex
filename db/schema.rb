@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190617154613) do
+ActiveRecord::Schema.define(version: 20190618191929) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 20190617154613) do
     t.jsonb "grid", default: {}
     t.integer "height", default: 15
     t.integer "width", default: 25
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["map_id"], name: "index_layouts_on_map_id"
   end
 
@@ -29,6 +31,8 @@ ActiveRecord::Schema.define(version: 20190617154613) do
     t.bigint "default_layout_id"
     t.bigint "user_id"
     t.string "access_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["access_code"], name: "index_maps_on_access_code", unique: true
     t.index ["default_layout_id"], name: "index_maps_on_default_layout_id"
     t.index ["user_id"], name: "index_maps_on_user_id"
@@ -43,6 +47,8 @@ ActiveRecord::Schema.define(version: 20190617154613) do
     t.integer "layout"
     t.integer "location_q"
     t.integer "location_r"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["code"], name: "index_players_on_code"
     t.index ["map_id"], name: "index_players_on_map_id"
     t.index ["user_id"], name: "index_players_on_user_id"
