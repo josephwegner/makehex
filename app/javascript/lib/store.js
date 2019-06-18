@@ -94,11 +94,9 @@ export default class Store {
         overwrite ({ commit }, data) {
           commit('updateTile', { tiles: data, source: 'overwrite' })
           var coords = []
-          for (var q in data) {
-            for (var r in data[q]) {
-              coords.push({q: q, r: r})
-            }
-          }
+          utils.iterateOverGrid(data, (tile, tileCoords) => {
+            coords.push(tileCoords)
+          })
           Cable.sendTileUpdate(coords)
         }
       },
@@ -121,14 +119,11 @@ export default class Store {
           })
 
           var colorObj = {}
-          for(var q in layout.grid) {
-            for (var r in layout.grid[q]) {
-              var color = layout.grid[q][r].color
-              if (color) {
-                colorObj[color] = true
-              }
+          utils.iterateOverGrid(layout.grid, (tile) => {
+            if (tile.color) {
+              colorObj[tile.color] = true
             }
-          }
+          })
 
           return Object.keys(colorObj)
         },
@@ -340,28 +335,25 @@ export default class Store {
           var changes = {}
           var finalValues = {}
 
-          for (var q in payload.tiles) {
-            for (var r in payload.tiles[q]) {
-              var updates = payload.tiles[q][r]
-              var tile = layout.grid[q][r] || {}
+          utils.iterateOverGrid(payload.tiles, (updates, coords) => {
+            var tile = layout.grid[coords.q][coords.r] || {}
 
-              if (!changes[q]) {
-                changes[q] = {}
-                finalValues[q] = {}
-              }
-
-              if (updates === null) {
-                changes[q][r] = utils.defaultTile()
-                finalValues[q][r] = utils.defaultTile()
-              } else {
-                changes[q][r] = Object.assign(
-                  {q: q, r: r},
-                  tile
-                )
-                finalValues[q][r] = Object.assign({}, tile, updates)
-              }
+            if (!changes[coords.q]) {
+              changes[coords.q] = {}
+              finalValues[coords.q] = {}
             }
-          }
+
+            if (updates === null) {
+              changes[coords.q][coords.r] = utils.defaultTile()
+              finalValues[coords.q][coords.r] = utils.defaultTile()
+            } else {
+              changes[coords.q][coords.r] = Object.assign(
+                {q: coords.q, r: coords.r},
+                tile
+              )
+              finalValues[coords.q][coords.r] = Object.assign({}, tile, updates)
+            }
+          })
 
           var newGrid = {}
           for (var q in finalValues) {

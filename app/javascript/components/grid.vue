@@ -204,11 +204,10 @@ export default {
 
       var coordsToCheck = []
       var changes = []
-      for (var q in changeGrid) {
-        for (var r in changeGrid[q]) {
-          changes.push(changeGrid[q][r])
-        }
-      }
+
+      utils.iterateOverGrid(changeGrid, (tile) => {
+        changes.push(tile)
+      })
 
       if(this.fillSections.length) {
         // Pull out any fillSections that might have been effected by the changes
