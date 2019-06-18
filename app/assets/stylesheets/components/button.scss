@@ -46,4 +46,18 @@
     color: var(--white);
     background-color: var(--red);
   }
+
+  &.green {
+    color: var(--white);
+    background-color: var(--green);
+
+    &:hover {
+      background-color: lighten(#297C46, 10%);
+    }
+  }
+
+  &.grey {
+    color: var(--white);
+    background-color: var(--gray);
+  }
 }

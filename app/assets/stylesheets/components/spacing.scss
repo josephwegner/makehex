@@ -5,6 +5,13 @@ $sizes: (
   "b": 2rem // margin big
 );
 
+.mauto {
+  margin: auto;
+}
+.pauto {
+  padding: auto;
+}
+
 @each $name, $size in $sizes {
   .m#{$name} {
     margin: $size;

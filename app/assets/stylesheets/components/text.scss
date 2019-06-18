@@ -4,7 +4,7 @@ $weights: 300, 400, 600, 600;
 
 @each $color in $fontColors {
   .#{$color} {
-    color: #{$color};
+    color: var(--#{$color});
   }
 }
 

@@ -1,11 +1,18 @@
-$percentages: 50, 100;
+$percentages: 50, 75, 100;
 $sizes: .5rem, 1rem, 2rem, 3rem, 5rem, 10rem, 50rem;
 
+.wa {
+  width: auto;
+}
+.ha {
+  height: auto;
+}
+
 @each $perc in $percentages {
-  .w-#{$perc} {
+  .w#{$perc} {
     width: percentage($perc / 100);
   }
-  .h-#{$perc} {
+  .h#{$perc} {
     height: percentage($perc / 100);
   }
 }

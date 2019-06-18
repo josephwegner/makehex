@@ -1,4 +1,5 @@
 class LayoutsController < ApplicationController
+  before_action :authenticate_user!
 
   def create
     @map = Map.find(params[:map])

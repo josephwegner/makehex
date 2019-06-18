@@ -1,27 +1,56 @@
-<% content_for :submenu do %>
-  <div class="tr ps-r">
-    <%= link_to "New Map", new_map_path, class: "button inline m0" %>
-  </div>
+<% content_for :head_tags do %>
+  <%= stylesheet_link_tag 'home', media: 'all' %>
 <% end %>
 
-<h1>Maps</h1>
-<ul class="map-list">
-<% current_user.maps.each do |map| %>
-  <li class="map-item">
-    <a href="<%= map_path(map.id) %>">
-      <div class="map-colors">
-        <% @map_colors[map.id].each do |color| %>
-          <i style="background-color: <%= color %>"></i>
-        <% end %>
-      </div>
-      <div class="details">
-        <span class="map-title"><%= map.name %></span>
-        <div>
-          <span class="sub-detail"><%= map.layouts.count %> layouts</span>
-          <span class="sub-detail"><%= map.players.count %> players</span>
-        </div>
-      </div>
-    </a>
-  </li>
-<% end %>
-</ul>
+<div class="hero">
+  <div class="hero-bg">
+    <%= image_tag "welton-bg.png", class: "w50" %>
+    <%= image_tag "welton.gif", class: "w50", style: "position: absolute; top: 0; left: 0;" %>
+  </div>
+  <div class="hero-text">
+    <div class="p tc">
+      <%= image_tag "logo.png", class: "w-5" %>
+      <h1 class="white f5 vt p-l mb-b fw1">MakeHex</h1>
+      <h2 class="darkWhite fw1 f3">Easy hex maps for tabletop gaming</h2>
+      <%= link_to "Make a Map", new_registration_path(User), class: "button dib wa green pb-x f3 m-t" %>
+    </div>
+  </div>
+</div>
+
+<div class="features flex around pb-b">
+  <div>
+    <div class="hexagon">
+      <%= image_tag "easymaps.png" %>
+    </div>
+    <h3 class="tc mb-t p-t">Maps Made Easy</h3>
+    <p class="mauto w75">Anyone can run a tabletop game - creative skills are optional. Low-fidelity hex maps allow you to focus on your story-telling while giving players a tactical tool.</p>
+  </div>
+  <div>
+    <div class="hexagon">
+      <%= image_tag "anywhere.png" %>
+    </div>
+    <h3 class="tc mb-t p-t">Play Anywhere</h3>
+    <p class="mauto w75">Whether your party meets in-person or virtually, the best gaming happens when players are comfortably controlling their own devices.</p>
+  </div>
+  <div>
+    <div class="hexagon">
+      <%= image_tag "livegaming.png" %>
+    </div>
+    <h3 class="tc mb-t p-t">Live Gaming</h3>
+    <p class="mauto w75">Build an immersive encounter with live-updating maps that both you and your players can interact with in real-time.</p>
+  </div>
+</div>
+
+<div class="southport">
+  <div></div>
+</div>
+
+<div class="oss tc">
+  <h3 class="f5 fw2">MakeHex is Open Source!</h3>
+  <p><a href="https://github.com/josephwegner/makehex" class="button grey">Contribute</a> or <a href="https://www.patreon.com/makednd" class="button">Donate</a></p>
+</div>
+
+<div class="footer tc">
+  <%= link_to "Make a Map", new_registration_path(User), class: "button dib wa green pb-x f4 m-t" %>
+  <p class="f3 p-y">Made with <i class="red">&#x2764;</i> and open source. Chat us up in Discord.</p>
+</div>

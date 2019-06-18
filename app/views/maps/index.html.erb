@@ -1,0 +1,27 @@
+<% content_for :submenu do %>
+  <div class="tr ps-r">
+    <%= link_to "New Map", new_map_path, class: "button inline m0" %>
+  </div>
+<% end %>
+
+<h1>Maps</h1>
+<ul class="map-list">
+<% current_user.maps.each do |map| %>
+  <li class="map-item">
+    <a href="<%= map_path(map.id) %>">
+      <div class="map-colors">
+        <% @map_colors[map.id].each do |color| %>
+          <i style="background-color: <%= color %>"></i>
+        <% end %>
+      </div>
+      <div class="details">
+        <span class="map-title"><%= map.name %></span>
+        <div>
+          <span class="sub-detail"><%= map.layouts.count %> layouts</span>
+          <span class="sub-detail"><%= map.players.count %> players</span>
+        </div>
+      </div>
+    </a>
+  </li>
+<% end %>
+</ul>

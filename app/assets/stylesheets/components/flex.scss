@@ -1,11 +1,12 @@
 .flex {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
-  &.spread {
-    justify-content: space-between;
-
+  &.around {
+    justify-content: space-around;
   }
+
   .auto {
     flex: auto;
   }
