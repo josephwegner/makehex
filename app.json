@@ -5,6 +5,9 @@
     "EMAIL_FROM": {
       "required": true
     },
+    "ADMIN_EMAILS": {
+      "value": "dev@joewegner.com"
+    },
     "APP_ENV": {
       "value": "staging"
     },

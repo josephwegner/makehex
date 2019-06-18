@@ -53,7 +53,7 @@ class MapsController < ApplicationController
     @layout.save
     @map.save
     flash[:notice] = "Created #{@map.name}"
-    redirect_to root_path
+    redirect_to map_path(@map)
   end
 
   def update
@@ -71,7 +71,7 @@ class MapsController < ApplicationController
     authenticate_user!
     @map = Map.find_by_id(params[:id])
 
-    if @map.user == current_user
+    if map_admin?(@map)
       @player_id = 'dm'
       respond_to do |format|
         format.json { render :json => @map, :include => ['layouts', 'players'] }
@@ -94,6 +94,10 @@ class MapsController < ApplicationController
       format.json { render :json => @map, :include => 'layouts' }
       format.html { render :template => "maps/auth_player" }
     end
+  end
+
+  def map_admin?(map)
+    @map.user == current_user || ENV['ADMIN_EMAILS'].split(' ').include?(current_user.email)
   end
 
   def secure_params
