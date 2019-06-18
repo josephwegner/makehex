@@ -6,8 +6,8 @@
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag 'outofapp', media: 'all' %>
 
-    <%= yield :head_tags %>
     <%= render :partial => 'shared/social_tags' %>
+    <%= yield :head_tags %>
   </head>
   <body>
     <div id="nav">
