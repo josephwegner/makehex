@@ -1,0 +1,14 @@
+<% content_for :head_tags do %>
+  <%= stylesheet_link_tag 'home', media: 'all' %>
+  <script>
+    mixpanel.track("Load Pricing");
+  </script>
+<% end %>
+<div id="nav">
+  <%= link_to "Pricing", pricing_path %>
+  <%= link_to "Log in →", new_session_path(User) %>
+</div>
+
+<p class="white mauto f3 fw1 bg-darkGray mb-t p" style="max-width: 50rem; border-radius: var(--borderRadius);">
+MakeHex is an open-source project, which for now at least means I pretty much do with it what I want and build the parts that are most interesting to me. Pricing is annoying and scary for me, so I've procrastinated on it. It's on my todo list, and something I'll have to do soon, but not yet. In the mean time, if you create an account you'll be grandfathered into free "premium" (wtv that means) forever. That obviously won't be the case once I convince myself to build the billing stuff.
+</p>

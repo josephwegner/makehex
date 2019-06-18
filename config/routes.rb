@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   devise_for :users
   root 'home#index'
+  get 'pricing', to: "home#pricing"
   resources :maps
   resources :layouts
   resources :players do

@@ -1,6 +1,8 @@
 class HomeController < ApplicationController
-  layout 'marketing'
+  layout 'marketing', :except => [:pricing]
   def index
+  end
 
+  def pricing
   end
 end
