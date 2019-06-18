@@ -15,7 +15,7 @@
       <%= image_tag "logo.png", class: "w-5" %>
       <h1 class="white f5 vt p-l mb-b fw1">MakeHex</h1>
       <h2 class="darkWhite fw1 f3">Easy hex maps for tabletop gaming</h2>
-      <%= link_to "Make a Map", new_registration_path(User), class: "button dib wa green pb-x f3 m-t" %>
+      <%= link_to "Make a Map", @cta_path, class: "button dib wa green pb-x f3 m-t" %>
     </div>
   </div>
 </div>
@@ -54,6 +54,6 @@
 </div>
 
 <div class="footer tc">
-  <%= link_to "Make a Map", new_registration_path(User), class: "button dib wa green pb-x f4 m-t" %>
+  <%= link_to "Make a Map", @cta_path, class: "button dib wa green pb-x f4 m-t" %>
   <p class="f3 p-y">Made with <i class="red">&#x2764;</i> and open source. Chat us up in <a href="https://discord.gg/VTWF3GG">Discord</a>.</p>
 </div>
