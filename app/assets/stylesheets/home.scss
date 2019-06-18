@@ -63,8 +63,8 @@ h1 {
   img {
     position: absolute;
     top: -3.5rem;
-    //clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     clip-path: polygon(6.05rem 0.75rem, 11.4rem 3.8rem, 11.4rem 10.1rem, 6.05rem 13.2rem, 0.7rem 10.1rem, 0.7rem 3.8rem);
+    -webkit-clip-path: polygon(6.05rem 0.75rem, 11.4rem 3.8rem, 11.4rem 10.1rem, 6.05rem 13.2rem, 0.7rem 10.1rem, 0.7rem 3.8rem);
     height: 13rem;
     padding: .5rem;
     z-index: 1;
