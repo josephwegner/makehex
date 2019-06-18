@@ -2,11 +2,12 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MakeHex</title>
+    <title>MakeHex | Easy maps for tabletop gaming</title>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag 'outofapp', media: 'all' %>
 
     <%= yield :head_tags %>
+    <%= render :partial => 'shared/social_tags' %>
   </head>
   <body>
     <%= yield %>
