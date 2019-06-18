@@ -15,21 +15,17 @@ class GridEvents extends EventEmitter {
   }
 
   addToState(changes) {
-    for (var q in changes) {
-      for (var r in changes[q]) {
-        var change = changes[q][r]
+    utils.iterateOverGrid(changes, (change) => {
+      if (typeof(change.entities) === 'undefined') {
+        change.entities = {}
+      }
 
-        if (typeof(change.entities) === 'undefined') {
-          change.entities = {}
-        }
-
-        for(var prop in utils.constants.TILE) {
-          if (typeof(change[prop]) === 'undefined') {
-            change[prop] = utils.constants.TILE[prop]
-          }
+      for(var prop in utils.constants.TILE) {
+        if (typeof(change[prop]) === 'undefined') {
+          change[prop] = utils.constants.TILE[prop]
         }
       }
-    }
+    })
 
     this.oldStates.push(changes)
     if (this.oldStates.length > 20) {
@@ -43,6 +39,7 @@ class GridEvents extends EventEmitter {
 
   applyStateChange(changes) {
     var oldValues = {}
+
     for (var q in changes) {
       oldValues[q] = {}
       for (var r in changes[q]) {

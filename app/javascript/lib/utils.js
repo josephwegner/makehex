@@ -10,6 +10,14 @@ const utils = {
     }
   },
 
+  iterateOverGrid(grid, cb) {
+    for (var q in grid) {
+      for (var r in grid[q]) {
+        cb(grid[q][r], {q: q, r: r})
+      }
+    }
+  },
+
   fillEmpties(layout) {
     for (var x=0; x<layout.width; x++) {
       for (var y=0; y<layout.height; y++) {
