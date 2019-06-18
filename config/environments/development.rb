@@ -37,7 +37,6 @@ config.webpacker.check_yarn_integrity = true
   config.action_mailer.perform_caching = false
   config.action_mailer.default_url_options = { host: 'localhost', port: 5000 }
   config.action_mailer.delivery_method = :smtp
-  config.action_controller.asset_host = "http://localhost:5000"
   config.action_mailer.asset_host = "http://localhost:5000"
 
   # Print deprecation notices to the Rails logger.

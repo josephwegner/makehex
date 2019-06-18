@@ -33,6 +33,10 @@ html,body {
   box-sizing: border-box;
 }
 
+.black {
+  src: url(font-path("font-awesome/fa-solid-900.eot"));
+}
+
 @import './components/button.scss';
 @import './colors.scss';
 @import './fonts.scss';
