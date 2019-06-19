@@ -1,9 +1,16 @@
-puts "CI_NODE_INDEX is #{ENV['CI_NODE_INDEX']}"
+namespace :tests do
+  desc 'Run tests'
+  task :run do
+    puts "CI_NODE_INDEX is #{ENV['CI_NODE_INDEX']}"
 
-if ENV['CI_NODE_INDEX'] == '1'
-  puts 'running front-end tests'
-  exec 'npm run test'
-else
-  puts 'running rspec tests'
-  exec 'rspec'
+    if ENV['CI_NODE_INDEX'] == '1'
+      puts 'running front-end tests'
+      exec 'npm run test'
+    else
+      puts 'running rspec tests'
+      exec 'rspec'
+    end
+  end
 end
+
+task :test => 'tests:run'
