@@ -60,8 +60,8 @@
         "heroku-redis:in-dyno"
       ],
       "buildpacks": [
-        { "url": "heroku/nodejs" },
-        { "url": "https://github.com/heroku/heroku-buildpack-google-chrome" }
+        { "url": "heroku/ruby" },
+        { "url": "heroku/nodejs" }
       ],
       "env": {
         "LANG": {
