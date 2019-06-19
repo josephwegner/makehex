@@ -1,6 +1,9 @@
 {
   "name": "makehex",
   "private": true,
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha"
+  },
   "dependencies": {
     "@rails/webpacker": "3.5",
     "actioncable": "^5.2.1",
@@ -14,6 +17,7 @@
     "vuex": "^3.0.1"
   },
   "devDependencies": {
+    "mocha": "^6.1.4",
     "webpack-dev-server": "2.11.2"
   }
 }

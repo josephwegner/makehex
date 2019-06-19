@@ -55,6 +55,10 @@
   "stack": "heroku-18",
   "environments": {
     "test": {
+      "addons": [
+        "heroku-postgresql:in-dyno",
+        "heroku-redis:in-dyno"
+      ],
       "env": {
         "LANG": {
           "value": "en_US.UTF-8"
@@ -68,6 +72,14 @@
         "EMAIL_FROM": {
           "value": "test@makehex.com"
         }
+      },
+      "formation": {
+        "test": {
+          "quantity": 2
+        }
+      },
+      "scripts": {
+        "test": "bundle exec rake test"
       }
     }
   }
