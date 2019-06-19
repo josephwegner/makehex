@@ -59,6 +59,10 @@
         "heroku-postgresql:in-dyno",
         "heroku-redis:in-dyno"
       ],
+      "buildpacks": [
+        { "url": "heroku/nodejs" },
+        { "url": "https://github.com/heroku/heroku-buildpack-google-chrome" }
+      ],
       "env": {
         "LANG": {
           "value": "en_US.UTF-8"
