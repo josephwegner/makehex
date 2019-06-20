@@ -8,3 +8,4 @@ STATUS
 db/*.dump
 **/.DS_Store
 .tmp/
+coverage
