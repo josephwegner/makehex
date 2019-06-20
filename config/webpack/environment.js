@@ -6,12 +6,15 @@ environment.loaders.append('vue', vue)
 
 environment.plugins.prepend(
   'svg-spritemap-webpack-plugin',
-  new SVGSpritemapPlugin({
-    src: 'app/assets/tilecons/*.svg',
-    filename: 'tilecons.svg',
-    prefix: '',
-    generate: {
-      symbol: true
+  new SVGSpritemapPlugin('app/assets/tilecons/*.svg', {
+    output: {
+      filename: 'tilecons.svg',
+    },
+    sprite: {
+      prefix: () => { return '' },
+      generate: {
+        symbol: true
+      }
     }
   })
 )
