@@ -4,14 +4,14 @@ namespace :tests do
     puts "CI_NODE_INDEX is #{ENV['CI_NODE_INDEX']}"
 
     if ENV['CI_NODE_INDEX'] == '1'
-      Rake::Task["tests:mocha"].invoke
+      Rake::Task["tests:jest"].invoke
     else
       Rake::Task["tests:rspec"].invoke
     end
   end
 
   desc 'Run front-end tests'
-  task :mocha do
+  task :jest do
     puts 'running front-end tests'
     exec 'yarn run test'
   end
