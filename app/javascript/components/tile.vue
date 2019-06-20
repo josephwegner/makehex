@@ -42,6 +42,7 @@
 
 
     <component v-for="entity in dirEntities"
+               key="`entity.dir`"
                ng-if="entity.entity"
                v-bind:is="entity.entity"
                v-bind:color="entityColor"

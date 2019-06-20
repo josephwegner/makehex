@@ -1,3 +1,5 @@
+import '@babel/polyfill'
+
 var flash = document.getElementsByClassName('flash')
 if (flash.length) {
   flash = flash[0]

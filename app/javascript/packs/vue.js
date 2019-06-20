@@ -1,4 +1,5 @@
 /* eslint no-console:0 */
+import '@babel/polyfill'
 import Vue from 'vue/dist/vue.js'
 import Vuex from 'vuex'
 import Map from '../components/map.vue'
