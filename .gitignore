@@ -7,3 +7,5 @@ dump.rdb
 STATUS
 db/*.dump
 **/.DS_Store
+.tmp/
+coverage

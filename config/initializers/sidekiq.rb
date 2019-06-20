@@ -1,7 +1,7 @@
 require 'connection_pool'
 
 
-if ENV['RAILS_ENV'] != 'production' && ENV['RAILS_ENV'] != 'staging'
+if ENV['RAILS_ENV'] == 'development'
   require 'dotenv/load'
 end
 
