@@ -53,7 +53,7 @@
       "url": "heroku/ruby"
     },
     {
-      "url": "heroku/node"
+      "url": "heroku/nodejs"
     }
   ],
   "stack": "heroku-18",
