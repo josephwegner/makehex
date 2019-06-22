@@ -45,11 +45,15 @@
     "papertrail",
     "heroku-postgresql",
     "heroku-redis",
-    "sendgrid"
+    "sendgrid",
+    "cloudinary"
   ],
   "buildpacks": [
     {
       "url": "heroku/ruby"
+    },
+    {
+      "url": "heroku/node"
     }
   ],
   "stack": "heroku-18",
@@ -58,10 +62,6 @@
       "addons": [
         "heroku-postgresql:in-dyno",
         "heroku-redis:in-dyno"
-      ],
-      "buildpacks": [
-        { "url": "heroku/ruby" },
-        { "url": "heroku/nodejs" }
       ],
       "env": {
         "LANG": {
