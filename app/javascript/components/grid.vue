@@ -2,8 +2,8 @@
   <svg xmlns="http://www.w3.org/2000/svg"
        version="1.1"
        xmlns:xlink="http://www.w3.org/1999/xlink"
-       v-bind:width="(width * 34.52) + (leftOffset * (isEditor ? 2 : 1))"
-       v-bind:height="(height * 30.22) + (topOffset * (isEditor ? 2 : 1))">
+       v-bind:width="(width * 35.52) + (leftOffset * (isEditor ? 2 : 1))"
+       v-bind:height="(height * 31) + (topOffset * (isEditor ? 2 : 1))">
 
     <g v-if="isEditor" id="top-add" data-addDir="Top">
       <tile v-for="n in (addWidth)"
@@ -77,7 +77,8 @@
               v-bind:yOffset="topOffset"
               v-bind:xOffset="leftOffset"
               v-on:fill="fillFromCoords"
-              v-bind:dragging="dragging" />
+              v-bind:dragging="dragging"
+              v-bind:fog="drawFog ? tile.fog : false" />
       </g>
       <tile v-if="selectedHex.q >= 0"
             v-bind:key="key(selectedHex.q, selectedHex.r)"
@@ -389,6 +390,13 @@ export default {
         this.computeFillSections()
       }
     })
+  },
+
+  props: {
+    drawFog: {
+      type: Boolean,
+      default: true
+    }
   }
 }
 </script>
