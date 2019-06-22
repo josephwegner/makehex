@@ -1,6 +1,8 @@
 require 'factory_bot_rails'
 require 'simplecov'
 require 'simplecov-console'
+require 'fakeredis/rspec'
+
 SimpleCov.start do
   formatter SimpleCov::Formatter::Console
   minimum_coverage 1

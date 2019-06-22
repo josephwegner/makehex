@@ -2,8 +2,8 @@
   <svg xmlns="http://www.w3.org/2000/svg"
        version="1.1"
        xmlns:xlink="http://www.w3.org/1999/xlink"
-       v-bind:width="(width + 2) * 35"
-       v-bind:height="(height + 3) * 31">
+       v-bind:width="(width * 34.52) + (leftOffset * (isEditor ? 2 : 1))"
+       v-bind:height="(height * 30.22) + (topOffset * (isEditor ? 2 : 1))">
 
     <g v-if="isEditor" id="top-add" data-addDir="Top">
       <tile v-for="n in (addWidth)"

@@ -21,4 +21,6 @@ module MakeHex
     key: "_#{Rails.application.class.parent_name.downcase}_session",
     threadsafe: false
   end
+
+  require 'carrierwave/orm/activerecord'
 end

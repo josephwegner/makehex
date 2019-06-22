@@ -2,7 +2,9 @@ import ActionCable from 'actioncable'
 
 class Cable {
   constructor() {
-    this.ac = ActionCable.createConsumer()
+    if (!window.isSSR) {
+      this.ac = ActionCable.createConsumer()
+    }
   }
 
   loadStore(store) {
@@ -25,6 +27,7 @@ class Cable {
   }
 
   connectToTile(layoutId) {
+    if (!this.ac) { return }
     if (this.tileChannel) { this.disconnectFromTile() }
 
     this.tileChannel = this.ac.subscriptions.create({
@@ -34,6 +37,7 @@ class Cable {
   }
 
   connectToMap() {
+    if (!this.ac) { return }
     if (this.mapChannel) {
       // noop
     }

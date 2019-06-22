@@ -35,6 +35,11 @@ class TileUpdateWorker
           }
         })
         puts "Updated #{tiles.size} tiles"
+
+        svg = Preview.svg_from_layout(layout)
+        io = Preview::FileStringIO.new(svg, layout.map.preview_filename)
+        layout.map.preview = io
+        layout.map.save!
       end
     end
   end

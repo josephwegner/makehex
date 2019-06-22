@@ -42,6 +42,8 @@ gem 'devise'
 gem 'premailer-rails'
 gem 'font-awesome-sass', '~> 5.5.0'
 gem 'rmagick'
+gem 'carrierwave'
+gem 'cloudinary'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -57,6 +59,8 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'simplecov', require: false
   gem 'simplecov-console', require: false
+  gem 'fakeredis'
+  gem 'rspec-sidekiq'
 end
 
 group :development do

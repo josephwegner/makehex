@@ -6,14 +6,14 @@
 
 <h1>Maps</h1>
 <ul class="map-list">
-<% current_user.maps.each do |map| %>
+<% current_user.maps.order(created_at: :desc).each do |map| %>
   <li class="map-item">
     <a href="<%= map_path(map.id) %>">
-      <div class="map-colors">
-        <% @map_colors[map.id].each do |color| %>
-          <i style="background-color: <%= color %>"></i>
-        <% end %>
-      </div>
+      <% if map.preview.url.nil? %>
+        <div class="preview">No Preview</div>
+      <% else %>
+        <div class="preview" style="background-image: url('<%= map.preview.url %>')"><div></div></div>
+      <% end %>
       <div class="details">
         <span class="map-title"><%= map.name %></span>
         <div>

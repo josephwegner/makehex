@@ -2,6 +2,7 @@ node_modules
 tmp
 log
 public/packs
+public/uploads
 .env
 dump.rdb
 STATUS
