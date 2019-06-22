@@ -12,7 +12,7 @@
       "value": "staging"
     },
     "GRID_UPDATE_INTERVAL": {
-      "value": 5
+      "value": "5"
     },
     "LANG": {
       "required": true
