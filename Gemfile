@@ -42,6 +42,8 @@ gem 'devise'
 gem 'premailer-rails'
 gem 'font-awesome-sass', '~> 5.5.0'
 gem 'rmagick'
+gem 'carrierwave'
+gem 'cloudinary'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

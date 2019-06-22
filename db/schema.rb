@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190618191929) do
+ActiveRecord::Schema.define(version: 20190621115613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 20190618191929) do
     t.string "access_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "preview"
     t.index ["access_code"], name: "index_maps_on_access_code", unique: true
     t.index ["default_layout_id"], name: "index_maps_on_default_layout_id"
     t.index ["user_id"], name: "index_maps_on_user_id"

@@ -43,11 +43,10 @@ h1 {
 }
 
 .map-item {
-  height: 4rem;
   border: 1px solid var(--lightestGray);
   background-color: var(--gray);
   border-radius: var(--borderRadius);
-  width: 14rem;
+  width: 16rem;
   margin: .5rem;
   box-sizing: border-box;
 
@@ -57,28 +56,26 @@ h1 {
     height: 100%;
     width: 100%;
     padding: .5rem;
-    display: flex;
     box-sizing: border-box;
+    display: block;
   }
 
-  .map-colors {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    border-radius: 2px;
-    margin-right: .5rem;
+  .preview {
+    height: 6rem;
+    line-height: 6rem;
+    text-align: center;
+    background-color: var(--lightGray);
+    font-weight: 800;
+    color: var(--darkWhite);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-bottom: .5rem;
 
-    i {
-      width: .5rem;
-      flex: auto;
-
-      &:first-child {
-        border-radius: 2px 2px 0 0;
-      }
-
-      &:last-child {
-        border-radius: 0 0 2px 2px;
-      }
+    > div {
+      height: 100%;
+      width: 100%;
+      background-color: adjust-color(#333, $alpha: -0.8);
     }
   }
 

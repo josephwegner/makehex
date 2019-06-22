@@ -4,7 +4,13 @@ class Map < ApplicationRecord
   has_many :layouts
   has_many :players
 
+  mount_uploader :preview, PreviewUploader
+
   def cookie_auth_token
     "map_#{self.access_code}_authorization"
+  end
+
+  def preview_filename
+    "#{self.id}_#{self.access_code}_preview.svg"
   end
 end

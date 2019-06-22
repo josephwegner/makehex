@@ -1,5 +1,4 @@
 import Vuex from 'vuex'
-import Vue from 'vue'
 import Cable from './cable.js'
 import GridEvents from './grid-events.js'
 import utils from './utils.js'
