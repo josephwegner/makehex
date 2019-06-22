@@ -42,6 +42,7 @@ class MapsController < ApplicationController
   def update
     @map = Map.find_by_id(params[:id])
     attrs = secure_params
+
     if @map.update_attributes(attrs)
       render :json => { success: true }
 

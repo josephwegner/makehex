@@ -30,6 +30,22 @@ namespace :previews do
       puts "Generated map for map ##{map.id}. #{maps.length - i} maps remaining."
     end
   end
+
+  desc "Regenerate previews for maps that had one but are now missing. This only works locally."
+  task refill: :environment do
+    include Rails.application.routes.url_helpers
+
+    maps = Map.where.not(preview: nil)
+    maps.each do |map|
+      relative = ActionController::Base.helpers.asset_path(map.preview.url)
+      path = "#{Rails.root.join("public")}#{relative}"
+
+      if !File.exist?(path)
+        Rake::Task['previews:for_map'].execute({ map_id: map.id})
+        puts "Generated map for map ##{map.id}."
+      end
+    end
+  end
 end
 
 def svg_from_layout(layout)

@@ -1,0 +1,14 @@
+---
+<% cl = URI(ENV['CLOUDINARY_URL']) %>
+default: &default
+  cloud_name: <%= cl.host %>
+  api_key: '<%= cl.userinfo.split(':')[0] %>'
+  api_secret: <%= cl.userinfo.split(':')[1] %>
+  enhance_image_tag: true
+  static_file_support: false
+development:
+  <<: *default
+production:
+  <<: *default
+test:
+  <<: *default

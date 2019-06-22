@@ -1,6 +1,6 @@
 class PreviewUploader < CarrierWave::Uploader::Base
-  storage :file
-
+  include Cloudinary::CarrierWave unless Rails.env.development?
+  
   def store_dir
     "uploads/previews"
   end
