@@ -51,7 +51,7 @@ export default {
     border-radius: var(--borderRadius);
     cursor: pointer;
     box-sizing: border-box;
-    border: 2px solid var(--darkGray);
+    border: 2px solid var(--gray-9);
   }
 
   .color-tab.selected-color {

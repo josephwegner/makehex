@@ -106,7 +106,7 @@ export default {
 <style scoped>
   h2 {
     text-align: center;
-    color: var(--darkWhite);
+    color: var(--gray-1);
     margin-bottom: 0;
   }
 
@@ -117,12 +117,12 @@ export default {
   }
 
   .share-url span:first-child {
-    color: var(--darkWhite);
+    color: var(--gray-1);
     font-weight: 600;
   }
 
   .share-url span:last-child {
-    color: var(--darkWhite);
+    color: var(--gray-1);
   }
 
   .form {

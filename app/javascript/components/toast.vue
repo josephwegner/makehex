@@ -102,7 +102,7 @@ export default {
     background: var(--white);
     border-radius: var(--borderRadius);
     padding: 1rem;
-    box-shadow: 0px 0px .5rem 0 var(--gray);
+    box-shadow: 0px 0px .5rem 0 var(--gray-8);
     transition: border-radius .3s;
     font-weight: 600;
   }

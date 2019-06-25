@@ -314,6 +314,7 @@ export default {
     },
 
     fillFromCoords(coords) {
+      return
       var tile = this.grid[coords.q][coords.r]
 
       var locations = this.fillSections.find(section => {
@@ -376,6 +377,7 @@ export default {
   },
 
   mounted: function() {
+    return
     GridEvents.on('tileChange', (changed) => {
       if (this.$store.state.tool.coverage === 'fill') {
         setTimeout(this.computeFillSections.bind(this, changed), 0)

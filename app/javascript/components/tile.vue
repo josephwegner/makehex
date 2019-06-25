@@ -205,6 +205,7 @@ export default {
     },
 
     onClick($event) {
+      return
       var coords = {q: this.q, r: this.r}
 
       this.$emit('click', coords, $event)
@@ -252,6 +253,7 @@ export default {
     },
 
     onHover($event) {
+      return
       this.$emit('hover', {q: this.q, r: this.r})
       if (this.viewOnly) { return }
       if (this.$store.state.tool.type !== 'hex') {

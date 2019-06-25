@@ -3,7 +3,7 @@ import '@babel/polyfill'
 import Vue from 'vue/dist/vue.js'
 import Vuex from 'vuex'
 import Map from '../components/map.vue'
-import Tools from '../components/tools.vue'
+import Toolbar from '../components/toolbar.vue'
 import API from '../lib/api.js'
 import Cable from '../lib/cable.js'
 import Store from '../lib/store.js'
@@ -43,11 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   if (player === 'dm') {
-    const tools = new Vue({
-      el: '.footer-tools',
+    const toolbar = new Vue({
+      el: '.toolbar',
       store: store,
-      template: '<Tools/>',
-      components: { Tools }
+      template: '<Toolbar />',
+      components: { Toolbar }
     })
   }
 })

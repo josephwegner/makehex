@@ -79,7 +79,7 @@ export default {
   .toolbar-modal svg {
     height: 32px;
     width: 32px;
-    background-color: var(--darkWhite);
+    background-color: var(--gray-1);
     margin: 4px;
     border-radius: var(--borderRadius);
     cursor: pointer;
@@ -94,15 +94,15 @@ export default {
     height: 100%;
     width: 100%;
     border-radius: var(--borderRadius);
-    background-color: var(--darkWhite);
+    background-color: var(--gray-1);
     box-sizing: border-box;
-    border: 2px solid var(--darkGray);
+    border: 2px solid var(--gray-9);
   }
 
   .selected-icon svg {
     height: 28px;
     width: 28px;
-    stroke: var(--darkGray);
+    stroke: var(--gray-9);
   }
 
   .selected-icon.empty svg,

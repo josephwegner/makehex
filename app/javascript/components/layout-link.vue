@@ -122,10 +122,10 @@ export default {
   button {
     height: 100%;
     box-sizing: border-box;
-    border: 2px solid var(--darkGray);
+    border: 2px solid var(--gray-9);
     border-radius: var(--borderRadius);
-    background: var(--midGray);
-    color: var(--darkWhite);
+    background: var(--gray-7);
+    color: var(--gray-1);
     font-size: .75rem;
     cursor: pointer;
   }
@@ -134,7 +134,7 @@ export default {
     margin: 0;
     padding: 0;
     list-style-type: none;
-    border: 2px solid var(--darkGray);
+    border: 2px solid var(--gray-9);
     border-radius: var(--borderRadius);
     width: 100%;
     box-sizing: border-box;
@@ -158,16 +158,16 @@ export default {
   }
 
   li.selected {
-    background: var(--darkWhite);
+    background: var(--gray-1);
     color: var(--black);
   }
 
   li:not(.selected):hover {
-    background: var(--gray);
+    background: var(--gray-8);
   }
 
   label {
-    color: var(--darkWhite);
+    color: var(--gray-1);
     font-size: .75rem;
   }
 
