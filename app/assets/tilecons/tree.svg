@@ -2,7 +2,7 @@
      baseProfile="full"
      width="200" height="200"
      xmlns="http://www.w3.org/2000/svg">
-     <path stroke="#000" d="M95 165
+     <path stroke="inherit" d="M95 165
                             105 165
                             105 146
                             140 146

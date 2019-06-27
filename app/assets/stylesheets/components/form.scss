@@ -32,8 +32,8 @@ button, input {
     width: 100%;
     font-size: 1.5rem;
     color: var(--black);
-    background-color: var(--darkWhite);
-    border: 2px solid var(--darkGray);
+    background-color: var(--gray-1);
+    border: 2px solid var(--gray-9);
     border-radius: var(--borderRadius);
     padding: .25rem .5rem;
     box-sizing: border-box;
@@ -60,14 +60,14 @@ button, input {
       content: '\f00c';
       text-rendering: auto;
       -webkit-font-smoothing: antialiased;
-      background-color: var(--darkWhite);
+      background-color: var(--gray-1);
       border-radius: var(--borderRadius);
       padding: .25rem;
       margin-right: .5rem;
       vertical-align: middle;
       cursor: pointer;
       transition: color .125s;
-      color: var(--darkWhite);
+      color: var(--gray-1);
     }
   }
 
@@ -105,7 +105,7 @@ button, input {
   margin-top: 1rem;
 
   a {
-    color: var(--darkGray);
+    color: var(--gray-9);
     padding: .25rem 0;
     display: block;
   }

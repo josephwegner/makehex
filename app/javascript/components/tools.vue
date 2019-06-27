@@ -54,10 +54,6 @@
           <i class="fas fa-cog"></i>
         </button>
       </div>
-
-      <toolbar-panes>
-        <hex-zoom />
-      </toolbar-panes>
     </div>
     <Modal />
   </div>
@@ -171,7 +167,7 @@ export default {
 
 <style scoped>
   .toolbar {
-    background-color: var(--lightGray);
+    background-color: var(--gray-4);
     height: var(--toolbarWidth);
     display: flex;
     padding: 8px;
@@ -210,7 +206,7 @@ export default {
 	  padding: 0;
   }
   input[type="color"]::-webkit-color-swatch {
-  	border: 2px solid var(--darkGray);
+  	border: 2px solid var(--gray-9);
     border-radius: var(--borderRadius);
   }
 </style>
@@ -221,10 +217,10 @@ export default {
   height: 100%;
   width: var(--toolWidth);
   box-sizing: border-box;
-  border: 2px solid var(--darkGray);
+  border: 2px solid var(--gray-9);
   border-radius: var(--borderRadius);
-  background: var(--midGray);
-  color: var(--darkWhite);
+  background: var(--gray-7);
+  color: var(--gray-1);
   font-size: 18px;
   padding: 0;
   cursor: pointer;
@@ -233,13 +229,13 @@ export default {
 
 
 .toolbar-modal {
-  background-color: var(--midGray);
+  background-color: var(--gray-7);
   border-radius: var(--borderRadius);
   position: absolute;
   left: 50%;
   bottom: 100%;
   transform: translateX(-50%) translateY(-1rem);
-  box-shadow: 0 0 10px 0 var(--darkGray);
+  box-shadow: 0 0 10px 0 var(--gray-9);
 }
 
 .toolbar-modal:after {
@@ -249,7 +245,7 @@ export default {
   height: 0;
   border-top: 7px solid transparent;
   border-bottom: 7px solid transparent;
-  border-left: 7px solid var(--midGray);
+  border-left: 7px solid var(--gray-7);
   position: absolute;
   top: 100%;
   left: 50%;

@@ -54,9 +54,9 @@ export default {
    left: 50%;
    transform: translateX(-50%) translateY(-50%);
    width: 44rem;
-   background: var(--lightestGray);
+   background: var(--gray-3);
    border-radius: var(--borderRadius);
-   border: 2px solid var(--gray);
+   border: 2px solid var(--gray-8);
    padding: 1rem;
  }
 
@@ -71,7 +71,7 @@ export default {
  }
 
  .close-modal:hover {
-   color: var(--darkWhite);
+   color: var(--gray-1);
  }
 </style>
 

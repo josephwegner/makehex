@@ -19,3 +19,36 @@ $weights: 300, 400, 600, 600;
     font-weight: $weight;
   }
 }
+
+.font-mh {
+  font-family: 'Makehex';
+  -webkit-font-smoothing: antialiased;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: 1;
+
+  &.hexfill:before {
+    content: "\e900";
+  }
+
+  &.hextexture:before {
+    content: "\e901";
+  }
+
+  &.hexhide:before {
+    content: "\e905";
+  }
+
+  &.hexshow:before {
+    content: "\e902";
+  }
+
+  &.hex:before {
+    content: "\e903";
+  }
+
+  &.hex-empty:before {
+    content: "\e904";
+  }
+}

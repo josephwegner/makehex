@@ -3,13 +3,12 @@ import '@babel/polyfill'
 import Vue from 'vue/dist/vue.js'
 import Vuex from 'vuex'
 import Map from '../components/map.vue'
-import Tools from '../components/tools.vue'
+import Toolbar from '../components/toolbar.vue'
 import API from '../lib/api.js'
 import Cable from '../lib/cable.js'
 import Store from '../lib/store.js'
 
 Vue.use(Vuex)
-Vue.config.performance = true
 
 //load directives
 import FocusInput from '../directives/focus-input.js'
@@ -37,17 +36,26 @@ document.addEventListener('DOMContentLoaded', () => {
       API.getMap(mapId).then((map) => {
         this.$store.commit('addMap', map)
         this.$store.commit('openLayout', map.default_layout_id)
+
+        var color;
+        if (this.$store.getters.activeColors.length) {
+          color = this.$store.getters.activeColors[0]
+        } else {
+          color = '#297C46';
+        }
+        
+        this.$store.commit('updateDrawTool', {color: color})
       })
       Cable.loadStore(this.$store)
     }
   })
 
   if (player === 'dm') {
-    const tools = new Vue({
-      el: '.footer-tools',
+    const toolbar = new Vue({
+      el: '.toolbar',
       store: store,
-      template: '<Tools/>',
-      components: { Tools }
+      template: '<Toolbar />',
+      components: { Toolbar }
     })
   }
 })

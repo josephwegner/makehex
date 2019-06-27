@@ -22,13 +22,7 @@ export default class Store {
         },
         selectedHex: null,
         hoveredHex: null,
-        tool: {
-          color: '#008000',
-          icon: null,
-          type: 'design',
-          coverage: 'single',
-          fogType: 'fog'
-        }
+        drawTools: {}
       },
 
       actions: {
@@ -56,22 +50,11 @@ export default class Store {
 
         drawTile ({ commit, state, getters }, coords) {
           var tile = getters.activeLayout.grid[coords.q][coords.r] || {}
-          var props = {
+          var props = Object.assign({
             color: tile.color,
             fog: tile.fog,
             icon: tile.icon
-          }
-
-          switch(state.tool.type) {
-            case 'design':
-              props.color = state.tool.color
-              props.icon = state.tool.icon
-              break
-
-            case 'fog':
-              props.fog = state.tool.fogType === 'fog' ? true : false
-              break
-          }
+          }, state.drawTools)
 
           var data = {}
           data[coords.q] = {}
@@ -317,6 +300,10 @@ export default class Store {
           state.map = Object.assign({}, state.map, { players: players })
         },
 
+        updateDrawTool(state, payload) {
+          state.drawTools = Object.assign({}, state.drawTools, payload)
+        },
+
         openLayout(state, layoutId) {
           state.activeLayoutId = layoutId
           Cable.connectToTile(layoutId)
@@ -394,12 +381,10 @@ export default class Store {
          layout.grid = payload.grid
        },
 
-       updateTool(state, payload) {
-         if (state.tool.type === 'hex' && payload.type === 'type' && payload.value !== 'hex') {
-           state.selectedHex = null
-         }
-
-         state.tool[payload.type] = payload.value
+       removeDrawTool(state, payload) {
+         var newTools = Object.assign({}, state.drawTools)
+         delete newTools[payload]
+         state.drawTools = newTools
        },
 
        selectHex(state, payload) {

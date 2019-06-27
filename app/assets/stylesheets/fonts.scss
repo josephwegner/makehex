@@ -69,3 +69,11 @@
   font-style: italic;
   src: url('/webfonts/texgyrebonum-italic.otf') format('opentype');
 }
+@font-face {
+  font-family: 'Makehex';
+  src: url('/webfonts/icomoon.eot');
+  src: url('/webfonts/icomoon.eot?#iefix') format('embedded-opentype'),
+       url('/webfonts/icomoon.woff') format('woff'),
+       url('/webfonts/icomoon.ttf')  format('truetype'),
+       url('/webfonts/icomoon.svg#makehex') format('svg');
+}

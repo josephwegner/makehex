@@ -109,7 +109,7 @@ export default {
     margin: 0;
     padding: 0;
     list-style-type: none;
-    border: 2px solid var(--darkGray);
+    border: 2px solid var(--gray-9);
     border-radius: var(--borderRadius);
     width: 100%;
     box-sizing: border-box;
@@ -133,12 +133,12 @@ export default {
   }
 
   li.selected {
-    background: var(--darkWhite);
+    background: var(--gray-1);
     color: var(--black);
   }
 
   li:not(.selected):hover {
-    background: var(--gray);
+    background: var(--gray-8);
   }
 
   .form-submit {
@@ -150,8 +150,8 @@ export default {
   }
 
   input {
-    background: var(--midGray);
-    border: 2px solid var(--darkGray);
+    background: var(--gray-7);
+    border: 2px solid var(--gray-9);
     border-radius: var(--borderRadius);
     font-size: 1rem;
     padding: .5rem;

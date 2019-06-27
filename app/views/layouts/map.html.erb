@@ -12,12 +12,6 @@
   </head>
 
   <body>
-    <div class="header ps bg-darkGray flex spread">
-      <a href="/" style="text-decoration: none;">
-        <%= image_tag 'logo.svg', class: 'w-3 ps-l' %>
-      </a>
-      <%= link_to "Exit", :back, class: 'button inline outline white m0' %>
-    </div>
     <%= yield %>
     <svg style="overflow: hidden; top: -100%; left: -100%; position: absolute; opacity: 0;">
       <defs>

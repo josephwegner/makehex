@@ -25,10 +25,10 @@ export default {
 
 <style>
   .toolbar-panes .pane {
-    box-shadow: inset 0 -3px 3px -2px var(--darkGray), 0px 0px 6px 0px var(--darkGray);
-    background-color: var(--midGray);
+    box-shadow: inset 0 -3px 3px -2px var(--gray-9), 0px 0px 6px 0px var(--gray-9);
+    background-color: var(--gray-7);
     border-radius: var(--borderRadius) var(--borderRadius) 0 0;
-    border: 2px solid var(--darkGray);
+    border: 2px solid var(--gray-9);
     border-bottom: none;
     z-index: 3;
     pointer-events: all;
@@ -36,7 +36,7 @@ export default {
 
   .toolbar-panes .pane-header {
     color: var(--white);
-    border-bottom: 1px solid var(--darkGray);
+    border-bottom: 1px solid var(--gray-9);
     padding: .25rem .5rem;
   }
 
