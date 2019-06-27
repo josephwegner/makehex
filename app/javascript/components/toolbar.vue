@@ -11,7 +11,7 @@
         </button>
       </div>
       <toolbox>
-        <Drawbox />
+        <component v-bind:is="chosenToolbox" />
       </toolbox>
     </div>
   </div>
@@ -20,16 +20,19 @@
 <script>
 import Toolbox from './toolbox.vue'
 import Drawbox from './toolboxes/drawbox.vue'
+import Layoutbox from './toolboxes/layoutbox.vue'
+import Settingsbox from './toolboxes/settingsbox.vue'
+
 
 export default {
-  components: { Toolbox, Drawbox },
+  components: { Toolbox, Drawbox, Layoutbox, Settingsbox },
 
   computed: {
     chosenToolbox() {
       return {
         draw: Drawbox,
-        layouts: Drawbox,
-        settings: Drawbox
+        layouts: Layoutbox,
+        settings: Settingsbox
       }[this.category]
     }
   },

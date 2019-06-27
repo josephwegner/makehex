@@ -14,7 +14,7 @@ environment.plugins.prepend(
   'svg-spritemap-webpack-plugin',
   new SVGSpritemapPlugin('app/assets/tilecons/*.svg', {
     output: {
-      filename: 'tilecons.svg',
+      filename: 'tilecons.svg'
     },
     sprite: {
       prefix: () => { return '' },

@@ -36,7 +36,19 @@ $weights: 300, 400, 600, 600;
     content: "\e901";
   }
 
-  &.hexvisibility:before {
+  &.hexhide:before {
+    content: "\e905";
+  }
+
+  &.hexshow:before {
     content: "\e902";
+  }
+
+  &.hex:before {
+    content: "\e903";
+  }
+
+  &.hex-empty:before {
+    content: "\e904";
   }
 }

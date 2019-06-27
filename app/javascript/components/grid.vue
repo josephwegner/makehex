@@ -7,7 +7,7 @@
 
     <g v-if="isEditor" id="top-add" data-addDir="Top">
       <tile v-for="n in (addWidth)"
-            v-bind:key="key(`top-${n}`)"
+            v-bind:key="`${layoutId}-top-${n}`"
             v-bind="addHex"
             v-bind:selectable="false"
             v-bind:r="0"
@@ -17,7 +17,7 @@
             v-on:click="addRows"
             v-bind:viewOnly="true" />
         <tile v-for="n in (addWidth)"
-              v-bind:key="key(`2top-${n}`)"
+              v-bind:key="`${layoutId}-2top-${n}`"
               v-bind="addHex"
               v-bind:selectable="false"
               v-bind:r="1"
@@ -29,7 +29,7 @@
     </g>
     <g v-if="isEditor" id="left-add" data-addDir="Left">
       <tile v-for="n in addHeight"
-            v-bind:key="key(`left-${n}`)"
+            v-bind:key="`${layoutId}-left-${n}`"
             v-bind="addHex"
             v-bind:selectable="false"
             v-bind:r="n"
@@ -40,7 +40,7 @@
     </g>
     <g v-if="isEditor" id="right-add" data-addDir="Right">
       <tile v-for="n in addHeight"
-            v-bind:key="key(`right-${n}`)"
+            v-bind:key="`${layoutId}-right-${n}`"
             v-bind="addHex"
             v-bind:selectable="false"
             v-bind:r="n"
@@ -52,7 +52,7 @@
     </g>
     <g v-if="isEditor" id="bottom-add" data-addDir="Bottom">
       <tile v-for="n in (addWidth + 1)"
-            v-bind:key="key(`bottom-${n}`)"
+            v-bind:key="`${layoutId}-bottom-${n}`"
             v-bind="addHex"
             v-bind:selectable="false"
             v-bind:r="height + 2"
@@ -69,10 +69,10 @@
        <g v-for="(cells, q) in grid">
         <tile v-for="(tile, r) in cells"
               v-if="r !== selectedHex.r || q !== selectedHex.q"
-              v-bind:key="key(q, r)"
+              v-bind:key="`${layoutId}-${q}-${r}`"
               v-bind="tile"
-              v-bind:q="parseInt(q)"
-              v-bind:r="parseInt(r)"
+              v-bind:q="q"
+              v-bind:r="r"
               v-bind:gridWidth="width"
               v-bind:yOffset="topOffset"
               v-bind:xOffset="leftOffset"
@@ -81,10 +81,10 @@
               v-bind:fog="drawFog ? tile.fog : false" />
       </g>
       <tile v-if="selectedHex.q >= 0"
-            v-bind:key="key(selectedHex.q, selectedHex.r)"
+            v-bind:key="`${layoutId}-${selectedHex.q}-${selectedHex.r}`"
             v-bind="grid[selectedHex.q][selectedHex.r]"
-            v-bind:q="parseInt(selectedHex.q)"
-            v-bind:r="parseInt(selectedHex.r)"
+            v-bind:q="selectedHex.q"
+            v-bind:r="selectedHex.r"
             v-bind:gridWidth="width"
             v-bind:yOffset="topOffset"
             v-bind:xOffset="leftOffset"
@@ -164,6 +164,10 @@ export default {
 
     selectedHex () {
       return this.$store.state.selectedHex ? this.$store.state.selectedHex : {q: -1, r: -1}
+    },
+
+    layoutId () {
+      return this.$store.getters.activeLayout ? this.$store.getters.activeLayout.id : 'none'
     }
   },
 
@@ -396,7 +400,6 @@ export default {
 
   props: {
     drawFog: {
-      type: Boolean,
       default: true
     }
   }

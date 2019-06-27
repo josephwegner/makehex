@@ -4,16 +4,23 @@
       <div class="drawoptions" v-show="!optionsPage">
         <draw-option option="color"
                      v-bind:openOptions="openOptions.bind(this, 'color-options')"
-                     v-bind:value="color">
+                     v-bind:value="color"
+                     v-bind:forceEnabled="!!fillColor">
           <i class="font-mh hexfill" v-bind:style="{ color: fillColor} "></i>
           <span>Color</span>
         </draw-option>
-        <draw-option option="icon">
-          <i class="font-mh hextexture"></i>
+        <draw-option option="icon"
+                     v-bind:openOptions="openOptions.bind(this, 'icon-options')"
+                     v-bind:value="icon || 'rocky'">
+          <i v-bind:class="{'font-mh': true, hextexture: !icon, 'hex-empty': icon}">
+            <svg v-if="icon" class="preview-icon">
+              <use v-bind:href="'/packs/tilecons.svg#' + icon" />
+            </svg>
+          </i>
           <span>Texture</span>
         </draw-option>
-        <draw-option option="fog">
-          <i class="font-mh hexvisibility"></i>
+        <draw-option option="fog" toggle="true" v-bind:value="fog">
+          <i v-bind:class="{'font-mh': true, hexhide: fog, hexshow: !fog}"></i>
           <span>Fog of War</span>
         </draw-option>
       </div>
@@ -30,11 +37,20 @@
 <script>
 import DrawOption from '../draw-option.vue'
 import ColorOptions from './color-options.vue'
+import IconOptions from './icon-options.vue'
 
 export default {
-  components: { DrawOption, ColorOptions },
+  components: { DrawOption, ColorOptions, IconOptions },
 
   computed: {
+    fog() {
+      return this.$store.state.drawTools.fog
+    },
+
+    icon() {
+      return this.$store.state.drawTools.icon
+    },
+
     fillColor() {
       return this.$store.state.drawTools.color
     },

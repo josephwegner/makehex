@@ -9,7 +9,6 @@ import Cable from '../lib/cable.js'
 import Store from '../lib/store.js'
 
 Vue.use(Vuex)
-Vue.config.performance = true
 
 //load directives
 import FocusInput from '../directives/focus-input.js'
@@ -37,6 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
       API.getMap(mapId).then((map) => {
         this.$store.commit('addMap', map)
         this.$store.commit('openLayout', map.default_layout_id)
+
+        var color;
+        if (this.$store.getters.activeColors.length) {
+          color = this.$store.getters.activeColors[0]
+        } else {
+          color = '#297C46';
+        }
+        
+        this.$store.commit('updateDrawTool', {color: color})
       })
       Cable.loadStore(this.$store)
     }

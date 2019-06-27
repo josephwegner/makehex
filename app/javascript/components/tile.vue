@@ -6,8 +6,8 @@
          v-bind:stroke="selected ? '#999' : stroke"
          v-bind:stroke-width="selected ? 3 : 1"
          v-bind:fill="fog && !isEditor ? '#cdcdcd' : color"
-         v-bind:data-q="q"
-         v-bind:data-r="r"
+         v-bind:data-q="coords.q"
+         v-bind:data-r="coords.r"
          v-on:mouseover="onHover($event)"
          v-on:mousedown="onClick($event)">
     </use>
@@ -65,6 +65,13 @@ export default {
   },
 
   computed: {
+    coords() {
+      return {
+        q: parseInt(this.q),
+        r: parseInt(this.r)
+      }
+    },
+
     entityColor() {
       var color = this.color.replace('#','')
       if (color.length === 3) {
@@ -106,16 +113,16 @@ export default {
     selected() {
       return this.selectable &&
              this.$store.state.selectedHex &&
-             this.$store.state.selectedHex.q === this.q &&
-             this.$store.state.selectedHex.r === this.r
+             this.$store.state.selectedHex.q === this.coords.q &&
+             this.$store.state.selectedHex.r === this.coords.r
     },
 
     translation() {
       // Each of these tiles has 2px of padding on it so subtract 4+1 before calculating position
       // Except ignore that for Y. There's probably a nice math way to figure out how much
       // to set each tile into each other... but I'm lazy so, #magicstrings
-      var yTranslation = (this.r * (HEIGHT - 16)) + this.yOffset;
-      var xTranslation = ((this.q + (this.r * .5)) * (WIDTH - 5)) + this.xOffset;
+      var yTranslation = (this.coords.r * (HEIGHT - 16)) + this.yOffset;
+      var xTranslation = ((this.coords.q + (this.r * .5)) * (WIDTH - 5)) + this.xOffset;
 
       return `matrix(1,0,0,1,${xTranslation},${yTranslation})`
     }
@@ -123,60 +130,47 @@ export default {
 
   props: {
     q: {
-      type: Number,
       default: 0
     },
     r: {
-      type: Number,
       default: 0
     },
     color: {
-      type: String,
       default: utils.constants.TILE.color
     },
     dragging: {
-      type: Boolean,
       default: false
     },
     icon: {
-      type: String
+      required: false
     },
     fog: {
-      type: Boolean,
       default: utils.constants.TILE.fog
     },
     entities: {
-      type: Object,
       default: () => {
         return { in: {} }
       }
     },
     label: {
-      type: String,
       default: ''
     },
     stroke: {
-      type: String,
       default: '#232323'
     },
     gridWidth: {
-      type: Number,
       default: 1
     },
     selectable: {
-      type: Boolean,
       default: true
     },
     xOffset: {
-      type: Number,
       default: 0
     },
     viewOnly: {
-      type: Boolean,
       default: false
     },
     yOffset: {
-      type: Number,
       default: 0
     }
   },
@@ -205,18 +199,13 @@ export default {
     },
 
     onClick($event) {
-      return
-      var coords = {q: this.q, r: this.r}
+      var coords = {q: this.coords.q, r: this.coords.r}
 
       this.$emit('click', coords, $event)
       if (this.viewOnly) { return }
       var state = this.$store.state
 
-      if (state.tool.type === 'hex') {
-        this.$store.commit('selectHex', coords)
-      } else if (state.tool.type === 'erase') {
-        this.$store.dispatch('eraseTile', coords)
-      } else if (state.tool.type === 'player') {
+      if (state.drawTools.player) {
         if (this.fog) {
           this.$eventHub.$emit('notification', {
             type: 'warn',
@@ -240,25 +229,13 @@ export default {
 
         this.$store.dispatch('movePlayer', coords)
       } else {
-        switch (state.tool.coverage) {
-          case 'single':
-            this.$store.dispatch('drawTile', coords)
-            break;
-
-          case 'fill':
-            this.$emit('fill', coords)
-            break;
-        }
+        this.$store.dispatch('drawTile', coords)
       }
     },
 
     onHover($event) {
-      return
-      this.$emit('hover', {q: this.q, r: this.r})
+      this.$emit('hover', {q: this.coords.q, r: this.coords.r})
       if (this.viewOnly) { return }
-      if (this.$store.state.tool.type !== 'hex') {
-        this.$store.commit('hoverHex', {q: this.q, r: this.r })
-      }
       if ($event.buttons && this.dragging) {
         this.onClick()
       }

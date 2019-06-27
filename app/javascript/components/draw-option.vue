@@ -1,31 +1,48 @@
 <template>
   <div v-bind:class="{ 'draw-option': true, enabled: enabled }"
-       v-on:click="toggle()">
+       v-on:click="toggleEnabled()">
     <div class="slot">
       <slot></slot>
     </div>
+
     <button v-if="enabled && openOptions"
             class="configure fas fa-cog"
             v-on:click.stop="openOptions()">
     </button>
+
+    <button v-if="toggle && enabled"
+            v-bind:class="{toggle: true, on: value}"
+            v-on:click.stop="clickToggle()"></button>
   </div>
 </template>
 
 <script>
 
 export default {
+  beforeUpdate() {
+    if (this.forceEnabled && !this.enabled) {
+      this.enabled = true
+    }
+  },
+
   data() {
     return {
-      enabled: false
+      enabled: this.forceEnabled
     }
   },
 
   methods: {
-    toggle() {
+    clickToggle() {
+      var update = {}
+      update[this.option] = !this.value
+      this.$store.commit('updateDrawTool', update)
+    },
+
+    toggleEnabled() {
       this.enabled = !this.enabled
       if (this.enabled) {
         var update = {}
-        update[this.option] = this.value
+        update[this.option] = this.toggle ? !this.value : this.value
         this.$store.commit('updateDrawTool', update)
       } else {
         this.$store.commit('removeDrawTool', this.option)
@@ -34,14 +51,20 @@ export default {
   },
 
   props: {
+    forceEnabled: {
+      default: false
+    },
+
     openOptions: {
-      type: Function,
       default: null
     },
 
     option: {
-      type: String,
       required: true
+    },
+
+    toggle: {
+      default: false
     },
 
     value: {
@@ -89,14 +112,27 @@ export default {
     transition: color .125s;
     padding: .5rem 1rem 0 1rem;
     display: block;
+    position: relative;
+  }
+
+  .preview-icon {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    stroke: black;
+    padding: .25em;
+    box-sizing: border-box;
+    stroke: var(--blue);
   }
 
   .enabled span, .enabled i, .draw-option.enabled:hover span, .draw-option.enabled:hover i {
     color: var(--blue);
   }
 
-  .configure {
-    background: transparent;
+  button {
+    background-color: transparent;
     border: none;
     color: var(--lightestBlue);
     padding: .25rem 0;
@@ -104,12 +140,70 @@ export default {
     cursor: pointer;
   }
 
-  .draw-option:hover .configure {
+  button.toggle {
+    position: relative;
+  }
+
+  button.toggle:before {
+    content: '';
+    display: block;
+    height: .5rem;
+    width: 1.5rem;
+    border: 2px solid;
+    border-color: var(--lightestBlue);
+    border-radius: 1rem;
+    margin: auto;
+    transition: border-color .125s;
+  }
+
+  button.toggle:after {
+    content: '';
+    display: block;
+    height: .3rem;
+    width: .3rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 1rem;
+    background-color: var(--lightestBlue);
+    transform: translate(-.5rem, -.125rem);
+    transition: background-color .125s, transform .125s;
+  }
+
+  button.toggle.on:after {
+    transform: translate(.275rem, -.125rem);
+  }
+
+  button.toggle:hover:before {
+    border-color: var(--blue);
+  }
+
+  button.toggle:hover:after {
+    background-color: var(--blue);
+  }
+
+  button.toggle.on:hover:before {
+    border-color: var(--lightestBlue);
+  }
+
+  button.toggle.on:hover:after {
+    background-color: var(--lightestBlue);
+  }
+
+  .draw-option:hover button:before {
+    border-color: var(--blue);
+  }
+
+  .draw-option:hover button:after {
+    background-color: var(--blue);
+  }
+
+  .draw-option:hover button {
     color: var(--lightBlue);
   }
 
-  .draw-option:hover .configure:hover {
-    background: var(--lightBlue);
+  .draw-option:hover button:hover {
+    background-color: var(--lightBlue);
     color: var(--lightestBlue);
   }
 </style>

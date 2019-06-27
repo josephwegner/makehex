@@ -50,22 +50,11 @@ export default class Store {
 
         drawTile ({ commit, state, getters }, coords) {
           var tile = getters.activeLayout.grid[coords.q][coords.r] || {}
-          var props = {
+          var props = Object.assign({
             color: tile.color,
             fog: tile.fog,
             icon: tile.icon
-          }
-
-          switch(state.tool.type) {
-            case 'design':
-              props.color = state.tool.color
-              props.icon = state.tool.icon
-              break
-
-            case 'fog':
-              props.fog = state.tool.fogType === 'fog' ? true : false
-              break
-          }
+          }, state.drawTools)
 
           var data = {}
           data[coords.q] = {}
